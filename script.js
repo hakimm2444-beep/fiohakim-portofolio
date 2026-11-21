@@ -1,5 +1,5 @@
 // =========================================
-// 1. IMPORT & INISIALISASI FIREBASE SDK
+// 1. IMPORT & INISIALISASI FIREBASE SDK (100% PAKET GRATIS SPARK)
 // =========================================
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
 import { getAnalytics } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-analytics.js";
@@ -18,12 +18,6 @@ import {
     setDoc, 
     deleteDoc 
 } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
-import { 
-    getStorage, 
-    ref, 
-    uploadBytesResumable, 
-    getDownloadURL 
-} from "https://www.gstatic.com/firebasejs/10.12.0/firebase-storage.js";
 
 const firebaseConfig = {
     apiKey: "AIzaSyAfUEk1G_noUjtd1MinSxNKdg5T57GcoXE",
@@ -39,9 +33,11 @@ const app = initializeApp(firebaseConfig);
 const analytics = getAnalytics(app);
 const auth = getAuth(app);
 const db = getFirestore(app);
-const storage = getStorage(app);
 
+// Simpan sesi login admin secara permanen di browser
 setPersistence(auth, browserLocalPersistence);
+
+// Dokumen teks & struktur di Firestore
 const portfolioDocRef = doc(db, "portfolio", "mainData");
 
 let extraSidebarItems = [];
@@ -52,16 +48,69 @@ let isEditingMode = false;
 let currentUser = null;
 
 // =========================================
-// 2. MICROINTERACTIONS ENGINE (TILT, GLARE, REVEAL)
+// 2. PENYIMPANAN GAMBAR HD GRATIS DI CLOUD FIRESTORE (CHUNKED)
+// =========================================
+
+// Konversi gambar pilihan menjadi WebP/JPEG berkualitas tajam (maksimal ~700KB agar muat di 1 dokumen Firestore)
+function compressImageForFirestore(file, maxWidth = 1600, quality = 0.85) {
+    return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onload = (event) => {
+            const img = new Image();
+            img.onload = () => {
+                let width = img.width;
+                let height = img.height;
+                if (width > maxWidth) {
+                    height = Math.round((height * maxWidth) / width);
+                    width = maxWidth;
+                }
+                const canvas = document.createElement('canvas');
+                canvas.width = width;
+                canvas.height = height;
+                const ctx = canvas.getContext('2d');
+                ctx.drawImage(img, 0, 0, width, height);
+
+                // Gunakan WebP karena ukurannya 30-40% lebih kecil dengan ketajaman tetap tinggi
+                let dataUrl = canvas.toDataURL('image/webp', quality);
+                // Jika masih di atas 850KB (batas dokumen Firestore 1MB), turunkan sedikit kualitasnya
+                if (dataUrl.length > 850000) {
+                    dataUrl = canvas.toDataURL('image/webp', 0.65);
+                }
+                resolve(dataUrl);
+            };
+            img.onerror = reject;
+            img.src = event.target.result;
+        };
+        reader.onerror = reject;
+        reader.readAsDataURL(file);
+    });
+}
+
+// Simpan setiap media ke dokumen terpisah di koleksi "portfolio_media" (masing-masing punya jatah 1MB penuh)
+async function saveMediaToFirestore(mediaKey, dataUrl) {
+    const mediaDocRef = doc(db, "portfolio_media", mediaKey);
+    await setDoc(mediaDocRef, {
+        imageData: dataUrl,
+        updatedAt: Date.now()
+    });
+}
+
+async function loadMediaFromFirestore(mediaKey) {
+    const mediaDocRef = doc(db, "portfolio_media", mediaKey);
+    const snap = await getDoc(mediaDocRef);
+    return snap.exists() ? snap.data().imageData : null;
+}
+
+// =========================================
+// 3. MICROINTERACTIONS ENGINE (TILT, GLARE, REVEAL)
 // =========================================
 function initMicrointeractions() {
-    // 1. Efek 3D Tilt & Cursor Glare pada Kartu Kaca
     document.querySelectorAll('.interactive-card').forEach(card => {
         if (card.dataset.tiltBound) return;
         card.dataset.tiltBound = "true";
 
         card.addEventListener('mousemove', (e) => {
-            if (isEditingMode) return; // Nonaktifkan tilt saat mengetik agar nyaman
+            if (isEditingMode) return;
             const rect = card.getBoundingClientRect();
             const x = e.clientX - rect.left;
             const y = e.clientY - rect.top;
@@ -82,7 +131,6 @@ function initMicrointeractions() {
         });
     });
 
-    // 2. Efek Magnetic ringan pada tombol utama
     document.querySelectorAll('.magnetic-btn').forEach(btn => {
         if (btn.dataset.magBound) return;
         btn.dataset.magBound = "true";
@@ -99,7 +147,6 @@ function initMicrointeractions() {
         });
     });
 
-    // 3. Scroll Reveal Animation
     const observer = new IntersectionObserver((entries) => {
         entries.forEach(entry => {
             if (entry.isIntersecting) {
@@ -111,7 +158,6 @@ function initMicrointeractions() {
     document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
 }
 
-// Scroll-Spy Sidebar (Menandai menu aktif sesuai posisi gulir)
 window.addEventListener('scroll', () => {
     const sections = document.querySelectorAll('section[id]');
     const scrollPos = window.scrollY + 220;
@@ -133,7 +179,7 @@ window.addEventListener('scroll', () => {
 });
 
 // =========================================
-// 3. SIMPAN OTOMATIS KE CLOUD FIRESTORE
+// 4. SIMPAN OTOMATIS TEKS & KOLOM KE FIRESTORE
 // =========================================
 async function saveAllToCloud(showAlert = false) {
     if (!currentUser) return;
@@ -154,10 +200,11 @@ async function saveAllToCloud(showAlert = false) {
         }, { merge: true });
 
         if (showAlert) {
-            showToast("Semua perubahan tersimpan!");
+            showToast("Semua perubahan tersimpan ke Cloud!");
         }
     } catch (error) {
         console.error("Gagal menyimpan ke Cloud:", error);
+        showToast("Gagal menyimpan: " + error.message, 4000);
     }
 }
 
@@ -172,7 +219,7 @@ function showToast(msg, duration = 2500) {
 }
 
 // =========================================
-// 4. RENDER SIDEBAR & KOLOM DINAMIS
+// 5. RENDER SIDEBAR & KOLOM DINAMIS
 // =========================================
 function renderDynamicElements() {
     const sidebarList = document.getElementById('sidebarLinks');
@@ -206,7 +253,6 @@ function renderDynamicElements() {
         });
     });
 
-    // Render Kolom Keahlian Tambahan
     const skillsGrid = document.getElementById('skillsGrid');
     skillsGrid.querySelectorAll('.dynamic-col').forEach(el => el.remove());
     extraSkills.forEach((col, index) => {
@@ -222,7 +268,6 @@ function renderDynamicElements() {
         skillsGrid.appendChild(card);
     });
 
-    // Render Kolom Proyek Tambahan
     const projectsGrid = document.getElementById('projectsGrid');
     projectsGrid.querySelectorAll('.dynamic-col').forEach(el => el.remove());
     extraProjects.forEach((col, index) => {
@@ -242,7 +287,6 @@ function renderDynamicElements() {
         projectsGrid.appendChild(card);
     });
 
-    // Render Kolom Bebas Tambahan
     const customGrid = document.getElementById('customColumnsGrid');
     customGrid.querySelectorAll('.dynamic-col').forEach(el => el.remove());
     extraCustomCols.forEach((col, index) => {
@@ -286,10 +330,11 @@ function renderDynamicElements() {
 }
 
 // =========================================
-// 5. MUAT DATA DARI FIRESTORE
+// 6. MUAT DATA & FOTO DARI CLOUD FIRESTORE
 // =========================================
 async function loadCloudContent() {
     try {
+        // Muat teks & struktur utama
         const docSnap = await getDoc(portfolioDocRef);
         if (docSnap.exists()) {
             const data = docSnap.data();
@@ -303,31 +348,31 @@ async function loadCloudContent() {
                 });
             }
 
-            if (data.media) {
-                if (data.media.profileImage) {
-                    document.getElementById('profileImage').src = data.media.profileImage;
-                }
-                if (data.media.bannerImage) {
-                    document.getElementById('bannerImage').src = data.media.bannerImage;
-                }
-                if (data.media.bgImage) {
-                    document.body.style.backgroundImage = `url('${data.media.bgImage}')`;
-                }
-            }
-
             extraSidebarItems = data.extraSidebarItems || [];
             extraSkills = data.extraSkills || [];
             extraProjects = data.extraProjects || [];
             extraCustomCols = data.extraCustomCols || [];
             renderDynamicElements();
         }
+
+        // Muat masing-masing foto dari dokumen terpisah di Firestore
+        const [profileData, bannerData, bgData] = await Promise.all([
+            loadMediaFromFirestore('profileImage'),
+            loadMediaFromFirestore('bannerImage'),
+            loadMediaFromFirestore('bgImage')
+        ]);
+
+        if (profileData) document.getElementById('profileImage').src = profileData;
+        if (bannerData) document.getElementById('bannerImage').src = bannerData;
+        if (bgData) document.body.style.backgroundImage = `url('${bgData}')`;
+
     } catch (error) {
         console.error("Gagal memuat data dari Firebase:", error);
     }
 }
 
 // =========================================
-// 6. KONTROL ADMIN RINGKAS (EDIT <-> SELESAI EDIT)
+// 7. KONTROL ADMIN RINGKAS (EDIT <-> SELESAI EDIT)
 // =========================================
 const adminLoginBtn = document.getElementById('adminLoginBtn');
 const adminQuickControls = document.getElementById('adminQuickControls');
@@ -424,7 +469,7 @@ logoutAdminBtn.addEventListener('click', async () => {
 });
 
 // =========================================
-// 7. AKSI TAMBAH SIDEBAR & TAMBAH KOLOM
+// 8. AKSI TAMBAH SIDEBAR & TAMBAH KOLOM
 // =========================================
 document.getElementById('openAddSidebarModal').addEventListener('click', () => {
     document.getElementById('addSidebarModal').style.display = 'flex';
@@ -475,64 +520,71 @@ document.getElementById('addCustomColBtn').addEventListener('click', () => {
 });
 
 // =========================================
-// 8. UPLOAD GAMBAR RESOLUSI TINGGI (HD)
+// 9. UPLOAD GAMBAR LANGSUNG KE CLOUD FIRESTORE (GRATIS)
 // =========================================
-function setupFirebaseImageUpload(inputId, mediaKey, applyCallback) {
+function setupFirestoreImageUpload(inputId, mediaKey, maxWidth, applyCallback) {
     const inputEl = document.getElementById(inputId);
 
-    inputEl.addEventListener('change', (e) => {
+    inputEl.addEventListener('change', async (e) => {
         const file = e.target.files[0];
-        if (!file || !currentUser) return;
+        if (!file) return;
 
-        if (!file.type.startsWith('image/')) {
-            return alert("Harap pilih file gambar yang valid.");
+        if (!currentUser) {
+            alert("Sesi admin tidak ditemukan. Silakan login ulang.");
+            return;
         }
 
-        const storageRef = ref(storage, `portfolio_media/${mediaKey}_${Date.now()}_${file.name}`);
-        const uploadTask = uploadBytesResumable(storageRef, file);
+        if (!file.type.startsWith('image/')) {
+            return alert("Harap pilih file gambar yang valid (JPG, PNG, WEBP).");
+        }
 
-        uploadTask.on('state_changed',
-            (snapshot) => {
-                const progress = Math.round((snapshot.bytesTransferred / snapshot.totalBytes) * 100);
-                showToast(`Mengunggah foto: ${progress}%...`, 0);
-            },
-            (error) => {
-                document.getElementById('uploadToast').classList.add('hidden');
-                alert("Gagal mengunggah gambar: " + error.message);
-            },
-            async () => {
-                const downloadURL = await getDownloadURL(uploadTask.snapshot.ref);
-                await setDoc(portfolioDocRef, {
-                    media: { [mediaKey]: downloadURL }
-                }, { merge: true });
+        // 1. Tampilkan preview langsung di layar seketika
+        const instantUrl = URL.createObjectURL(file);
+        applyCallback(instantUrl);
+        showToast("Memproses & menyimpan foto ke Firestore...", 0);
 
-                applyCallback(downloadURL);
-                showToast("Foto HD berhasil disimpan!", 3000);
-            }
-        );
+        try {
+            // 2. Optimasi resolusi & simpan langsung ke Cloud Firestore (paket gratis Spark)
+            const optimizedDataUrl = await compressImageForFirestore(file, maxWidth, 0.85);
+            await saveMediaToFirestore(mediaKey, optimizedDataUrl);
+
+            applyCallback(optimizedDataUrl);
+            showToast("Foto berhasil tersimpan di Cloud!", 3000);
+        } catch (error) {
+            console.error("Gagal menyimpan foto ke Firestore:", error);
+            showToast("Gagal menyimpan foto: " + error.message, 4000);
+        } finally {
+            inputEl.value = '';
+        }
     });
 }
 
-setupFirebaseImageUpload('uploadBanner', 'bannerImage', (url) => {
+setupFirestoreImageUpload('uploadBanner', 'bannerImage', 1600, (url) => {
     document.getElementById('bannerImage').src = url;
 });
-setupFirebaseImageUpload('uploadProfile', 'profileImage', (url) => {
+setupFirestoreImageUpload('uploadProfile', 'profileImage', 700, (url) => {
     document.getElementById('profileImage').src = url;
 });
-setupFirebaseImageUpload('uploadBg', 'bgImage', (url) => {
+setupFirestoreImageUpload('uploadBg', 'bgImage', 1600, (url) => {
     document.body.style.backgroundImage = `url('${url}')`;
 });
 
+// Reset Semua Data & Foto di Cloud
 document.getElementById('resetAllBtn').addEventListener('click', async () => {
     if (!currentUser) return;
-    if (confirm("Yakin ingin mereset seluruh konten di Cloud ke pengaturan awal?")) {
-        await deleteDoc(portfolioDocRef);
+    if (confirm("Yakin ingin mereset seluruh konten dan foto di Cloud ke pengaturan awal?")) {
+        await Promise.all([
+            deleteDoc(portfolioDocRef),
+            deleteDoc(doc(db, "portfolio_media", "profileImage")),
+            deleteDoc(doc(db, "portfolio_media", "bannerImage")),
+            deleteDoc(doc(db, "portfolio_media", "bgImage"))
+        ]);
         location.reload();
     }
 });
 
 // =========================================
-// 9. SIDEBAR MOBILE & FILTER PROYEK
+// 10. SIDEBAR MOBILE & FILTER PROYEK
 // =========================================
 const sidebar = document.getElementById('sidebar');
 document.getElementById('openSidebarBtn').addEventListener('click', () => {
