@@ -9,14 +9,13 @@
 </head>
 <body id="mainBody">
 
-    <!-- Lapisan Kontras Halus di Atas Background agar Teks Selalu Terbaca -->
+    <!-- Lapisan Kontras Tipis agar Teks Tetap Tajam di Atas Background -->
     <div class="bg-readability-tint" aria-hidden="true"></div>
 
-    <!-- Efek Cahaya Ambient di Belakang Lapisan Kaca -->
+    <!-- Efek Cahaya Ambient Halus -->
     <div class="ambient-orbs" aria-hidden="true">
         <div class="orb orb-1"></div>
         <div class="orb orb-2"></div>
-        <div class="orb orb-3"></div>
     </div>
 
     <!-- Sidebar Navigasi Frosted Glass -->
@@ -30,8 +29,7 @@
             <li><a href="#home" class="nav-item active"><i class="fas fa-home editable-icon" data-icon-key="navHomeIcon"></i> <span class="editable" data-key="navHome">Beranda</span></a></li>
             <li><a href="#about" class="nav-item"><i class="fas fa-user editable-icon" data-icon-key="navAboutIcon"></i> <span class="editable" data-key="navAbout">Tentang</span></a></li>
             <li><a href="#skills" class="nav-item"><i class="fas fa-microchip editable-icon" data-icon-key="navSkillsIcon"></i> <span class="editable" data-key="navSkills">Keahlian</span></a></li>
-            <li><a href="#projects" class="nav-item"><i class="fas fa-network-wired editable-icon" data-icon-key="navProjectsIcon"></i> <span class="editable" data-key="navProjects">Proyek Lab</span></a></li>
-            <li><a href="#custom-columns" class="nav-item"><i class="fas fa-columns editable-icon" data-icon-key="navCustomIcon"></i> <span class="editable" data-key="navCustom">Kolom Ekstra</span></a></li>
+            <li><a href="#projects" class="nav-item"><i class="fas fa-folder-open editable-icon" data-icon-key="navProjectsIcon"></i> <span class="editable" data-key="navProjects">Tugas & Project</span></a></li>
             <li><a href="#contact" class="nav-item"><i class="fas fa-envelope editable-icon" data-icon-key="navContactIcon"></i> <span class="editable" data-key="navContact">Kontak</span></a></li>
         </ul>
 
@@ -51,7 +49,7 @@
     <!-- Konten Utama -->
     <main class="main-content">
 
-        <!-- Hero Section (Menyatu Langsung dengan Background Utama) -->
+        <!-- Hero Section (Menyatu dengan Background Utama) -->
         <section id="home" class="hero">
             <div class="hero-wrapper">
                 <div class="hero-content glass-hero-card reveal">
@@ -64,7 +62,7 @@
                         Membangun infrastruktur jaringan yang handal, mengamankan server, dan menghubungkan konektivitas masa depan.
                     </p>
                     <div class="hero-buttons">
-                        <a href="#projects" class="btn primary magnetic-btn editable" data-key="btnPrimary">Lihat Proyek</a>
+                        <a href="#projects" class="btn primary magnetic-btn editable" data-key="btnPrimary">Lihat Tugas & Project</a>
                         <a href="#contact" class="btn secondary glass-pill magnetic-btn editable" data-key="btnSecondary">Hubungi Saya</a>
                     </div>
                 </div>
@@ -103,7 +101,7 @@
             <div class="section-header-flex reveal">
                 <h2 class="section-title editable" data-key="skillsSectionTitle">Keahlian <span>Teknis</span></h2>
                 <button class="edit-only-box btn-add-item" id="addSkillColBtn">
-                    <i class="fas fa-plus"></i> Tambah Kolom Keahlian
+                    <i class="fas fa-plus"></i> Tambah Keahlian
                 </button>
             </div>
 
@@ -143,24 +141,29 @@
             </div>
         </section>
 
-        <!-- Proyek Praktikum -->
+        <!-- Tugas & Project (Dengan Upload Video YouTube, TikTok, Foto & Link) -->
         <section id="projects" class="section">
             <div class="section-header-flex reveal">
-                <h2 class="section-title editable" data-key="projectsSectionTitle">Proyek & <span>Praktikum</span></h2>
-                <button class="edit-only-box btn-add-item" id="addProjectColBtn">
-                    <i class="fas fa-plus"></i> Tambah Kolom Proyek
+                <h2 class="section-title editable" data-key="projectsSectionTitle">Tugas & <span>Project</span></h2>
+                <button class="edit-only-box btn-add-item" id="openAddProjectModalBtn">
+                    <i class="fas fa-plus-square"></i> Tambah Konten / Project Baru
                 </button>
             </div>
+
+            <!-- Bilah Status & Filter Kaca Transparan (Seperti Gambar 3) -->
+            <div class="showcase-status-bar glass-bar reveal">
+                <span id="activeFilterLabel">Menampilkan: <strong>Semua Tugas</strong></span>
+                <span class="item-count-badge" id="totalProjectCountBadge">4 item</span>
+            </div>
             
-            <div class="filter-buttons reveal">
-                <button class="filter-btn glass-pill active" data-filter="all">Semua</button>
-                <button class="filter-btn glass-pill" data-filter="mikrotik">MikroTik</button>
-                <button class="filter-btn glass-pill" data-filter="server">Linux Server</button>
-                <button class="filter-btn glass-pill" data-filter="fo">Fiber Optik</button>
+            <div class="filter-buttons reveal" id="projectFilterButtons">
+                <!-- Tombol filter akan dirender otomatis berdasarkan kategori/guru -->
             </div>
 
-            <div class="projects-grid" id="projectsGrid">
-                <div class="project-card glass-card interactive-card reveal" data-category="mikrotik">
+            <!-- Grid Kartu Project / Media -->
+            <div class="projects-grid media-showcase-grid" id="projectsGrid">
+                <!-- Kartu bawaan yang bisa diedit/dihapus -->
+                <div class="project-card glass-card interactive-card reveal" data-category="MikroTik">
                     <div class="card-glare"></div>
                     <div class="project-header">
                         <div class="icon-badge icon-picker-trigger" title="Klik untuk ganti ikon">
@@ -172,7 +175,7 @@
                     <p class="editable" data-key="proj1Desc">Membangun sistem RT/RW Net skala lab menggunakan metode Load Balancing PCC 2 ISP dan manajemen user dengan Mikhmon.</p>
                 </div>
 
-                <div class="project-card glass-card interactive-card reveal" data-category="server">
+                <div class="project-card glass-card interactive-card reveal" data-category="Linux Server">
                     <div class="card-glare"></div>
                     <div class="project-header">
                         <div class="icon-badge icon-picker-trigger" title="Klik untuk ganti ikon">
@@ -184,7 +187,7 @@
                     <p class="editable" data-key="proj2Desc">Implementasi Debian 11 Server menggunakan Nginx, MariaDB, Bind9, dan sertifikat SSL lokal untuk layanan intranet sekolah.</p>
                 </div>
 
-                <div class="project-card glass-card interactive-card reveal" data-category="fo">
+                <div class="project-card glass-card interactive-card reveal" data-category="Fiber Optik">
                     <div class="card-glare"></div>
                     <div class="project-header">
                         <div class="icon-badge icon-picker-trigger" title="Klik untuk ganti ikon">
@@ -196,7 +199,7 @@
                     <p class="editable" data-key="proj3Desc">Simulasi penarikan kabel dropcore dari ODP ke OTP, melakukan fusion splicing, dan memastikan redaman di bawah -20 dBm.</p>
                 </div>
 
-                <div class="project-card glass-card interactive-card reveal" data-category="mikrotik">
+                <div class="project-card glass-card interactive-card reveal" data-category="MikroTik">
                     <div class="card-glare"></div>
                     <div class="project-header">
                         <div class="icon-badge icon-picker-trigger" title="Klik untuk ganti ikon">
@@ -206,26 +209,6 @@
                     </div>
                     <h3 class="editable" data-key="proj4Title">Segmentasi Jaringan dengan VLAN</h3>
                     <p class="editable" data-key="proj4Desc">Memisahkan trafik jaringan Guru, Siswa, dan Tamu menggunakan Router-on-a-Stick dan Manageable Switch.</p>
-                </div>
-            </div>
-        </section>
-
-        <!-- Bagian Kolom Bebas -->
-        <section id="custom-columns" class="section">
-            <div class="section-header-flex reveal">
-                <h2 class="section-title editable" data-key="customSectionTitle">Sertifikasi & <span>Informasi Tambahan</span></h2>
-                <button class="edit-only-box btn-add-item" id="addCustomColBtn">
-                    <i class="fas fa-plus"></i> Tambah Kolom Bebas
-                </button>
-            </div>
-            <div class="skills-grid" id="customColumnsGrid">
-                <div class="skill-card glass-card interactive-card reveal">
-                    <div class="card-glare"></div>
-                    <div class="icon-badge icon-picker-trigger" title="Klik untuk ganti ikon">
-                        <i class="fas fa-certificate editable-icon" data-icon-key="customCol1Icon"></i>
-                    </div>
-                    <h3 class="editable" data-key="customCol1Title">Sertifikasi MTCNA</h3>
-                    <p class="editable" data-key="customCol1Desc">MikroTik Certified Network Associate - Menguasai dasar routing, firewall, wireless, dan QoS.</p>
                 </div>
             </div>
         </section>
@@ -258,9 +241,9 @@
     <input type="file" id="uploadProfile" accept="image/*" hidden>
     <input type="file" id="uploadBg" accept="image/*" hidden>
 
-    <!-- Indikator Status Upload Melayang -->
+    <!-- Indikator Status Melayang -->
     <div id="uploadToast" class="upload-toast glass-pill hidden">
-        <i class="fas fa-spinner fa-spin"></i> <span id="uploadProgressText">Mengunggah...</span>
+        <i class="fas fa-spinner fa-spin"></i> <span id="uploadProgressText">Menyimpan...</span>
     </div>
 
     <!-- Bilah Kontrol Admin Ringkas di Pojok Kanan Bawah -->
@@ -286,15 +269,92 @@
         </div>
     </div>
 
-    <!-- Modal Pemilih Ikon (Icon Picker) -->
+    <!-- =========================================================
+         MODAL TAMBAH KONTEN / PROJECT BARU (SEPERTI GAMBAR 2)
+         ========================================================= -->
+    <div id="addProjectModal" class="modal">
+        <div class="modal-content glass-modal modal-scrollable">
+            <span class="close-modal" data-close="addProjectModal">&times;</span>
+            <h3><i class="fas fa-folder-plus"></i> Tambah Konten / Tugas Baru</h3>
+
+            <div class="form-group">
+                <label>Kategori / Nama Guru / Kelompok</label>
+                <input type="text" id="projCategoryInput" list="categorySuggestions" class="glass-input" placeholder="Pilih atau ketik nama guru / kategori...">
+                <datalist id="categorySuggestions">
+                    <option value="MikroTik">
+                    <option value="Linux Server">
+                    <option value="Fiber Optik">
+                    <option value="Tugas Sekolah">
+                </datalist>
+                <small class="field-hint">Otomatis muncul sebagai tombol filter kategori baru.</small>
+            </div>
+
+            <div class="form-group">
+                <label>Jenis Konten</label>
+                <select id="projMediaType" class="modal-select glass-input">
+                    <option value="youtube">Video YouTube (Link YouTube / Shorts)</option>
+                    <option value="tiktok">Video TikTok (Link Video TikTok)</option>
+                    <option value="image">Unggah Foto Langsung (Dari Galeri / Laptop)</option>
+                    <option value="link">Tautan Link / Google Drive / Web Demo</option>
+                </select>
+            </div>
+
+            <!-- Input Dinamis: Link YouTube / TikTok / Eksternal -->
+            <div class="form-group" id="projUrlGroup">
+                <label id="projUrlLabel">Tempel Link Video YouTube</label>
+                <input type="url" id="projMediaUrlInput" class="glass-input" placeholder="https://www.youtube.com/watch?v=...">
+                <small class="field-hint" id="projUrlHint">Video akan langsung bisa diputar di dalam kartu project.</small>
+            </div>
+
+            <!-- Input Dinamis: Upload Foto Langsung -->
+            <div class="form-group hidden" id="projFileGroup">
+                <label>Pilih File Foto (JPG / PNG / WebP)</label>
+                <input type="file" id="projMediaFileInput" accept="image/*" class="glass-input file-input-custom">
+                <small class="field-hint">Foto diproses dengan kualitas tinggi (HD) agar tetap tajam dan jelas.</small>
+            </div>
+
+            <div class="form-group">
+                <label>Judul Karya / Tugas</label>
+                <input type="text" id="projTitleInput" class="glass-input" placeholder="Contoh: Konfigurasi VLAN & Hotspot MikroTik">
+            </div>
+
+            <div class="form-group">
+                <label>Mata Pelajaran / Tag</label>
+                <input type="text" id="projTagInput" class="glass-input" placeholder="Contoh: VIDEO / MIKROTIK / IOT">
+            </div>
+
+            <div class="form-group">
+                <label>Tautan Tambahan / Link Lampiran (Opsional)</label>
+                <input type="url" id="projExtraLinkInput" class="glass-input" placeholder="Contoh: https://1drv.ms/... atau link Google Drive">
+            </div>
+
+            <div class="form-group">
+                <label>Deskripsi</label>
+                <textarea id="projDescInput" rows="3" class="glass-input" placeholder="Jelaskan detail konfigurasi, alat yang digunakan, atau isi file..."></textarea>
+            </div>
+
+            <button id="submitNewProjectBtn" class="btn primary" style="width: 100%; margin-top: 8px;">
+                <i class="fas fa-cloud-upload-alt"></i> Simpan & Tampilkan Project
+            </button>
+        </div>
+    </div>
+
+    <!-- Modal Pemutar Layar Penuh (Lightbox) -->
+    <div id="fullscreenMediaModal" class="modal">
+        <div class="modal-content glass-modal fullscreen-box">
+            <span class="close-modal" data-close="fullscreenMediaModal">&times;</span>
+            <h3 id="fullscreenMediaTitle" style="margin-bottom: 12px;">Pratinjau Media</h3>
+            <div id="fullscreenMediaContainer" class="fullscreen-media-body"></div>
+        </div>
+    </div>
+
+    <!-- Modal Pemilih Ikon -->
     <div id="iconPickerModal" class="modal">
         <div class="modal-content glass-modal">
             <span class="close-modal" data-close="iconPickerModal">&times;</span>
             <h3><i class="fas fa-icons"></i> Pilih Ikon</h3>
             <p class="modal-hint">Pilih ikon jaringan, server, atau perangkat untuk bagian ini:</p>
-            <div class="icon-grid-picker" id="iconGridPicker">
-                <!-- Daftar ikon akan dirender otomatis oleh JS -->
-            </div>
+            <div class="icon-grid-picker" id="iconGridPicker"></div>
         </div>
     </div>
 
@@ -316,13 +376,13 @@
             <span class="close-modal" data-close="addSidebarModal">&times;</span>
             <h3><i class="fas fa-bars"></i> Tambah Menu Sidebar</h3>
             <input type="text" id="newSidebarLabel" class="glass-input" placeholder="Nama Menu (misal: Galeri Lab)" style="margin: 10px 0;">
-            <input type="text" id="newSidebarLink" class="glass-input" placeholder="Target Link (misal: #custom-columns)" style="margin-bottom: 10px;">
+            <input type="text" id="newSidebarLink" class="glass-input" placeholder="Target Link (misal: #projects)" style="margin-bottom: 10px;">
             <select id="newSidebarIcon" class="modal-select glass-input">
                 <option value="fas fa-folder">Ikon Folder</option>
                 <option value="fas fa-certificate">Ikon Sertifikat</option>
                 <option value="fas fa-server">Ikon Server</option>
                 <option value="fas fa-network-wired">Ikon Jaringan</option>
-                <option value="fas fa-images">Ikon Galeri</option>
+                <option value="fas fa-play-circle">Ikon Video</option>
                 <option value="fas fa-link">Ikon Link</option>
             </select>
             <button id="confirmAddSidebarBtn" class="btn primary" style="width: 100%; margin-top: 12px;">Tambahkan</button>

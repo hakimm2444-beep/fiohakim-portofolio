@@ -1,19 +1,20 @@
 /* =========================================
-   RESET & VARIABEL FROSTED GLASS KONTRAS TINGGI
+   RESET & VARIABEL FROSTED GLASS TEMBUS PANDANG
    ========================================= */
 :root {
     --bg-base: #070b14;
-    --glass-bg: rgba(10, 16, 30, 0.68);
-    --glass-bg-hover: rgba(15, 23, 42, 0.8);
-    --glass-panel-bg: rgba(8, 13, 24, 0.82);
-    --glass-border: rgba(255, 255, 255, 0.16);
-    --glass-border-bright: rgba(255, 255, 255, 0.32);
-    --glass-shadow: 0 10px 36px 0 rgba(0, 0, 0, 0.55);
+    /* Opasitas kaca rendah agar latar belakang terlihat jelas menembus kaca */
+    --glass-bg: rgba(12, 18, 32, 0.42);
+    --glass-bg-hover: rgba(16, 24, 42, 0.56);
+    --glass-panel-bg: rgba(10, 15, 28, 0.55);
+    --glass-border: rgba(255, 255, 255, 0.22);
+    --glass-border-bright: rgba(255, 255, 255, 0.38);
+    --glass-shadow: 0 12px 36px 0 rgba(0, 0, 0, 0.42);
     --primary: #38bdf8;
     --secondary: #818cf8;
     --emerald: #10b981;
     --text-main: #ffffff;
-    --text-muted: #e2e8f0;
+    --text-muted: #f1f5f9;
     --sidebar-width: 245px;
 }
 
@@ -36,17 +37,17 @@ body {
     overflow-x: hidden;
 }
 
-/* Lapisan redup lembut di atas background agar teks tidak silau/tenggelam */
+/* Lapisan redup sangat tipis agar background tetap cerah & tembus di kaca */
 .bg-readability-tint {
     position: fixed;
     inset: 0;
-    background: radial-gradient(circle at center, rgba(6, 10, 20, 0.38) 0%, rgba(6, 10, 20, 0.65) 100%);
+    background: linear-gradient(180deg, rgba(6, 10, 20, 0.18) 0%, rgba(6, 10, 20, 0.38) 100%);
     z-index: -2;
     pointer-events: none;
 }
 
 /* =========================================
-   AMBIENT ORBS (CAHAYA DI BALIK KACA)
+   AMBIENT ORBS (CAHAYA LEMBUT)
    ========================================= */
 .ambient-orbs {
     position: fixed;
@@ -59,8 +60,8 @@ body {
 .orb {
     position: absolute;
     border-radius: 50%;
-    filter: blur(115px);
-    opacity: 0.35;
+    filter: blur(120px);
+    opacity: 0.28;
     animation: floatOrb 18s ease-in-out infinite alternate;
 }
 
@@ -81,28 +82,18 @@ body {
     animation-delay: -6s;
 }
 
-.orb-3 {
-    width: 340px;
-    height: 340px;
-    background: radial-gradient(circle, #10b981, transparent 70%);
-    top: 45%;
-    left: 42%;
-    opacity: 0.22;
-    animation-delay: -12s;
-}
-
 @keyframes floatOrb {
     0% { transform: translate(0, 0) scale(1); }
     100% { transform: translate(45px, -35px) scale(1.12); }
 }
 
 /* =========================================
-   KOMPONEN MATERIAL FROSTED GLASS
+   KOMPONEN FROSTED GLASS TEMBUS PANDANG
    ========================================= */
 .glass-panel {
     background: var(--glass-panel-bg);
-    backdrop-filter: blur(24px) saturate(175%);
-    -webkit-backdrop-filter: blur(24px) saturate(175%);
+    backdrop-filter: blur(20px) saturate(165%);
+    -webkit-backdrop-filter: blur(20px) saturate(165%);
     border-right: 1px solid var(--glass-border);
     box-shadow: var(--glass-shadow);
 }
@@ -110,8 +101,8 @@ body {
 .glass-card {
     position: relative;
     background: var(--glass-bg);
-    backdrop-filter: blur(20px) saturate(165%);
-    -webkit-backdrop-filter: blur(20px) saturate(165%);
+    backdrop-filter: blur(18px) saturate(165%);
+    -webkit-backdrop-filter: blur(18px) saturate(165%);
     border: 1px solid var(--glass-border);
     border-top: 1px solid var(--glass-border-bright);
     border-left: 1px solid var(--glass-border-bright);
@@ -126,18 +117,41 @@ body {
 
 .glass-card:hover {
     background: var(--glass-bg-hover);
-    border-color: rgba(56, 189, 248, 0.5);
-    box-shadow: 0 16px 42px rgba(0, 0, 0, 0.65), 0 0 22px rgba(56, 189, 248, 0.18);
+    border-color: rgba(56, 189, 248, 0.55);
+    box-shadow: 0 16px 42px rgba(0, 0, 0, 0.5), 0 0 24px rgba(56, 189, 248, 0.2);
 }
 
-/* Efek Kilau Cursor di Atas Kartu Kaca */
+.glass-bar {
+    background: rgba(12, 18, 32, 0.48);
+    backdrop-filter: blur(18px) saturate(165%);
+    -webkit-backdrop-filter: blur(18px) saturate(165%);
+    border: 1px solid var(--glass-border);
+    border-top: 1px solid var(--glass-border-bright);
+    border-radius: 14px;
+    padding: 0.85rem 1.3rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.3rem;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+}
+
+.item-count-badge {
+    background: rgba(255, 255, 255, 0.14);
+    border: 1px solid rgba(255, 255, 255, 0.25);
+    padding: 0.25rem 0.75rem;
+    border-radius: 999px;
+    font-size: 0.82rem;
+    font-weight: 600;
+}
+
 .card-glare {
     position: absolute;
     inset: 0;
     pointer-events: none;
     background: radial-gradient(
-        circle 220px at var(--mouse-x, 50%) var(--mouse-y, 50%),
-        rgba(255, 255, 255, 0.13),
+        circle 240px at var(--mouse-x, 50%) var(--mouse-y, 50%),
+        rgba(255, 255, 255, 0.16),
         transparent 75%
     );
     opacity: 0;
@@ -149,7 +163,7 @@ body {
 }
 
 .glass-pill {
-    background: rgba(12, 19, 36, 0.72);
+    background: rgba(12, 18, 32, 0.48);
     backdrop-filter: blur(16px) saturate(165%);
     -webkit-backdrop-filter: blur(16px) saturate(165%);
     border: 1px solid var(--glass-border);
@@ -157,7 +171,7 @@ body {
 }
 
 .glass-pill:hover {
-    background: rgba(25, 38, 68, 0.85);
+    background: rgba(30, 45, 78, 0.65);
     border-color: var(--glass-border-bright);
     transform: translateY(-2px);
 }
@@ -193,7 +207,7 @@ body {
     font-weight: 800;
     color: #fff;
     letter-spacing: 0.8px;
-    text-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
+    text-shadow: 0 2px 10px rgba(0, 0, 0, 0.6);
 }
 
 .logo span {
@@ -229,11 +243,12 @@ body {
     align-items: center;
     gap: 0.9rem;
     padding: 0.78rem 1rem;
-    color: #e2e8f0;
+    color: #ffffff;
     text-decoration: none;
     border-radius: 12px;
     font-weight: 500;
     border: 1px solid transparent;
+    text-shadow: 0 1px 6px rgba(0, 0, 0, 0.65);
     transition: all 0.25s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
@@ -246,17 +261,11 @@ body {
 
 .sidebar-links a:hover,
 .sidebar-links a.active {
-    background: rgba(56, 189, 248, 0.16);
-    border-color: rgba(56, 189, 248, 0.35);
+    background: rgba(56, 189, 248, 0.24);
+    border-color: rgba(56, 189, 248, 0.45);
     color: #fff;
     transform: translateX(4px);
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
-}
-
-.sidebar-links a:hover i,
-.sidebar-links a.active i {
-    transform: scale(1.18);
-    color: #7dd3fc;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.25);
 }
 
 .delete-sidebar-item {
@@ -270,11 +279,6 @@ body {
     cursor: pointer;
     margin-left: 5px;
     justify-content: center;
-    transition: transform 0.2s;
-}
-
-.delete-sidebar-item:hover {
-    transform: scale(1.15);
 }
 
 .sidebar-add-box {
@@ -307,7 +311,7 @@ body {
 
 .hero {
     position: relative;
-    min-height: 86vh;
+    min-height: 85vh;
     display: flex;
     align-items: center;
     padding: 4rem 6%;
@@ -323,18 +327,17 @@ body {
     gap: 2.5rem;
 }
 
-/* Kartu Kaca Hero dengan Kontras Tinggi */
 .glass-hero-card {
     flex: 1;
-    background: rgba(9, 14, 26, 0.68);
-    backdrop-filter: blur(22px) saturate(170%);
-    -webkit-backdrop-filter: blur(22px) saturate(170%);
+    background: rgba(12, 18, 32, 0.42);
+    backdrop-filter: blur(20px) saturate(165%);
+    -webkit-backdrop-filter: blur(20px) saturate(165%);
     border: 1px solid var(--glass-border);
     border-top: 1px solid var(--glass-border-bright);
     border-left: 1px solid var(--glass-border-bright);
     border-radius: 22px;
     padding: 2.6rem;
-    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.55);
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.45);
 }
 
 .hero h1 {
@@ -342,29 +345,29 @@ body {
     margin-bottom: 0.6rem;
     line-height: 1.2;
     color: #ffffff;
-    text-shadow: 0 2px 12px rgba(0, 0, 0, 0.6);
+    text-shadow: 0 2px 14px rgba(0, 0, 0, 0.75);
 }
 
 .highlight {
     background: linear-gradient(90deg, #38bdf8, #818cf8);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
-    filter: drop-shadow(0 2px 8px rgba(56, 189, 248, 0.3));
+    filter: drop-shadow(0 2px 10px rgba(0, 0, 0, 0.6));
 }
 
 .hero h2 {
     font-size: 1.35rem;
     font-weight: 600;
-    color: #f1f5f9;
+    color: #ffffff;
     margin-bottom: 1.2rem;
-    text-shadow: 0 1px 8px rgba(0, 0, 0, 0.6);
+    text-shadow: 0 2px 10px rgba(0, 0, 0, 0.75);
 }
 
 .hero-desc {
     max-width: 600px;
-    color: #e2e8f0;
+    color: #f8fafc;
     margin-bottom: 2rem;
-    text-shadow: 0 1px 6px rgba(0, 0, 0, 0.6);
+    text-shadow: 0 1px 8px rgba(0, 0, 0, 0.75);
 }
 
 .hero-buttons {
@@ -384,11 +387,11 @@ body {
     height: 255px;
     border-radius: 50%;
     padding: 10px;
-    background: rgba(12, 19, 36, 0.65);
-    backdrop-filter: blur(20px);
-    -webkit-backdrop-filter: blur(20px);
+    background: rgba(12, 18, 32, 0.42);
+    backdrop-filter: blur(18px);
+    -webkit-backdrop-filter: blur(18px);
     border: 1px solid var(--glass-border-bright);
-    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.55), 0 0 30px rgba(56, 189, 248, 0.25);
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.45), 0 0 30px rgba(56, 189, 248, 0.25);
     transition: transform 0.4s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
@@ -416,14 +419,9 @@ body {
     justify-content: center;
     cursor: pointer;
     box-shadow: 0 4px 12px rgba(0,0,0,0.6);
-    transition: transform 0.2s;
 }
 
-.profile-change-badge:hover {
-    transform: scale(1.12);
-}
-
-/* Buttons & Microinteractions */
+/* Buttons */
 .btn {
     padding: 0.82rem 1.85rem;
     border-radius: 12px;
@@ -431,7 +429,10 @@ body {
     font-weight: 600;
     cursor: pointer;
     border: none;
-    display: inline-block;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
     transition: transform 0.22s cubic-bezier(0.22, 1, 0.36, 1),
                 box-shadow 0.25s ease,
                 background 0.25s ease;
@@ -457,15 +458,16 @@ body {
 }
 
 .btn-add-item {
-    background: rgba(16, 185, 129, 0.22);
-    backdrop-filter: blur(12px);
-    border: 1px dashed var(--emerald);
-    color: #6ee7b7;
-    padding: 0.55rem 1.1rem;
-    border-radius: 10px;
+    background: rgba(16, 185, 129, 0.28);
+    backdrop-filter: blur(14px);
+    border: 1px dashed #34d399;
+    color: #ffffff;
+    padding: 0.6rem 1.2rem;
+    border-radius: 12px;
     cursor: pointer;
-    font-size: 0.85rem;
+    font-size: 0.88rem;
     font-weight: 600;
+    text-shadow: 0 1px 4px rgba(0,0,0,0.6);
     transition: all 0.25s ease;
 }
 
@@ -476,7 +478,7 @@ body {
 }
 
 /* =========================================
-   SECTIONS & KARTU KONTEN
+   SECTIONS & KARTU KONTEN / PROJECT MEDIA
    ========================================= */
 .section {
     padding: 4.5rem 6%;
@@ -487,16 +489,15 @@ body {
     flex-direction: column;
     align-items: center;
     gap: 0.8rem;
-    margin-bottom: 2.5rem;
+    margin-bottom: 2rem;
 }
 
-/* Judul Bagian dengan Latar Kaca Tipis agar Kontras di Atas Background Terang */
 .section-title {
     text-align: center;
-    font-size: 2.1rem;
-    margin-bottom: 1.2rem;
+    font-size: 2.15rem;
+    margin-bottom: 1rem;
     color: #ffffff;
-    text-shadow: 0 2px 14px rgba(0, 0, 0, 0.85);
+    text-shadow: 0 2px 16px rgba(0, 0, 0, 0.85);
 }
 
 .section-title span {
@@ -514,29 +515,75 @@ body {
 }
 
 /* Grid Kartu */
-.skills-grid, .projects-grid {
+.skills-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(265px, 1fr));
     gap: 1.5rem;
 }
 
-.skill-card, .project-card {
-    padding: 1.9rem;
-    transform-style: preserve-3d;
+.media-showcase-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(330px, 1fr));
+    gap: 1.7rem;
 }
 
-/* Lencana Ikon Kaca & Pemilih Ikon */
+.skill-card, .project-card {
+    padding: 1.8rem;
+    transform-style: preserve-3d;
+    display: flex;
+    flex-direction: column;
+}
+
+/* Wadah Media Video / Foto di Atas Kartu Project (Seperti Gambar 3) */
+.project-media-wrapper {
+    position: relative;
+    width: calc(100% + 3.6rem);
+    margin: -1.8rem -1.8rem 1.3rem -1.8rem;
+    aspect-ratio: 16 / 9;
+    background: rgba(5, 9, 18, 0.75);
+    border-bottom: 1px solid var(--glass-border);
+    overflow: hidden;
+}
+
+.project-media-wrapper iframe,
+.project-media-wrapper img {
+    width: 100%;
+    height: 100%;
+    border: none;
+    object-fit: cover;
+    display: block;
+}
+
+.tiktok-embed-box {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, rgba(15, 23, 42, 0.8), rgba(236, 72, 153, 0.25));
+    gap: 10px;
+    padding: 1rem;
+    text-align: center;
+}
+
+.tiktok-embed-box i {
+    font-size: 2.6rem;
+    color: #fff;
+    filter: drop-shadow(0 0 12px rgba(236, 72, 153, 0.7));
+}
+
 .icon-badge {
-    width: 50px;
-    height: 50px;
+    width: 48px;
+    height: 48px;
     border-radius: 14px;
-    background: rgba(56, 189, 248, 0.16);
-    border: 1px solid rgba(56, 189, 248, 0.35);
+    background: rgba(56, 189, 248, 0.22);
+    border: 1px solid rgba(56, 189, 248, 0.42);
     display: flex;
     align-items: center;
     justify-content: center;
     margin-bottom: 1.1rem;
-    transition: transform 0.3s cubic-bezier(0.22, 1, 0.36, 1), background 0.3s ease;
+    transition: transform 0.3s ease, background 0.3s ease;
 }
 
 .center-badge {
@@ -550,90 +597,153 @@ body {
 }
 
 .icon-badge i {
-    font-size: 1.45rem;
-    color: #7dd3fc;
-}
-
-.interactive-card:hover .icon-badge {
-    transform: scale(1.1) translateY(-2px);
-    background: rgba(56, 189, 248, 0.25);
-}
-
-/* Indikator visual ikon bisa diklik saat Mode Edit aktif */
-body.editing-active .icon-picker-trigger,
-body.editing-active .sidebar-links a i {
-    cursor: pointer;
-    position: relative;
+    font-size: 1.4rem;
+    color: #bae6fd;
 }
 
 body.editing-active .icon-picker-trigger {
     outline: 1px dashed var(--emerald);
-    box-shadow: 0 0 12px rgba(16, 185, 129, 0.35);
-}
-
-body.editing-active .icon-picker-trigger:hover {
-    background: rgba(16, 185, 129, 0.25);
-    transform: scale(1.08);
+    cursor: pointer;
 }
 
 .skill-card h3, .project-card h3, .about-card h3 {
-    margin-bottom: 0.7rem;
-    font-size: 1.2rem;
+    margin-bottom: 0.65rem;
+    font-size: 1.22rem;
     color: #ffffff;
-    text-shadow: 0 1px 6px rgba(0, 0, 0, 0.6);
+    text-shadow: 0 2px 8px rgba(0, 0, 0, 0.75);
 }
 
 .skill-card p, .project-card p, .about-card p {
-    color: #e2e8f0;
+    color: #f1f5f9;
     font-size: 0.95rem;
-    text-shadow: 0 1px 4px rgba(0, 0, 0, 0.5);
+    text-shadow: 0 1px 6px rgba(0, 0, 0, 0.75);
+}
+
+/* Badge Kategori & Guru di Kartu Project */
+.project-meta-badges {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-bottom: 0.85rem;
+}
+
+.tag {
+    background: rgba(56, 189, 248, 0.24);
+    border: 1px solid rgba(56, 189, 248, 0.45);
+    color: #e0f2fe;
+    padding: 0.28rem 0.8rem;
+    border-radius: 8px;
+    font-size: 0.76rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.4px;
+}
+
+.teacher-tag {
+    background: rgba(234, 179, 8, 0.22);
+    border: 1px solid rgba(250, 204, 21, 0.45);
+    color: #fef08a;
+    padding: 0.28rem 0.8rem;
+    border-radius: 8px;
+    font-size: 0.76rem;
+    font-weight: 600;
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+}
+
+/* Tautan Lampiran & Tombol Putar Layar Penuh di Bawah Kartu */
+.project-link-preview {
+    display: block;
+    color: #7dd3fc;
+    font-size: 0.84rem;
+    text-decoration: none;
+    word-break: break-all;
+    margin-top: 0.6rem;
+    padding: 0.45rem 0.7rem;
+    background: rgba(255, 255, 255, 0.08);
+    border-radius: 8px;
+    border: 1px solid rgba(255, 255, 255, 0.14);
+}
+
+.project-link-preview:hover {
+    background: rgba(56, 189, 248, 0.2);
+    color: #fff;
+}
+
+.btn-card-fullscreen {
+    margin-top: auto;
+    padding: 0.65rem 1rem;
+    width: 100%;
+    border-radius: 10px;
+    background: rgba(255, 255, 255, 0.12);
+    border: 1px solid rgba(255, 255, 255, 0.25);
+    color: #ffffff;
+    font-weight: 600;
+    font-size: 0.86rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 7px;
+    margin-top: 1.1rem;
+    transition: all 0.25s ease;
+}
+
+.btn-card-fullscreen:hover {
+    background: rgba(56, 189, 248, 0.3);
+    border-color: var(--primary);
 }
 
 .delete-card-btn {
     position: absolute;
     top: 12px;
     right: 12px;
-    z-index: 10;
-    background: rgba(239, 68, 68, 0.9);
-    backdrop-filter: blur(6px);
+    z-index: 15;
+    background: rgba(239, 68, 68, 0.92);
     color: white;
     border: none;
-    width: 28px;
-    height: 28px;
-    border-radius: 8px;
+    width: 32px;
+    height: 32px;
+    border-radius: 9px;
     cursor: pointer;
-    font-size: 0.85rem;
+    font-size: 0.88rem;
     justify-content: center;
-    transition: transform 0.2s;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.45);
 }
 
-.delete-card-btn:hover {
-    transform: scale(1.12);
-}
-
-/* Filter Proyek */
+/* Filter Proyek dengan Counter Jumlah */
 .filter-buttons {
     display: flex;
     justify-content: center;
-    gap: 0.8rem;
+    gap: 0.75rem;
     margin-bottom: 2.2rem;
     flex-wrap: wrap;
 }
 
 .filter-btn {
     color: #ffffff;
-    padding: 0.55rem 1.3rem;
+    padding: 0.55rem 1.2rem;
     border-radius: 999px;
     cursor: pointer;
-    font-weight: 500;
+    font-weight: 600;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.filter-count {
+    background: rgba(255, 255, 255, 0.18);
+    padding: 0.1rem 0.52rem;
+    border-radius: 999px;
+    font-size: 0.75rem;
 }
 
 .filter-btn.active {
-    background: linear-gradient(135deg, #0284c7, #4f46e5);
-    border-color: transparent;
+    background: linear-gradient(135deg, #0ea5e9, #4f46e5);
+    border-color: rgba(255, 255, 255, 0.45);
     color: #fff;
-    font-weight: 600;
-    box-shadow: 0 4px 16px rgba(56, 189, 248, 0.35);
+    box-shadow: 0 6px 20px rgba(14, 165, 233, 0.45);
 }
 
 .project-card.hide {
@@ -649,16 +759,6 @@ body.editing-active .icon-picker-trigger:hover {
 
 .project-header .icon-badge {
     margin-bottom: 0;
-}
-
-.tag {
-    background: rgba(56, 189, 248, 0.2);
-    border: 1px solid rgba(56, 189, 248, 0.4);
-    color: #bae6fd;
-    padding: 0.3rem 0.85rem;
-    border-radius: 999px;
-    font-size: 0.78rem;
-    font-weight: 600;
 }
 
 /* Kontak & Input Frosted Glass */
@@ -677,24 +777,35 @@ body.editing-active .icon-picker-trigger:hover {
 
 .glass-input {
     width: 100%;
-    padding: 0.95rem 1.1rem;
-    background: rgba(8, 13, 24, 0.65);
-    backdrop-filter: blur(12px);
+    padding: 0.88rem 1.05rem;
+    background: rgba(10, 15, 28, 0.55);
+    backdrop-filter: blur(14px);
     border: 1px solid var(--glass-border);
-    border-radius: 10px;
+    border-radius: 12px;
     color: #ffffff;
     outline: none;
     transition: border-color 0.25s ease, background 0.25s ease, box-shadow 0.25s ease;
 }
 
 .glass-input::placeholder {
-    color: #94a3b8;
+    color: #cbd5e1;
 }
 
 .glass-input:focus {
     border-color: var(--primary);
-    background: rgba(15, 23, 42, 0.85);
+    background: rgba(15, 23, 42, 0.75);
     box-shadow: 0 0 0 3px rgba(56, 189, 248, 0.22);
+}
+
+.file-input-custom::file-selector-button {
+    background: rgba(255, 255, 255, 0.88);
+    color: #0f172a;
+    border: none;
+    padding: 0.45rem 0.9rem;
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer;
+    margin-right: 10px;
 }
 
 .social-links {
@@ -718,10 +829,10 @@ body.editing-active .icon-picker-trigger:hover {
 .glass-footer {
     text-align: center;
     padding: 1.6rem;
-    background: rgba(8, 13, 24, 0.82);
+    background: rgba(10, 15, 28, 0.6);
     backdrop-filter: blur(18px);
     border-top: 1px solid var(--glass-border);
-    color: #e2e8f0;
+    color: #f1f5f9;
     font-size: 0.9rem;
 }
 
@@ -743,7 +854,8 @@ body.editing-active .icon-picker-trigger:hover {
 /* =========================================
    MODE EDITING & BILAH POJOK KANAN BAWAH
    ========================================= */
-.edit-only-box {
+.edit-only-box,
+.hidden {
     display: none !important;
 }
 
@@ -762,7 +874,6 @@ body.editing-active .editable {
     padding: 2px 6px;
     border-radius: 6px;
     cursor: text;
-    transition: background 0.2s;
 }
 
 body.editing-active .editable:focus {
@@ -791,11 +902,6 @@ body.editing-active .editable:focus {
     font-size: 1.2rem;
     cursor: pointer;
     box-shadow: 0 6px 20px rgba(56, 189, 248, 0.45);
-    transition: transform 0.25s;
-}
-
-.admin-fab:hover {
-    transform: scale(1.08);
 }
 
 .admin-quick-controls {
@@ -804,16 +910,10 @@ body.editing-active .editable:focus {
     gap: 8px;
 }
 
-.admin-quick-controls.hidden,
-.admin-fab.hidden,
-.upload-toast.hidden {
-    display: none !important;
-}
-
 .btn-pill-finish {
     background-color: var(--emerald);
     color: #042f2e;
-    border: 1px solid rgba(255,255,255,0.4);
+    border: 1px solid rgba(255,255,255,0.45);
     padding: 0.65rem 1.25rem;
     border-radius: 999px;
     font-weight: 700;
@@ -823,20 +923,13 @@ body.editing-active .editable:focus {
     align-items: center;
     gap: 8px;
     box-shadow: 0 6px 20px rgba(16, 185, 129, 0.45);
-    transition: transform 0.2s, background-color 0.2s;
-}
-
-.btn-pill-finish:hover {
-    transform: translateY(-2px);
-    background-color: #34d399;
 }
 
 .btn-pill-finish.view-mode-state {
-    background: rgba(10, 16, 30, 0.85);
+    background: rgba(10, 16, 30, 0.72);
     backdrop-filter: blur(14px);
     color: var(--primary);
     border: 1px solid var(--primary);
-    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.55);
 }
 
 .btn-pill-dark {
@@ -850,7 +943,6 @@ body.editing-active .editable:focus {
 
 .btn-pill-danger {
     background-color: rgba(239, 68, 68, 0.92);
-    backdrop-filter: blur(8px);
     color: #fff;
     border: 1px solid rgba(255,255,255,0.25);
     width: 38px;
@@ -872,45 +964,84 @@ body.editing-active .editable:focus {
 }
 
 /* =========================================
-   MODAL & GRID PEMILIH IKON (ICON PICKER)
+   MODAL TAMBAH KONTEN (SEPERTI GAMBAR 2) & FULLSCREEN
    ========================================= */
 .modal {
     display: none;
     position: fixed;
     inset: 0;
-    background: rgba(3, 7, 18, 0.72);
+    background: rgba(3, 7, 18, 0.65);
     backdrop-filter: blur(8px);
     z-index: 2000;
     justify-content: center;
     align-items: center;
+    padding: 1rem;
 }
 
 .glass-modal {
-    background: rgba(10, 16, 30, 0.88);
-    backdrop-filter: blur(24px) saturate(175%);
-    -webkit-backdrop-filter: blur(24px) saturate(175%);
+    background: rgba(13, 20, 36, 0.82);
+    backdrop-filter: blur(26px) saturate(175%);
+    -webkit-backdrop-filter: blur(26px) saturate(175%);
     padding: 2rem;
-    border-radius: 18px;
+    border-radius: 20px;
     border: 1px solid var(--glass-border-bright);
     box-shadow: 0 25px 50px rgba(0, 0, 0, 0.75);
-    width: 92%;
-    max-width: 440px;
+    width: 100%;
+    max-width: 490px;
     position: relative;
+}
+
+.modal-scrollable {
+    max-height: 88vh;
+    overflow-y: auto;
+}
+
+.fullscreen-box {
+    max-width: 880px;
+}
+
+.fullscreen-media-body {
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    background: #000;
+    border-radius: 12px;
+    overflow: hidden;
+}
+
+.fullscreen-media-body iframe,
+.fullscreen-media-body img {
+    width: 100%;
+    height: 100%;
+    border: none;
+    object-fit: contain;
+}
+
+.form-group {
+    margin-bottom: 1.05rem;
+}
+
+.form-group label {
+    display: block;
+    font-size: 0.88rem;
+    font-weight: 600;
+    color: #ffffff;
+    margin-bottom: 0.4rem;
+}
+
+.field-hint {
+    display: block;
+    font-size: 0.78rem;
+    color: #38bdf8;
+    margin-top: 0.35rem;
 }
 
 .close-modal {
     position: absolute;
-    top: 14px;
-    right: 18px;
+    top: 16px;
+    right: 20px;
     font-size: 1.5rem;
     cursor: pointer;
-    color: var(--text-muted);
-}
-
-.modal-hint {
-    font-size: 0.85rem;
-    color: var(--text-muted);
-    margin: 0.5rem 0 1rem;
+    color: #e2e8f0;
 }
 
 .modal-select option {
@@ -928,9 +1059,9 @@ body.editing-active .editable:focus {
 }
 
 .icon-option-btn {
-    background: rgba(255, 255, 255, 0.06);
+    background: rgba(255, 255, 255, 0.08);
     border: 1px solid var(--glass-border);
-    color: #e2e8f0;
+    color: #ffffff;
     height: 52px;
     border-radius: 12px;
     font-size: 1.25rem;
@@ -942,39 +1073,18 @@ body.editing-active .editable:focus {
 }
 
 .icon-option-btn:hover {
-    background: rgba(56, 189, 248, 0.25);
+    background: rgba(56, 189, 248, 0.3);
     border-color: var(--primary);
-    color: #ffffff;
     transform: scale(1.08);
 }
 
-/* Responsif Mobile */
 @media (max-width: 900px) {
-    .sidebar {
-        transform: translateX(-100%);
-    }
-    .sidebar.open {
-        transform: translateX(0);
-    }
-    .close-sidebar-btn, .mobile-sidebar-toggle {
-        display: block;
-    }
-    .main-content {
-        margin-left: 0;
-        width: 100%;
-    }
-    .hero-wrapper {
-        flex-direction: column-reverse;
-        text-align: center;
-    }
-    .hero-buttons {
-        justify-content: center;
-    }
-    .glass-ring {
-        width: 205px;
-        height: 205px;
-    }
-    .hero h1 {
-        font-size: 2.3rem;
-    }
+    .sidebar { transform: translateX(-100%); }
+    .sidebar.open { transform: translateX(0); }
+    .close-sidebar-btn, .mobile-sidebar-toggle { display: block; }
+    .main-content { margin-left: 0; width: 100%; }
+    .hero-wrapper { flex-direction: column-reverse; text-align: center; }
+    .hero-buttons { justify-content: center; }
+    .glass-ring { width: 205px; height: 205px; }
+    .hero h1 { font-size: 2.3rem; }
 }
