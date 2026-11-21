@@ -7,7 +7,9 @@ import {
     getAuth, 
     signInWithEmailAndPassword, 
     signOut, 
-    onAuthStateChanged 
+    onAuthStateChanged,
+    setPersistence,
+    browserLocalPersistence
 } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
 import { 
     getFirestore, 
@@ -23,7 +25,6 @@ import {
     getDownloadURL 
 } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-storage.js";
 
-// Konfigurasi Firebase Proyek fiohakim-portofolio
 const firebaseConfig = {
     apiKey: "AIzaSyAfUEk1G_noUjtd1MinSxNKdg5T57GcoXE",
     authDomain: "fiohakim-portofolio.firebaseapp.com",
@@ -34,18 +35,131 @@ const firebaseConfig = {
     measurementId: "G-7FXS8PH2F4"
 };
 
-// Inisialisasi Firebase & Layanan
 const app = initializeApp(firebaseConfig);
 const analytics = getAnalytics(app);
 const auth = getAuth(app);
 const db = getFirestore(app);
 const storage = getStorage(app);
 
-// Referensi Dokumen Utama Portofolio di Firestore
+// Pastikan sesi admin tersimpan permanen di browser (tidak perlu login ulang)
+setPersistence(auth, browserLocalPersistence);
+
 const portfolioDocRef = doc(db, "portfolio", "mainData");
 
+// State struktur dinamis (Sidebar & Kolom tambahan)
+let extraSidebarItems = [];
+let extraSkills = [];
+let extraProjects = [];
+let extraCustomCols = [];
+
 // =========================================
-// 2. MUAT DATA DARI FIRESTORE SAAT WEB DIBUKA
+// 2. RENDER SIDEBAR & KOLOM DINAMIS
+// =========================================
+function renderDynamicElements() {
+    // 1. Render Item Sidebar Tambahan
+    const sidebarList = document.getElementById('sidebarLinks');
+    sidebarList.querySelectorAll('.dynamic-sidebar-item').forEach(el => el.remove());
+
+    extraSidebarItems.forEach((item, index) => {
+        const li = document.createElement('li');
+        li.className = 'dynamic-sidebar-item';
+        li.innerHTML = `
+            <a href="${item.link}">
+                <i class="${item.icon}"></i> <span>${item.label}</span>
+            </a>
+            <button class="edit-only-box delete-sidebar-item" data-index="${index}" title="Hapus Menu">&times;</button>
+        `;
+        sidebarList.appendChild(li);
+    });
+
+    // Event hapus sidebar item
+    sidebarList.querySelectorAll('.delete-sidebar-item').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+            const idx = parseInt(e.target.getAttribute('data-index'));
+            extraSidebarItems.splice(idx, 1);
+            renderDynamicElements();
+        });
+    });
+
+    // 2. Render Kolom Keahlian Tambahan
+    const skillsGrid = document.getElementById('skillsGrid');
+    skillsGrid.querySelectorAll('.dynamic-col').forEach(el => el.remove());
+    extraSkills.forEach((col, index) => {
+        const card = document.createElement('div');
+        card.className = 'skill-card dynamic-col';
+        card.innerHTML = `
+            <button class="edit-only-box delete-card-btn" data-type="skill" data-index="${index}">&times;</button>
+            <i class="fas fa-microchip"></i>
+            <h3 class="editable dynamic-field" data-array="extraSkills" data-index="${index}" data-field="title">${col.title}</h3>
+            <p class="editable dynamic-field" data-array="extraSkills" data-index="${index}" data-field="desc">${col.desc}</p>
+        `;
+        skillsGrid.appendChild(card);
+    });
+
+    // 3. Render Kolom Proyek Tambahan
+    const projectsGrid = document.getElementById('projectsGrid');
+    projectsGrid.querySelectorAll('.dynamic-col').forEach(el => el.remove());
+    extraProjects.forEach((col, index) => {
+        const card = document.createElement('div');
+        card.className = 'project-card dynamic-col';
+        card.setAttribute('data-category', col.category || 'mikrotik');
+        card.innerHTML = `
+            <button class="edit-only-box delete-card-btn" data-type="project" data-index="${index}">&times;</button>
+            <div class="project-header">
+                <i class="fas fa-project-diagram"></i>
+                <span class="tag editable dynamic-field" data-array="extraProjects" data-index="${index}" data-field="tag">${col.tag}</span>
+            </div>
+            <h3 class="editable dynamic-field" data-array="extraProjects" data-index="${index}" data-field="title">${col.title}</h3>
+            <p class="editable dynamic-field" data-array="extraProjects" data-index="${index}" data-field="desc">${col.desc}</p>
+        `;
+        projectsGrid.appendChild(card);
+    });
+
+    // 4. Render Kolom Bebas Tambahan
+    const customGrid = document.getElementById('customColumnsGrid');
+    customGrid.querySelectorAll('.dynamic-col').forEach(el => el.remove());
+    extraCustomCols.forEach((col, index) => {
+        const card = document.createElement('div');
+        card.className = 'skill-card dynamic-col';
+        card.innerHTML = `
+            <button class="edit-only-box delete-card-btn" data-type="custom" data-index="${index}">&times;</button>
+            <i class="fas fa-star"></i>
+            <h3 class="editable dynamic-field" data-array="extraCustomCols" data-index="${index}" data-field="title">${col.title}</h3>
+            <p class="editable dynamic-field" data-array="extraCustomCols" data-index="${index}" data-field="desc">${col.desc}</p>
+        `;
+        customGrid.appendChild(card);
+    });
+
+    // Pasang listener hapus kolom
+    document.querySelectorAll('.delete-card-btn').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+            const type = e.target.getAttribute('data-type');
+            const idx = parseInt(e.target.getAttribute('data-index'));
+            if (type === 'skill') extraSkills.splice(idx, 1);
+            if (type === 'project') extraProjects.splice(idx, 1);
+            if (type === 'custom') extraCustomCols.splice(idx, 1);
+            renderDynamicElements();
+        });
+    });
+
+    // Sinkronkan perubahan teks langsung ke array saat diedit
+    document.querySelectorAll('.dynamic-field').forEach(el => {
+        el.addEventListener('input', () => {
+            const arrName = el.getAttribute('data-array');
+            const idx = parseInt(el.getAttribute('data-index'));
+            const field = el.getAttribute('data-field');
+            if (arrName === 'extraSkills') extraSkills[idx][field] = el.innerHTML;
+            if (arrName === 'extraProjects') extraProjects[idx][field] = el.innerHTML;
+            if (arrName === 'extraCustomCols') extraCustomCols[idx][field] = el.innerHTML;
+        });
+    });
+
+    // Terapkan status contenteditable sesuai mode saat ini
+    setEditMode(editModeToggle.checked);
+}
+
+// =========================================
+// 3. MUAT DATA DARI FIRESTORE SAAT WEB DIBUKA
 // =========================================
 async function loadCloudContent() {
     try {
@@ -53,9 +167,8 @@ async function loadCloudContent() {
         if (docSnap.exists()) {
             const data = docSnap.data();
 
-            // Terapkan teks yang tersimpan di Firestore
             if (data.texts) {
-                document.querySelectorAll('.editable').forEach(el => {
+                document.querySelectorAll('.editable[data-key]').forEach(el => {
                     const key = el.getAttribute('data-key');
                     if (data.texts[key]) {
                         el.innerHTML = data.texts[key];
@@ -63,18 +176,23 @@ async function loadCloudContent() {
                 });
             }
 
-            // Terapkan URL gambar resolusi tinggi dari Firebase Storage
             if (data.media) {
                 if (data.media.profileImage) {
                     document.getElementById('profileImage').src = data.media.profileImage;
                 }
                 if (data.media.bannerImage) {
-                    document.getElementById('home').style.backgroundImage = `url('${data.media.bannerImage}')`;
+                    document.getElementById('bannerImage').src = data.media.bannerImage;
                 }
                 if (data.media.bgImage) {
                     document.body.style.backgroundImage = `url('${data.media.bgImage}')`;
                 }
             }
+
+            extraSidebarItems = data.extraSidebarItems || [];
+            extraSkills = data.extraSkills || [];
+            extraProjects = data.extraProjects || [];
+            extraCustomCols = data.extraCustomCols || [];
+            renderDynamicElements();
         }
     } catch (error) {
         console.error("Gagal memuat data dari Firebase:", error);
@@ -82,11 +200,10 @@ async function loadCloudContent() {
 }
 
 // =========================================
-// 3. AUTENTIKASI ADMIN & SAKELAR EDIT BEBAS
+// 4. SESI LOGIN OTOMATIS & SAKELAR EDIT/VIEW
 // =========================================
 const adminLoginBtn = document.getElementById('adminLoginBtn');
 const loginModal = document.getElementById('loginModal');
-const closeModal = document.querySelector('.close-modal');
 const submitLoginBtn = document.getElementById('submitLoginBtn');
 const adminEmailInput = document.getElementById('adminEmailInput');
 const adminPasswordInput = document.getElementById('adminPasswordInput');
@@ -98,12 +215,12 @@ const uploadProgressText = document.getElementById('uploadProgressText');
 
 let currentUser = null;
 
-// Pantau status login admin
+// Jika sudah pernah login, otomatis masuk Mode Admin & langsung aktifkan Mode Edit
 onAuthStateChanged(auth, (user) => {
     currentUser = user;
     if (user) {
         adminPanel.classList.remove('hidden');
-        setEditMode(false); // Default aman: Mode Lihat aktif saat masuk
+        setEditMode(true); // Langsung siap edit tanpa perlu klik apa pun
     } else {
         adminPanel.classList.add('hidden');
         setEditMode(false);
@@ -119,19 +236,18 @@ adminLoginBtn.addEventListener('click', () => {
     }
 });
 
-closeModal.addEventListener('click', () => {
-    loginModal.style.display = 'none';
+// Tutup modal apa pun
+document.querySelectorAll('.close-modal').forEach(btn => {
+    btn.addEventListener('click', () => {
+        const modalId = btn.getAttribute('data-close');
+        document.getElementById(modalId).style.display = 'none';
+    });
 });
 
-// Login dengan Firebase Authentication
 async function handleFirebaseLogin() {
     const email = adminEmailInput.value.trim();
     const password = adminPasswordInput.value;
-
-    if (!email || !password) {
-        alert("Harap isi email dan password admin!");
-        return;
-    }
+    if (!email || !password) return alert("Harap isi email dan password admin!");
 
     try {
         submitLoginBtn.textContent = "Memverifikasi...";
@@ -151,12 +267,11 @@ adminPasswordInput.addEventListener('keypress', (e) => {
     if (e.key === 'Enter') handleFirebaseLogin();
 });
 
-// Logout Firebase
 logoutAdminBtn.addEventListener('click', async () => {
     await signOut(auth);
 });
 
-// Sakelar Bebas Pilih Mode Edit / Lihat
+// Sakelar Bebas Pindah Mode Edit <-> Mode View
 function setEditMode(enabled) {
     editModeToggle.checked = enabled;
     const editables = document.querySelectorAll('.editable');
@@ -164,12 +279,12 @@ function setEditMode(enabled) {
     if (enabled) {
         document.body.classList.add('editing-active');
         editables.forEach(el => el.setAttribute('contenteditable', 'true'));
-        editStatusText.textContent = 'Status: Mode Edit Aktif (Klik teks untuk mengubah)';
+        editStatusText.textContent = 'Status: Mode Edit Aktif (Bebas ubah teks & tambah kolom)';
         editStatusText.style.color = '#00ff88';
     } else {
         document.body.classList.remove('editing-active');
         editables.forEach(el => el.removeAttribute('contenteditable'));
-        editStatusText.textContent = 'Status: Mode Lihat (Teks terkunci aman)';
+        editStatusText.textContent = 'Status: Mode View (Tampilan pengunjung bersih)';
         editStatusText.style.color = '#00f2fe';
     }
 }
@@ -178,7 +293,56 @@ editModeToggle.addEventListener('change', (e) => {
     setEditMode(e.target.checked);
 });
 
-// Simpan Perubahan Teks ke Cloud Firestore
+// =========================================
+// 5. AKSI TAMBAH SIDEBAR & TAMBAH KOLOM
+// =========================================
+document.getElementById('openAddSidebarModal').addEventListener('click', () => {
+    document.getElementById('addSidebarModal').style.display = 'flex';
+});
+
+document.getElementById('confirmAddSidebarBtn').addEventListener('click', () => {
+    const label = document.getElementById('newSidebarLabel').value.trim();
+    const link = document.getElementById('newSidebarLink').value.trim() || '#custom-columns';
+    const icon = document.getElementById('newSidebarIcon').value;
+
+    if (!label) return alert("Nama menu sidebar tidak boleh kosong!");
+
+    extraSidebarItems.push({ label, link, icon });
+    document.getElementById('newSidebarLabel').value = '';
+    document.getElementById('newSidebarLink').value = '';
+    document.getElementById('addSidebarModal').style.display = 'none';
+    renderDynamicElements();
+});
+
+document.getElementById('addSkillColBtn').addEventListener('click', () => {
+    extraSkills.push({
+        title: "Keahlian Baru (Klik Edit)",
+        desc: "Klik teks ini untuk menuliskan deskripsi keahlian jaringan atau server baru."
+    });
+    renderDynamicElements();
+});
+
+document.getElementById('addProjectColBtn').addEventListener('click', () => {
+    extraProjects.push({
+        category: "mikrotik",
+        tag: "Praktikum Baru",
+        title: "Judul Proyek Baru",
+        desc: "Klik di sini untuk menjelaskan topologi, konfigurasi, dan hasil pengujian proyek."
+    });
+    renderDynamicElements();
+});
+
+document.getElementById('addCustomColBtn').addEventListener('click', () => {
+    extraCustomCols.push({
+        title: "Kolom Informasi Baru",
+        desc: "Klik di sini untuk mengisi konten kolom tambahan (sertifikat, penghargaan, atau pengalaman PKL)."
+    });
+    renderDynamicElements();
+});
+
+// =========================================
+// 6. SIMPAN SEMUA KE CLOUD FIRESTORE & STORAGE
+// =========================================
 document.getElementById('saveChangesBtn').addEventListener('click', async () => {
     if (!currentUser) return;
 
@@ -186,24 +350,27 @@ document.getElementById('saveChangesBtn').addEventListener('click', async () => 
     btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Menyimpan...';
 
     const textData = {};
-    document.querySelectorAll('.editable').forEach(el => {
+    document.querySelectorAll('.editable[data-key]').forEach(el => {
         const key = el.getAttribute('data-key');
         textData[key] = el.innerHTML;
     });
 
     try {
-        await setDoc(portfolioDocRef, { texts: textData }, { merge: true });
-        alert("Semua perubahan teks berhasil disimpan ke Firebase Cloud!");
+        await setDoc(portfolioDocRef, { 
+            texts: textData,
+            extraSidebarItems,
+            extraSkills,
+            extraProjects,
+            extraCustomCols
+        }, { merge: true });
+        alert("Semua perubahan (teks, sidebar, dan kolom baru) berhasil disimpan ke Firebase Cloud!");
     } catch (error) {
-        alert("Gagal menyimpan ke Firestore: " + error.message);
+        alert("Gagal menyimpan: " + error.message);
     } finally {
-        btn.innerHTML = '<i class="fas fa-cloud-upload-alt"></i> Simpan ke Cloud';
+        btn.innerHTML = '<i class="fas fa-cloud-upload-alt"></i> Simpan Semua';
     }
 });
 
-// =========================================
-// 4. UPLOAD GAMBAR HD KE FIREBASE STORAGE
-// =========================================
 function setupFirebaseImageUpload(inputId, mediaKey, applyCallback) {
     const inputEl = document.getElementById(inputId);
 
@@ -212,11 +379,9 @@ function setupFirebaseImageUpload(inputId, mediaKey, applyCallback) {
         if (!file || !currentUser) return;
 
         if (!file.type.startsWith('image/')) {
-            alert("Harap pilih file gambar yang valid (JPG, PNG, WEBP).");
-            return;
+            return alert("Harap pilih file gambar yang valid.");
         }
 
-        // Upload file asli resolusi penuh tanpa kompresi ke Firebase Storage
         const storageRef = ref(storage, `portfolio_media/${mediaKey}_${Date.now()}_${file.name}`);
         const uploadTask = uploadBytesResumable(storageRef, file);
 
@@ -231,65 +396,45 @@ function setupFirebaseImageUpload(inputId, mediaKey, applyCallback) {
             },
             async () => {
                 const downloadURL = await getDownloadURL(uploadTask.snapshot.ref);
-                
-                // Simpan URL gambar ke Firestore agar tampil untuk semua pengunjung
                 await setDoc(portfolioDocRef, {
                     media: { [mediaKey]: downloadURL }
                 }, { merge: true });
 
                 applyCallback(downloadURL);
-                uploadProgressText.textContent = "Upload selesai & tersimpan di Cloud!";
+                uploadProgressText.textContent = "Foto HD berhasil diperbarui di Cloud!";
                 setTimeout(() => { uploadProgressText.textContent = ""; }, 4000);
             }
         );
     });
 }
 
-setupFirebaseImageUpload(
-    'uploadProfile',
-    'profileImage',
-    (url) => { document.getElementById('profileImage').src = url; }
-);
+setupFirebaseImageUpload('uploadBanner', 'bannerImage', (url) => {
+    document.getElementById('bannerImage').src = url;
+});
+setupFirebaseImageUpload('uploadProfile', 'profileImage', (url) => {
+    document.getElementById('profileImage').src = url;
+});
+setupFirebaseImageUpload('uploadBg', 'bgImage', (url) => {
+    document.body.style.backgroundImage = `url('${url}')`;
+});
 
-setupFirebaseImageUpload(
-    'uploadBanner',
-    'bannerImage',
-    (url) => { document.getElementById('home').style.backgroundImage = `url('${url}')`; }
-);
-
-setupFirebaseImageUpload(
-    'uploadBg',
-    'bgImage',
-    (url) => { document.body.style.backgroundImage = `url('${url}')`; }
-);
-
-// Reset Data di Firestore
 document.getElementById('resetAllBtn').addEventListener('click', async () => {
     if (!currentUser) return;
-    if (confirm("Yakin ingin mereset semua teks dan gambar di Cloud ke pengaturan awal?")) {
-        try {
-            await deleteDoc(portfolioDocRef);
-            location.reload();
-        } catch (error) {
-            alert("Gagal mereset data: " + error.message);
-        }
+    if (confirm("Yakin ingin mereset seluruh konten di Cloud ke pengaturan awal?")) {
+        await deleteDoc(portfolioDocRef);
+        location.reload();
     }
 });
 
 // =========================================
-// 5. NAVIGASI, TYPING EFFECT & FILTER PROYEK
+// 7. SIDEBAR MOBILE, TYPING & FILTER PROYEK
 // =========================================
-const mobileMenu = document.getElementById('mobile-menu');
-const navLinks = document.getElementById('navLinks');
-
-mobileMenu.addEventListener('click', () => {
-    navLinks.classList.toggle('active');
+const sidebar = document.getElementById('sidebar');
+document.getElementById('openSidebarBtn').addEventListener('click', () => {
+    sidebar.classList.add('open');
 });
-
-document.querySelectorAll('.nav-links a').forEach(link => {
-    link.addEventListener('click', () => {
-        navLinks.classList.remove('active');
-    });
+document.getElementById('closeSidebarBtn').addEventListener('click', () => {
+    sidebar.classList.remove('open');
 });
 
 const typingText = document.querySelector('.typing-text');
@@ -300,19 +445,13 @@ const roles = [
     "Fiber Optic Technician"
 ];
 
-let roleIndex = 0;
-let charIndex = 0;
-let isDeleting = false;
+let roleIndex = 0, charIndex = 0, isDeleting = false;
 
 function typeEffect() {
     const currentRole = roles[roleIndex];
-    if (isDeleting) {
-        typingText.textContent = currentRole.substring(0, charIndex - 1);
-        charIndex--;
-    } else {
-        typingText.textContent = currentRole.substring(0, charIndex + 1);
-        charIndex++;
-    }
+    typingText.textContent = isDeleting 
+        ? currentRole.substring(0, --charIndex) 
+        : currentRole.substring(0, ++charIndex);
 
     let typeSpeed = isDeleting ? 50 : 100;
     if (!isDeleting && charIndex === currentRole.length) {
@@ -326,16 +465,13 @@ function typeEffect() {
     setTimeout(typeEffect, typeSpeed);
 }
 
-const filterButtons = document.querySelectorAll('.filter-btn');
-const projectCards = document.querySelectorAll('.project-card');
-
-filterButtons.forEach(button => {
+document.querySelectorAll('.filter-btn').forEach(button => {
     button.addEventListener('click', () => {
-        filterButtons.forEach(btn => btn.classList.remove('active'));
+        document.querySelectorAll('.filter-btn').forEach(btn => btn.classList.remove('active'));
         button.classList.add('active');
         const filterValue = button.getAttribute('data-filter');
 
-        projectCards.forEach(card => {
+        document.querySelectorAll('.project-card').forEach(card => {
             if (filterValue === 'all' || card.getAttribute('data-category') === filterValue) {
                 card.classList.remove('hide');
             } else {
@@ -352,7 +488,6 @@ document.getElementById('contactForm').addEventListener('submit', (e) => {
     e.target.reset();
 });
 
-// Jalankan saat halaman dimuat
 document.addEventListener('DOMContentLoaded', () => {
     loadCloudContent();
     typeEffect();
