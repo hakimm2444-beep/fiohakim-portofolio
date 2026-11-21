@@ -9,24 +9,30 @@
 </head>
 <body id="mainBody">
 
-    <!-- Sidebar Navigasi -->
-    <aside class="sidebar" id="sidebar">
+    <!-- Efek Cahaya Ambient di Belakang Lapisan Kaca -->
+    <div class="ambient-orbs" aria-hidden="true">
+        <div class="orb orb-1"></div>
+        <div class="orb orb-2"></div>
+        <div class="orb orb-3"></div>
+    </div>
+
+    <!-- Sidebar Navigasi Frosted Glass -->
+    <aside class="sidebar glass-panel" id="sidebar">
         <div class="sidebar-header">
             <div class="logo editable" data-key="logo">TJKT<span>.net</span></div>
             <button id="closeSidebarBtn" class="close-sidebar-btn"><i class="fas fa-times"></i></button>
         </div>
         
         <ul class="sidebar-links" id="sidebarLinks">
-            <li><a href="#home"><i class="fas fa-home"></i> <span>Beranda</span></a></li>
-            <li><a href="#about"><i class="fas fa-user"></i> <span>Tentang</span></a></li>
-            <li><a href="#skills"><i class="fas fa-microchip"></i> <span>Keahlian</span></a></li>
-            <li><a href="#projects"><i class="fas fa-network-wired"></i> <span>Proyek Lab</span></a></li>
-            <li><a href="#custom-columns"><i class="fas fa-columns"></i> <span>Kolom Ekstra</span></a></li>
-            <li><a href="#contact"><i class="fas fa-envelope"></i> <span>Kontak</span></a></li>
-            <!-- Item Sidebar Tambahan dari Firebase akan muncul di sini -->
+            <li><a href="#home" class="nav-item active"><i class="fas fa-home"></i> <span class="editable" data-key="navHome">Beranda</span></a></li>
+            <li><a href="#about" class="nav-item"><i class="fas fa-user"></i> <span class="editable" data-key="navAbout">Tentang</span></a></li>
+            <li><a href="#skills" class="nav-item"><i class="fas fa-microchip"></i> <span class="editable" data-key="navSkills">Keahlian</span></a></li>
+            <li><a href="#projects" class="nav-item"><i class="fas fa-network-wired"></i> <span class="editable" data-key="navProjects">Proyek Lab</span></a></li>
+            <li><a href="#custom-columns" class="nav-item"><i class="fas fa-columns"></i> <span class="editable" data-key="navCustom">Kolom Ekstra</span></a></li>
+            <li><a href="#contact" class="nav-item"><i class="fas fa-envelope"></i> <span class="editable" data-key="navContact">Kontak</span></a></li>
         </ul>
 
-        <!-- Tombol Tambah Menu Sidebar (Hanya tampil saat Mode Edit aktif) -->
+        <!-- Tombol Tambah Menu Sidebar (Hanya muncul saat Mode Edit) -->
         <div class="edit-only-box sidebar-add-box">
             <button id="openAddSidebarModal" class="btn-add-item">
                 <i class="fas fa-plus-circle"></i> Tambah Menu Sidebar
@@ -35,40 +41,42 @@
     </aside>
 
     <!-- Tombol Buka Sidebar di Layar Mobile -->
-    <button id="openSidebarBtn" class="mobile-sidebar-toggle">
+    <button id="openSidebarBtn" class="mobile-sidebar-toggle glass-pill">
         <i class="fas fa-bars"></i>
     </button>
 
-    <!-- Konten Utama (Bergeser rapi di sebelah Sidebar) -->
+    <!-- Konten Utama -->
     <main class="main-content">
 
-        <!-- Hero Section dengan Banner yang Bisa Diganti Fotonya -->
+        <!-- Hero Section dengan Banner -->
         <section id="home" class="hero">
             <img id="bannerImage" class="hero-banner-img" src="https://images.unsplash.com/photo-1558494949-ef010cbdcc31?auto=format&fit=crop&w=1920&q=85" alt="Banner Jaringan TJKT">
             <div class="hero-overlay"></div>
 
-            <!-- Tombol Cepat Ganti Banner saat Mode Edit -->
-            <label for="uploadBanner" class="edit-only-box banner-change-badge">
-                <i class="fas fa-camera"></i> Ganti Foto Banner
+            <!-- Tombol Ganti Banner Pojok Kiri Atas (Hanya muncul saat Mode Edit) -->
+            <label for="uploadBanner" class="edit-only-box banner-change-badge glass-pill">
+                <i class="fas fa-image"></i> FOTO BANNER
             </label>
 
             <div class="hero-wrapper">
-                <div class="hero-content">
-                    <p class="terminal-text editable" data-key="terminal">&gt; root@fiohakim-tjkt:~# ./init_profile.sh</p>
-                    <h1>Halo, Saya <span class="highlight editable" data-key="heroName">Fio Hakim</span></h1>
-                    <h2>Siswa Jurusan <span class="typing-text"></span></h2>
+                <div class="hero-content glass-hero-card reveal">
+                    <h1>
+                        <span class="editable" data-key="heroGreeting">Halo, Saya</span> 
+                        <span class="highlight editable" data-key="heroName">Fio Hakim</span>
+                    </h1>
+                    <h2 class="editable" data-key="heroSubtitle">Siswa Jurusan Teknik Jaringan Komputer & Telekomunikasi</h2>
                     <p class="hero-desc editable" data-key="heroDesc">
                         Membangun infrastruktur jaringan yang handal, mengamankan server, dan menghubungkan konektivitas masa depan.
                     </p>
                     <div class="hero-buttons">
-                        <a href="#projects" class="btn primary">Lihat Proyek</a>
-                        <a href="#contact" class="btn secondary">Hubungi Saya</a>
+                        <a href="#projects" class="btn primary magnetic-btn editable" data-key="btnPrimary">Lihat Proyek</a>
+                        <a href="#contact" class="btn secondary glass-pill magnetic-btn editable" data-key="btnSecondary">Hubungi Saya</a>
                     </div>
                 </div>
                 
                 <!-- Foto Profil -->
-                <div class="hero-profile">
-                    <div class="profile-frame">
+                <div class="hero-profile reveal">
+                    <div class="profile-frame glass-ring">
                         <img id="profileImage" src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&w=600&q=80" alt="Foto Profil">
                         <label for="uploadProfile" class="edit-only-box profile-change-badge" title="Ganti Foto Profil">
                             <i class="fas fa-camera"></i>
@@ -80,9 +88,10 @@
 
         <!-- Tentang Saya -->
         <section id="about" class="section">
-            <h2 class="section-title">Tentang <span>Saya</span></h2>
-            <div class="about-container">
-                <div class="about-card">
+            <h2 class="section-title reveal editable" data-key="aboutSectionTitle">Tentang <span>Saya</span></h2>
+            <div class="about-container reveal">
+                <div class="about-card glass-card interactive-card">
+                    <div class="card-glare"></div>
                     <i class="fas fa-network-wired icon-large"></i>
                     <h3 class="editable" data-key="aboutTitle">Profil Singkat</h3>
                     <p class="editable" data-key="aboutDesc">
@@ -92,107 +101,114 @@
             </div>
         </section>
 
-        <!-- Keahlian (Skills) + Fitur Tambah Kolom -->
-        <section id="skills" class="section bg-darker">
-            <div class="section-header-flex">
-                <h2 class="section-title">Keahlian <span>Teknis</span></h2>
+        <!-- Keahlian (Skills) -->
+        <section id="skills" class="section">
+            <div class="section-header-flex reveal">
+                <h2 class="section-title editable" data-key="skillsSectionTitle">Keahlian <span>Teknis</span></h2>
                 <button class="edit-only-box btn-add-item" id="addSkillColBtn">
                     <i class="fas fa-plus"></i> Tambah Kolom Keahlian
                 </button>
             </div>
 
             <div class="skills-grid" id="skillsGrid">
-                <div class="skill-card">
-                    <i class="fas fa-route"></i>
+                <div class="skill-card glass-card interactive-card reveal">
+                    <div class="card-glare"></div>
+                    <div class="icon-badge"><i class="fas fa-route"></i></div>
                     <h3 class="editable" data-key="skill1Title">Routing & Switching</h3>
                     <p class="editable" data-key="skill1Desc">Konfigurasi MikroTik (MTCNA), Cisco Packet Tracer, VLAN, OSPF, dan Manajemen Bandwidth.</p>
                 </div>
-                <div class="skill-card">
-                    <i class="fas fa-server"></i>
+                <div class="skill-card glass-card interactive-card reveal">
+                    <div class="card-glare"></div>
+                    <div class="icon-badge"><i class="fas fa-server"></i></div>
                     <h3 class="editable" data-key="skill2Title">System Administration</h3>
                     <p class="editable" data-key="skill2Desc">Instalasi & konfigurasi Linux Debian/Ubuntu Server (DNS, DHCP, Web Server, Mail Server).</p>
                 </div>
-                <div class="skill-card">
-                    <i class="fas fa-wave-square"></i>
+                <div class="skill-card glass-card interactive-card reveal">
+                    <div class="card-glare"></div>
+                    <div class="icon-badge"><i class="fas fa-wave-square"></i></div>
                     <h3 class="editable" data-key="skill3Title">Fiber Optik (FTTH)</h3>
                     <p class="editable" data-key="skill3Desc">Penyambungan kabel FO (Splicing), pengukuran redaman dengan OTDR & OPM, instalasi ODP/ONT.</p>
                 </div>
-                <div class="skill-card">
-                    <i class="fas fa-shield-alt"></i>
+                <div class="skill-card glass-card interactive-card reveal">
+                    <div class="card-glare"></div>
+                    <div class="icon-badge"><i class="fas fa-shield-alt"></i></div>
                     <h3 class="editable" data-key="skill4Title">Network Security</h3>
                     <p class="editable" data-key="skill4Desc">Konfigurasi Firewall, VPN (PPTP/L2TP/WireGuard), serta pemantauan trafik jaringan.</p>
                 </div>
-                <!-- Kolom Keahlian Tambahan Dinamis -->
             </div>
         </section>
 
-        <!-- Proyek Praktikum + Fitur Tambah Kolom Proyek -->
+        <!-- Proyek Praktikum -->
         <section id="projects" class="section">
-            <div class="section-header-flex">
-                <h2 class="section-title">Proyek & <span>Praktikum</span></h2>
+            <div class="section-header-flex reveal">
+                <h2 class="section-title editable" data-key="projectsSectionTitle">Proyek & <span>Praktikum</span></h2>
                 <button class="edit-only-box btn-add-item" id="addProjectColBtn">
                     <i class="fas fa-plus"></i> Tambah Kolom Proyek
                 </button>
             </div>
             
-            <div class="filter-buttons">
-                <button class="filter-btn active" data-filter="all">Semua</button>
-                <button class="filter-btn" data-filter="mikrotik">MikroTik</button>
-                <button class="filter-btn" data-filter="server">Linux Server</button>
-                <button class="filter-btn" data-filter="fo">Fiber Optik</button>
+            <div class="filter-buttons reveal">
+                <button class="filter-btn glass-pill active" data-filter="all">Semua</button>
+                <button class="filter-btn glass-pill" data-filter="mikrotik">MikroTik</button>
+                <button class="filter-btn glass-pill" data-filter="server">Linux Server</button>
+                <button class="filter-btn glass-pill" data-filter="fo">Fiber Optik</button>
             </div>
 
             <div class="projects-grid" id="projectsGrid">
-                <div class="project-card" data-category="mikrotik">
+                <div class="project-card glass-card interactive-card reveal" data-category="mikrotik">
+                    <div class="card-glare"></div>
                     <div class="project-header">
-                        <i class="fas fa-wifi"></i>
-                        <span class="tag">MikroTik</span>
+                        <div class="icon-badge"><i class="fas fa-wifi"></i></div>
+                        <span class="tag editable" data-key="proj1Tag">MikroTik</span>
                     </div>
                     <h3 class="editable" data-key="proj1Title">Hotspot Voucher & Load Balancing</h3>
                     <p class="editable" data-key="proj1Desc">Membangun sistem RT/RW Net skala lab menggunakan metode Load Balancing PCC 2 ISP dan manajemen user dengan Mikhmon.</p>
                 </div>
 
-                <div class="project-card" data-category="server">
+                <div class="project-card glass-card interactive-card reveal" data-category="server">
+                    <div class="card-glare"></div>
                     <div class="project-header">
-                        <i class="fas fa-terminal"></i>
-                        <span class="tag">Linux Server</span>
+                        <div class="icon-badge"><i class="fas fa-terminal"></i></div>
+                        <span class="tag editable" data-key="proj2Tag">Linux Server</span>
                     </div>
                     <h3 class="editable" data-key="proj2Title">Web Hosting & DNS Server Lokal</h3>
                     <p class="editable" data-key="proj2Desc">Implementasi Debian 11 Server menggunakan Nginx, MariaDB, Bind9, dan sertifikat SSL lokal untuk layanan intranet sekolah.</p>
                 </div>
 
-                <div class="project-card" data-category="fo">
+                <div class="project-card glass-card interactive-card reveal" data-category="fo">
+                    <div class="card-glare"></div>
                     <div class="project-header">
-                        <i class="fas fa-network-wired"></i>
-                        <span class="tag">Fiber Optik</span>
+                        <div class="icon-badge"><i class="fas fa-network-wired"></i></div>
+                        <span class="tag editable" data-key="proj3Tag">Fiber Optik</span>
                     </div>
                     <h3 class="editable" data-key="proj3Title">Instalasi Jaringan FTTH</h3>
                     <p class="editable" data-key="proj3Desc">Simulasi penarikan kabel dropcore dari ODP ke OTP, melakukan fusion splicing, dan memastikan redaman di bawah -20 dBm.</p>
                 </div>
 
-                <div class="project-card" data-category="mikrotik">
+                <div class="project-card glass-card interactive-card reveal" data-category="mikrotik">
+                    <div class="card-glare"></div>
                     <div class="project-header">
-                        <i class="fas fa-lock"></i>
-                        <span class="tag">MikroTik</span>
+                        <div class="icon-badge"><i class="fas fa-lock"></i></div>
+                        <span class="tag editable" data-key="proj4Tag">MikroTik</span>
                     </div>
                     <h3 class="editable" data-key="proj4Title">Segmentasi Jaringan dengan VLAN</h3>
                     <p class="editable" data-key="proj4Desc">Memisahkan trafik jaringan Guru, Siswa, dan Tamu menggunakan Router-on-a-Stick dan Manageable Switch.</p>
                 </div>
-                <!-- Kolom Proyek Tambahan Dinamis -->
             </div>
         </section>
 
-        <!-- Bagian Kolom Bebas (Custom Columns Section) -->
-        <section id="custom-columns" class="section bg-darker">
-            <div class="section-header-flex">
+        <!-- Bagian Kolom Bebas -->
+        <section id="custom-columns" class="section">
+            <div class="section-header-flex reveal">
                 <h2 class="section-title editable" data-key="customSectionTitle">Sertifikasi & <span>Informasi Tambahan</span></h2>
                 <button class="edit-only-box btn-add-item" id="addCustomColBtn">
                     <i class="fas fa-plus"></i> Tambah Kolom Bebas
                 </button>
             </div>
             <div class="skills-grid" id="customColumnsGrid">
-                <div class="skill-card">
-                    <i class="fas fa-certificate"></i>
+                <div class="skill-card glass-card interactive-card reveal">
+                    <div class="card-glare"></div>
+                    <div class="icon-badge"><i class="fas fa-certificate"></i></div>
                     <h3 class="editable" data-key="customCol1Title">Sertifikasi MTCNA</h3>
                     <p class="editable" data-key="customCol1Desc">MikroTik Certified Network Associate - Menguasai dasar routing, firewall, wireless, dan QoS.</p>
                 </div>
@@ -201,53 +217,81 @@
 
         <!-- Kontak -->
         <section id="contact" class="section">
-            <h2 class="section-title">Hubungi <span>Saya</span></h2>
-            <div class="contact-container">
+            <h2 class="section-title reveal editable" data-key="contactSectionTitle">Hubungi <span>Saya</span></h2>
+            <div class="contact-container glass-card reveal">
                 <form id="contactForm" class="contact-form">
-                    <input type="text" id="name" placeholder="Nama Anda / Perusahaan" required>
-                    <input type="email" id="email" placeholder="Email Anda" required>
-                    <textarea id="message" rows="5" placeholder="Pesan (misal: Tawaran PKL / Magang)" required></textarea>
-                    <button type="submit" class="btn primary">Kirim Pesan</button>
+                    <input type="text" id="name" class="glass-input" placeholder="Nama Anda / Perusahaan" required>
+                    <input type="email" id="email" class="glass-input" placeholder="Email Anda" required>
+                    <textarea id="message" rows="5" class="glass-input" placeholder="Pesan (misal: Tawaran PKL / Magang)" required></textarea>
+                    <button type="submit" class="btn primary magnetic-btn">Kirim Pesan</button>
                 </form>
                 <div class="social-links">
-                    <a href="#"><i class="fab fa-github"></i> GitHub</a>
-                    <a href="#"><i class="fab fa-linkedin"></i> LinkedIn</a>
-                    <a href="#"><i class="fas fa-envelope"></i> Email</a>
+                    <a href="#" class="glass-pill social-pill editable" data-key="socialGithub"><i class="fab fa-github"></i> GitHub</a>
+                    <a href="#" class="glass-pill social-pill editable" data-key="socialLinkedin"><i class="fab fa-linkedin"></i> LinkedIn</a>
+                    <a href="#" class="glass-pill social-pill editable" data-key="socialEmail"><i class="fas fa-envelope"></i> Email</a>
                 </div>
             </div>
         </section>
 
         <!-- Footer -->
-        <footer>
+        <footer class="glass-footer">
             <p class="editable" data-key="footerText">&copy; 2026 Portofolio TJKT - Fio Hakim. Dibuat dengan kode & kopi.</p>
         </footer>
     </main>
 
-    <!-- Tombol Akses Admin Mengambang -->
-    <button id="adminLoginBtn" class="admin-fab" title="Panel Admin">
-        <i class="fas fa-user-shield"></i>
-    </button>
+    <!-- Input File Tersembunyi -->
+    <input type="file" id="uploadBanner" accept="image/*" hidden>
+    <input type="file" id="uploadProfile" accept="image/*" hidden>
+    <input type="file" id="uploadBg" accept="image/*" hidden>
+
+    <!-- Indikator Status Upload Melayang -->
+    <div id="uploadToast" class="upload-toast glass-pill hidden">
+        <i class="fas fa-spinner fa-spin"></i> <span id="uploadProgressText">Mengunggah...</span>
+    </div>
+
+    <!-- Bilah Kontrol Admin Ringkas di Pojok Kanan Bawah -->
+    <div class="floating-admin-bar">
+        <button id="adminLoginBtn" class="admin-fab" title="Login Admin">
+            <i class="fas fa-user-shield"></i>
+        </button>
+
+        <div id="adminQuickControls" class="admin-quick-controls hidden">
+            <label for="uploadBg" class="edit-only-box btn-pill-dark glass-pill" title="Ganti Background Web">
+                <i class="fas fa-fill-drip"></i> BG
+            </label>
+            <button id="resetAllBtn" class="edit-only-box btn-pill-dark glass-pill" title="Reset ke Awal">
+                <i class="fas fa-undo"></i>
+            </button>
+            <button id="logoutAdminBtn" class="edit-only-box btn-pill-danger" title="Keluar Akun Admin">
+                <i class="fas fa-sign-out-alt"></i>
+            </button>
+
+            <button id="toggleEditModeBtn" class="btn-pill-finish">
+                <i class="fas fa-check"></i> Selesai Edit
+            </button>
+        </div>
+    </div>
 
     <!-- Modal Login Firebase Admin -->
     <div id="loginModal" class="modal">
-        <div class="modal-content">
+        <div class="modal-content glass-modal">
             <span class="close-modal" data-close="loginModal">&times;</span>
             <h3><i class="fas fa-fire"></i> Login Admin Firebase</h3>
-            <p class="modal-hint">Sesi login akan tersimpan otomatis di browser ini.</p>
-            <input type="email" id="adminEmailInput" placeholder="Email Admin" style="margin-bottom: 10px;">
-            <input type="password" id="adminPasswordInput" placeholder="Password Admin">
+            <p class="modal-hint">Sesi login tersimpan otomatis di browser ini.</p>
+            <input type="email" id="adminEmailInput" class="glass-input" placeholder="Email Admin" style="margin-bottom: 10px;">
+            <input type="password" id="adminPasswordInput" class="glass-input" placeholder="Password Admin">
             <button id="submitLoginBtn" class="btn primary" style="width: 100%; margin-top: 12px;">Masuk</button>
         </div>
     </div>
 
     <!-- Modal Tambah Menu Sidebar -->
     <div id="addSidebarModal" class="modal">
-        <div class="modal-content">
+        <div class="modal-content glass-modal">
             <span class="close-modal" data-close="addSidebarModal">&times;</span>
             <h3><i class="fas fa-bars"></i> Tambah Menu Sidebar</h3>
-            <input type="text" id="newSidebarLabel" placeholder="Nama Menu (misal: Galeri Lab)" style="margin: 10px 0;">
-            <input type="text" id="newSidebarLink" placeholder="Target Link (misal: #custom-columns atau https://...)" style="margin-bottom: 10px;">
-            <select id="newSidebarIcon" class="modal-select">
+            <input type="text" id="newSidebarLabel" class="glass-input" placeholder="Nama Menu (misal: Galeri Lab)" style="margin: 10px 0;">
+            <input type="text" id="newSidebarLink" class="glass-input" placeholder="Target Link (misal: #custom-columns)" style="margin-bottom: 10px;">
+            <select id="newSidebarIcon" class="modal-select glass-input">
                 <option value="fas fa-folder">Ikon Folder</option>
                 <option value="fas fa-certificate">Ikon Sertifikat</option>
                 <option value="fas fa-server">Ikon Server</option>
@@ -255,58 +299,10 @@
                 <option value="fas fa-images">Ikon Galeri</option>
                 <option value="fas fa-link">Ikon Link</option>
             </select>
-            <button id="confirmAddSidebarBtn" class="btn primary" style="width: 100%; margin-top: 12px;">Tambahkan ke Sidebar</button>
+            <button id="confirmAddSidebarBtn" class="btn primary" style="width: 100%; margin-top: 12px;">Tambahkan</button>
         </div>
     </div>
 
-    <!-- Panel Kontrol Admin (Muncul otomatis saat sudah login) -->
-    <div id="adminPanel" class="admin-panel hidden">
-        <div class="admin-header">
-            <span><i class="fas fa-cloud"></i> Admin Cloud Aktif</span>
-            <button id="logoutAdminBtn" class="btn-danger-sm">Keluar Akun</button>
-        </div>
-        
-        <div class="admin-body">
-            <!-- Sakelar Instan Mode Edit / Mode View -->
-            <div class="control-group toggle-row">
-                <label for="editModeToggle"><strong>Mode Edit Langsung</strong></label>
-                <label class="switch">
-                    <input type="checkbox" id="editModeToggle" checked>
-                    <span class="slider round"></span>
-                </label>
-            </div>
-            <p class="helper-text" id="editStatusText">Status: Mode Edit Aktif (Langsung klik teks/tambah kolom)</p>
-
-            <hr class="admin-divider">
-
-            <!-- Upload Gambar Resolusi Tinggi -->
-            <div class="control-group">
-                <label><i class="fas fa-image"></i> Ganti Foto Banner Hero (HD)</label>
-                <input type="file" id="uploadBanner" accept="image/*" class="file-input">
-            </div>
-
-            <div class="control-group">
-                <label><i class="fas fa-user-circle"></i> Ganti Foto Profil (HD)</label>
-                <input type="file" id="uploadProfile" accept="image/*" class="file-input">
-            </div>
-
-            <div class="control-group">
-                <label><i class="fas fa-fill-drip"></i> Ganti Background Web (HD)</label>
-                <input type="file" id="uploadBg" accept="image/*" class="file-input">
-            </div>
-
-            <p id="uploadProgressText" class="helper-text" style="color: #fbbf24;"></p>
-
-            <hr class="admin-divider">
-
-            <div class="admin-actions">
-                <button id="saveChangesBtn" class="btn primary btn-sm"><i class="fas fa-cloud-upload-alt"></i> Simpan Semua</button>
-                <button id="resetAllBtn" class="btn secondary btn-sm"><i class="fas fa-undo"></i> Reset</button>
-            </div>
-        </div>
-    </div>
-
-    <!-- Load script.js sebagai ES Module -->
     <script type="module" src="script.js"></script>
 </body>
 </html>
