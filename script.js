@@ -39,14 +39,63 @@ const portfolioDocRef = doc(db, "portfolio", "mainData");
 
 let extraSidebarItems = [];
 let extraSkills = [];
-let showcaseProjects = []; // Menyimpan project video YouTube, TikTok, Foto & Link
+let showcaseProjects = [];
 let savedIcons = {};
+let deletedStaticCards = []; // Menyimpan daftar kartu bawaan yang dihapus
+let deletedTextKeys = [];    // Menyimpan daftar key teks yang dihapus
 let activeProjectFilter = 'all';
 let isEditingMode = false;
 let currentUser = null;
 
 // =========================================
-// 2. PARSER VIDEO YOUTUBE & TIKTOK
+// 2. KONTROL HAPUS SEMUA TEKS SAAT MODE EDIT
+// =========================================
+function attachTextDeleteControls() {
+    document.querySelectorAll('.editable').forEach(el => {
+        if (el.parentElement && el.parentElement.classList.contains('editable-wrapper')) return;
+
+        const wrapper = document.createElement('span');
+        wrapper.className = 'editable-wrapper';
+        el.parentNode.insertBefore(wrapper, el);
+        wrapper.appendChild(el);
+
+        const delBtn = document.createElement('button');
+        delBtn.type = 'button';
+        delBtn.className = 'delete-text-btn';
+        delBtn.innerHTML = '&times;';
+        delBtn.title = 'Hapus teks ini';
+
+        delBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+
+            el.innerHTML = '';
+            const key = el.getAttribute('data-key');
+            if (key && !deletedTextKeys.includes(key)) {
+                deletedTextKeys.push(key);
+            }
+
+            // Jika merupakan field di kartu dinamis
+            if (el.classList.contains('dynamic-field')) {
+                const idx = parseInt(el.getAttribute('data-index'));
+                const field = el.getAttribute('data-field');
+                if (extraSkills[idx]) extraSkills[idx][field] = '';
+            } else if (el.classList.contains('dynamic-proj-field')) {
+                const idx = parseInt(el.getAttribute('data-index'));
+                const field = el.getAttribute('data-field');
+                if (showcaseProjects[idx]) showcaseProjects[idx][field] = '';
+            }
+
+            wrapper.style.display = 'none';
+            saveAllToCloud(true);
+        });
+
+        wrapper.appendChild(delBtn);
+    });
+}
+
+// =========================================
+// 3. PARSER VIDEO YOUTUBE & TIKTOK
 // =========================================
 function extractYouTubeId(url) {
     if (!url) return null;
@@ -62,7 +111,7 @@ function extractTikTokId(url) {
 }
 
 // =========================================
-// 3. PEMILIH IKON (ICON PICKER)
+// 4. PEMILIH IKON (ICON PICKER)
 // =========================================
 const ICON_OPTIONS = [
     "fas fa-network-wired", "fas fa-server", "fas fa-router", "fas fa-wifi",
@@ -156,7 +205,7 @@ document.addEventListener('click', (e) => {
 });
 
 // =========================================
-// 4. PENYIMPANAN GAMBAR HD GRATIS DI CLOUD FIRESTORE
+// 5. PENYIMPANAN GAMBAR HD GRATIS DI CLOUD FIRESTORE
 // =========================================
 function compressImageForFirestore(file, maxWidth = 1400, quality = 0.82) {
     return new Promise((resolve, reject) => {
@@ -202,7 +251,7 @@ async function loadMediaFromFirestore(mediaKey) {
 }
 
 // =========================================
-// 5. MICROINTERACTIONS ENGINE
+// 6. MICROINTERACTIONS ENGINE
 // =========================================
 function initMicrointeractions() {
     document.querySelectorAll('.interactive-card').forEach(card => {
@@ -241,7 +290,7 @@ function initMicrointeractions() {
 }
 
 // =========================================
-// 6. SIMPAN OTOMATIS KE CLOUD FIRESTORE
+// 7. SIMPAN OTOMATIS KE CLOUD FIRESTORE
 // =========================================
 async function saveAllToCloud(showAlert = false) {
     if (!currentUser) return;
@@ -249,12 +298,18 @@ async function saveAllToCloud(showAlert = false) {
     const textData = {};
     document.querySelectorAll('.editable[data-key]').forEach(el => {
         const key = el.getAttribute('data-key');
-        textData[key] = el.innerHTML;
+        const cleanText = el.innerHTML.trim();
+        textData[key] = cleanText;
+        if (!cleanText && !deletedTextKeys.includes(key)) {
+            deletedTextKeys.push(key);
+        }
     });
 
     try {
         await setDoc(portfolioDocRef, { 
             texts: textData,
+            deletedTextKeys,
+            deletedStaticCards,
             savedIcons,
             extraSidebarItems,
             extraSkills,
@@ -277,9 +332,15 @@ function showToast(msg, duration = 2500) {
 }
 
 // =========================================
-// 7. RENDER SIDEBAR, KEAHLIAN & PROJECT MEDIA
+// 8. RENDER SIDEBAR, KEAHLIAN & PROJECT MEDIA
 // =========================================
 function renderDynamicElements() {
+    // Sembunyikan kartu statis yang sudah dihapus
+    deletedStaticCards.forEach(staticKey => {
+        const el = document.querySelector(`[data-static-card="${staticKey}"]`);
+        if (el) el.remove();
+    });
+
     // 1. Render Sidebar Tambahan
     const sidebarList = document.getElementById('sidebarLinks');
     sidebarList.querySelectorAll('.dynamic-sidebar-item').forEach(el => el.remove());
@@ -314,7 +375,7 @@ function renderDynamicElements() {
         card.className = 'skill-card glass-card interactive-card dynamic-col reveal visible';
         card.innerHTML = `
             <div class="card-glare"></div>
-            <button class="edit-only-box delete-card-btn" data-type="skill" data-index="${index}"><i class="fas fa-trash"></i></button>
+            <button class="edit-only-box delete-card-btn" data-type="skill" data-index="${index}" title="Hapus Kartu"><i class="fas fa-trash"></i></button>
             <div class="icon-badge icon-picker-trigger" title="Klik untuk ganti ikon">
                 <i class="${col.icon || 'fas fa-microchip'} dynamic-icon" data-array="extraSkills" data-index="${index}"></i>
             </div>
@@ -324,9 +385,16 @@ function renderDynamicElements() {
         skillsGrid.appendChild(card);
     });
 
-    // 3. Render Kartu Project Media (YouTube, TikTok, Foto, Link)
+    // 3. Render Kartu Project Media
     const projectsGrid = document.getElementById('projectsGrid');
+    const placeholder = document.getElementById('emptyProjectsPlaceholder');
     projectsGrid.querySelectorAll('.dynamic-project-card').forEach(el => el.remove());
+
+    if (showcaseProjects.length === 0) {
+        if (placeholder) placeholder.classList.remove('hidden');
+    } else {
+        if (placeholder) placeholder.classList.add('hidden');
+    }
 
     showcaseProjects.forEach((proj, index) => {
         const card = document.createElement('div');
@@ -394,13 +462,20 @@ function renderDynamicElements() {
             </button>
         `;
 
-        // Sisipkan di bagian paling depan agar karya terbaru tampil pertama
         projectsGrid.insertBefore(card, projectsGrid.firstChild);
     });
 
-    // Event Hapus Kartu
+    // Event Hapus Kartu (Statis maupun Dinamis)
     document.querySelectorAll('.delete-card-btn').forEach(btn => {
         btn.addEventListener('click', async (e) => {
+            const staticKey = e.currentTarget.getAttribute('data-static-key');
+            if (staticKey) {
+                if (!deletedStaticCards.includes(staticKey)) deletedStaticCards.push(staticKey);
+                renderDynamicElements();
+                saveAllToCloud(true);
+                return;
+            }
+
             const type = e.currentTarget.getAttribute('data-type');
             const idx = parseInt(e.currentTarget.getAttribute('data-index'));
             if (type === 'skill') extraSkills.splice(idx, 1);
@@ -411,11 +486,10 @@ function renderDynamicElements() {
                 }
             }
             renderDynamicElements();
-            saveAllToCloud();
+            saveAllToCloud(true);
         });
     });
 
-    // Event Edit Teks Langsung pada Kartu Dinamis
     document.querySelectorAll('.dynamic-field').forEach(el => {
         el.addEventListener('input', () => {
             const idx = parseInt(el.getAttribute('data-index'));
@@ -432,7 +506,6 @@ function renderDynamicElements() {
         });
     });
 
-    // Event Putar / Lihat Layar Penuh
     document.querySelectorAll('.btn-card-fullscreen').forEach(btn => {
         btn.addEventListener('click', () => {
             const idx = parseInt(btn.getAttribute('data-index'));
@@ -440,13 +513,14 @@ function renderDynamicElements() {
         });
     });
 
+    attachTextDeleteControls();
     rebuildProjectFilters();
     applyEditModeState();
     initMicrointeractions();
 }
 
 // =========================================
-// 8. FILTER KATEGORI / GURU OTOMATIS & COUNTER ITEM
+// 9. FILTER KATEGORI / GURU OTOMATIS & COUNTER ITEM
 // =========================================
 function rebuildProjectFilters() {
     const filterContainer = document.getElementById('projectFilterButtons');
@@ -460,7 +534,6 @@ function rebuildProjectFilters() {
 
     filterContainer.innerHTML = '';
 
-    // Tombol "Semua Tugas"
     const allBtn = document.createElement('button');
     allBtn.className = `filter-btn glass-pill ${activeProjectFilter === 'all' ? 'active' : ''}`;
     allBtn.innerHTML = `<i class="fas fa-layer-group"></i> Semua Tugas <span class="filter-count">${allCards.length}</span>`;
@@ -470,7 +543,6 @@ function rebuildProjectFilters() {
     });
     filterContainer.appendChild(allBtn);
 
-    // Tombol Per Kategori / Nama Guru
     Object.keys(categoryCounts).forEach(cat => {
         const btn = document.createElement('button');
         btn.className = `filter-btn glass-pill ${activeProjectFilter === cat ? 'active' : ''}`;
@@ -513,7 +585,6 @@ function applyProjectFilter() {
     document.getElementById('totalProjectCountBadge').textContent = `${visibleCount} item`;
 }
 
-// Pemutar Layar Penuh
 function openFullscreenProject(proj) {
     if (!proj) return;
     const modal = document.getElementById('fullscreenMediaModal');
@@ -544,7 +615,7 @@ function openFullscreenProject(proj) {
 }
 
 // =========================================
-// 9. MODAL TAMBAH KONTEN / PROJECT BARU
+// 10. MODAL TAMBAH KONTEN / PROJECT BARU
 // =========================================
 const openAddProjectModalBtn = document.getElementById('openAddProjectModalBtn');
 const addProjectModal = document.getElementById('addProjectModal');
@@ -640,7 +711,6 @@ document.getElementById('submitNewProjectBtn').addEventListener('click', async (
         await saveAllToCloud(true);
         renderDynamicElements();
 
-        // Reset form & tutup modal
         document.getElementById('projCategoryInput').value = '';
         projMediaUrlInput.value = '';
         fileInput.value = '';
@@ -659,7 +729,7 @@ document.getElementById('submitNewProjectBtn').addEventListener('click', async (
 });
 
 // =========================================
-// 10. MUAT DATA DARI CLOUD FIRESTORE
+// 11. MUAT DATA DARI CLOUD FIRESTORE
 // =========================================
 async function loadCloudContent() {
     try {
@@ -667,10 +737,20 @@ async function loadCloudContent() {
         if (docSnap.exists()) {
             const data = docSnap.data();
 
+            deletedTextKeys = data.deletedTextKeys || [];
+            deletedStaticCards = data.deletedStaticCards || [];
+
             if (data.texts) {
                 document.querySelectorAll('.editable[data-key]').forEach(el => {
                     const key = el.getAttribute('data-key');
-                    if (data.texts[key]) el.innerHTML = data.texts[key];
+                    if (deletedTextKeys.includes(key) || data.texts[key] === '') {
+                        el.innerHTML = '';
+                        if (el.parentElement && el.parentElement.classList.contains('editable-wrapper')) {
+                            el.parentElement.style.display = 'none';
+                        }
+                    } else if (data.texts[key]) {
+                        el.innerHTML = data.texts[key];
+                    }
                 });
             }
 
@@ -687,6 +767,7 @@ async function loadCloudContent() {
             showcaseProjects = data.showcaseProjects || [];
             renderDynamicElements();
         } else {
+            attachTextDeleteControls();
             rebuildProjectFilters();
         }
 
@@ -704,7 +785,7 @@ async function loadCloudContent() {
 }
 
 // =========================================
-// 11. KONTROL ADMIN & EVENT TAMBAHAN
+// 12. KONTROL ADMIN & EVENT TAMBAHAN
 // =========================================
 const adminLoginBtn = document.getElementById('adminLoginBtn');
 const adminQuickControls = document.getElementById('adminQuickControls');
@@ -879,6 +960,7 @@ document.getElementById('contactForm').addEventListener('submit', (e) => {
 });
 
 document.addEventListener('DOMContentLoaded', () => {
+    attachTextDeleteControls();
     initIconPicker();
     initMicrointeractions();
     loadCloudContent();

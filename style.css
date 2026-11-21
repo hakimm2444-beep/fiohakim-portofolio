@@ -3,7 +3,6 @@
    ========================================= */
 :root {
     --bg-base: #070b14;
-    /* Opasitas kaca rendah agar latar belakang terlihat jelas menembus kaca */
     --glass-bg: rgba(12, 18, 32, 0.42);
     --glass-bg-hover: rgba(16, 24, 42, 0.56);
     --glass-panel-bg: rgba(10, 15, 28, 0.55);
@@ -37,7 +36,6 @@ body {
     overflow-x: hidden;
 }
 
-/* Lapisan redup sangat tipis agar background tetap cerah & tembus di kaca */
 .bg-readability-tint {
     position: fixed;
     inset: 0;
@@ -46,9 +44,6 @@ body {
     pointer-events: none;
 }
 
-/* =========================================
-   AMBIENT ORBS (CAHAYA LEMBUT)
-   ========================================= */
 .ambient-orbs {
     position: fixed;
     inset: 0;
@@ -256,7 +251,6 @@ body {
     color: var(--primary);
     width: 20px;
     text-align: center;
-    transition: transform 0.25s ease;
 }
 
 .sidebar-links a:hover,
@@ -301,7 +295,7 @@ body {
 }
 
 /* =========================================
-   KONTEN UTAMA & HERO MENYATU DENGAN BACKGROUND
+   KONTEN UTAMA & HERO
    ========================================= */
 .main-content {
     margin-left: var(--sidebar-width);
@@ -376,7 +370,6 @@ body {
     flex-wrap: wrap;
 }
 
-/* Foto Profil Bingkai Kaca */
 .hero-profile {
     flex-shrink: 0;
 }
@@ -514,7 +507,6 @@ body {
     padding: 2.6rem;
 }
 
-/* Grid Kartu */
 .skills-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(265px, 1fr));
@@ -534,7 +526,31 @@ body {
     flex-direction: column;
 }
 
-/* Wadah Media Video / Foto di Atas Kartu Project (Seperti Gambar 3) */
+/* Placeholder Kosong Saat Belum Ada Project */
+.empty-projects-placeholder {
+    grid-column: 1 / -1;
+    text-align: center;
+    padding: 3.2rem 2rem;
+    color: #e2e8f0;
+}
+
+.empty-projects-placeholder i {
+    font-size: 2.8rem;
+    color: var(--primary);
+    margin-bottom: 0.8rem;
+    opacity: 0.85;
+}
+
+.empty-projects-placeholder p {
+    font-size: 1.05rem;
+    font-weight: 600;
+    margin-bottom: 0.35rem;
+}
+
+.empty-projects-placeholder small {
+    color: #cbd5e1;
+}
+
 .project-media-wrapper {
     position: relative;
     width: calc(100% + 3.6rem);
@@ -583,7 +599,6 @@ body {
     align-items: center;
     justify-content: center;
     margin-bottom: 1.1rem;
-    transition: transform 0.3s ease, background 0.3s ease;
 }
 
 .center-badge {
@@ -619,7 +634,6 @@ body.editing-active .icon-picker-trigger {
     text-shadow: 0 1px 6px rgba(0, 0, 0, 0.75);
 }
 
-/* Badge Kategori & Guru di Kartu Project */
 .project-meta-badges {
     display: flex;
     flex-wrap: wrap;
@@ -652,7 +666,6 @@ body.editing-active .icon-picker-trigger {
     gap: 5px;
 }
 
-/* Tautan Lampiran & Tombol Putar Layar Penuh di Bawah Kartu */
 .project-link-preview {
     display: block;
     color: #7dd3fc;
@@ -712,7 +725,7 @@ body.editing-active .icon-picker-trigger {
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.45);
 }
 
-/* Filter Proyek dengan Counter Jumlah */
+/* Filter Proyek */
 .filter-buttons {
     display: flex;
     justify-content: center;
@@ -750,18 +763,48 @@ body.editing-active .icon-picker-trigger {
     display: none;
 }
 
-.project-header {
-    display: flex;
-    justify-content: space-between;
+/* =========================================
+   FITUR HAPUS SEMUA TEKS SAAT MODE EDIT
+   ========================================= */
+.editable-wrapper {
+    position: relative;
+    display: inline-block;
+    max-width: 100%;
+}
+
+.delete-text-btn {
+    display: none;
+    position: absolute;
+    top: -9px;
+    right: -9px;
+    z-index: 25;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    border: 1px solid rgba(255, 255, 255, 0.5);
+    background: #ef4444;
+    color: #ffffff;
+    font-size: 0.72rem;
+    font-weight: 700;
+    line-height: 1;
+    cursor: pointer;
     align-items: center;
-    margin-bottom: 0.8rem;
+    justify-content: center;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.6);
+    transition: transform 0.18s ease;
 }
 
-.project-header .icon-badge {
-    margin-bottom: 0;
+.delete-text-btn:hover {
+    transform: scale(1.18);
+    background: #dc2626;
 }
 
-/* Kontak & Input Frosted Glass */
+body.editing-active .editable-wrapper:hover > .delete-text-btn,
+body.editing-active .editable-wrapper:focus-within > .delete-text-btn {
+    display: inline-flex;
+}
+
+/* Kontak & Input */
 .contact-container {
     max-width: 620px;
     margin: 0 auto;
@@ -784,7 +827,6 @@ body.editing-active .icon-picker-trigger {
     border-radius: 12px;
     color: #ffffff;
     outline: none;
-    transition: border-color 0.25s ease, background 0.25s ease, box-shadow 0.25s ease;
 }
 
 .glass-input::placeholder {
@@ -874,6 +916,8 @@ body.editing-active .editable {
     padding: 2px 6px;
     border-radius: 6px;
     cursor: text;
+    min-width: 24px;
+    min-height: 1.2em;
 }
 
 body.editing-active .editable:focus {
@@ -964,7 +1008,7 @@ body.editing-active .editable:focus {
 }
 
 /* =========================================
-   MODAL TAMBAH KONTEN (SEPERTI GAMBAR 2) & FULLSCREEN
+   MODALS
    ========================================= */
 .modal {
     display: none;

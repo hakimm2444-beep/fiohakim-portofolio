@@ -9,7 +9,7 @@
 </head>
 <body id="mainBody">
 
-    <!-- Lapisan Kontras Tipis agar Teks Tetap Tajam di Atas Background -->
+    <!-- Lapisan Kontras Tipis di Atas Background -->
     <div class="bg-readability-tint" aria-hidden="true"></div>
 
     <!-- Efek Cahaya Ambient Halus -->
@@ -49,7 +49,7 @@
     <!-- Konten Utama -->
     <main class="main-content">
 
-        <!-- Hero Section (Menyatu dengan Background Utama) -->
+        <!-- Hero Section -->
         <section id="home" class="hero">
             <div class="hero-wrapper">
                 <div class="hero-content glass-hero-card reveal">
@@ -106,32 +106,36 @@
             </div>
 
             <div class="skills-grid" id="skillsGrid">
-                <div class="skill-card glass-card interactive-card reveal">
+                <div class="skill-card glass-card interactive-card reveal" data-static-card="skill1">
                     <div class="card-glare"></div>
+                    <button class="edit-only-box delete-card-btn" data-static-key="skill1" title="Hapus Kartu"><i class="fas fa-trash"></i></button>
                     <div class="icon-badge icon-picker-trigger" title="Klik untuk ganti ikon">
                         <i class="fas fa-route editable-icon" data-icon-key="skill1Icon"></i>
                     </div>
                     <h3 class="editable" data-key="skill1Title">Routing & Switching</h3>
                     <p class="editable" data-key="skill1Desc">Konfigurasi MikroTik (MTCNA), Cisco Packet Tracer, VLAN, OSPF, dan Manajemen Bandwidth.</p>
                 </div>
-                <div class="skill-card glass-card interactive-card reveal">
+                <div class="skill-card glass-card interactive-card reveal" data-static-card="skill2">
                     <div class="card-glare"></div>
+                    <button class="edit-only-box delete-card-btn" data-static-key="skill2" title="Hapus Kartu"><i class="fas fa-trash"></i></button>
                     <div class="icon-badge icon-picker-trigger" title="Klik untuk ganti ikon">
                         <i class="fas fa-server editable-icon" data-icon-key="skill2Icon"></i>
                     </div>
                     <h3 class="editable" data-key="skill2Title">System Administration</h3>
                     <p class="editable" data-key="skill2Desc">Instalasi & konfigurasi Linux Debian/Ubuntu Server (DNS, DHCP, Web Server, Mail Server).</p>
                 </div>
-                <div class="skill-card glass-card interactive-card reveal">
+                <div class="skill-card glass-card interactive-card reveal" data-static-card="skill3">
                     <div class="card-glare"></div>
+                    <button class="edit-only-box delete-card-btn" data-static-key="skill3" title="Hapus Kartu"><i class="fas fa-trash"></i></button>
                     <div class="icon-badge icon-picker-trigger" title="Klik untuk ganti ikon">
                         <i class="fas fa-wave-square editable-icon" data-icon-key="skill3Icon"></i>
                     </div>
                     <h3 class="editable" data-key="skill3Title">Fiber Optik (FTTH)</h3>
                     <p class="editable" data-key="skill3Desc">Penyambungan kabel FO (Splicing), pengukuran redaman dengan OTDR & OPM, instalasi ODP/ONT.</p>
                 </div>
-                <div class="skill-card glass-card interactive-card reveal">
+                <div class="skill-card glass-card interactive-card reveal" data-static-card="skill4">
                     <div class="card-glare"></div>
+                    <button class="edit-only-box delete-card-btn" data-static-key="skill4" title="Hapus Kartu"><i class="fas fa-trash"></i></button>
                     <div class="icon-badge icon-picker-trigger" title="Klik untuk ganti ikon">
                         <i class="fas fa-shield-alt editable-icon" data-icon-key="skill4Icon"></i>
                     </div>
@@ -141,7 +145,7 @@
             </div>
         </section>
 
-        <!-- Tugas & Project (Dengan Upload Video YouTube, TikTok, Foto & Link) -->
+        <!-- Tugas & Project (Kolom bawaan sudah dihapus, siap diisi video YouTube, TikTok, Foto & Link) -->
         <section id="projects" class="section">
             <div class="section-header-flex reveal">
                 <h2 class="section-title editable" data-key="projectsSectionTitle">Tugas & <span>Project</span></h2>
@@ -150,65 +154,20 @@
                 </button>
             </div>
 
-            <!-- Bilah Status & Filter Kaca Transparan (Seperti Gambar 3) -->
+            <!-- Bilah Status & Filter Kaca Transparan -->
             <div class="showcase-status-bar glass-bar reveal">
                 <span id="activeFilterLabel">Menampilkan: <strong>Semua Tugas</strong></span>
-                <span class="item-count-badge" id="totalProjectCountBadge">4 item</span>
+                <span class="item-count-badge" id="totalProjectCountBadge">0 item</span>
             </div>
             
-            <div class="filter-buttons reveal" id="projectFilterButtons">
-                <!-- Tombol filter akan dirender otomatis berdasarkan kategori/guru -->
-            </div>
+            <div class="filter-buttons reveal" id="projectFilterButtons"></div>
 
-            <!-- Grid Kartu Project / Media -->
+            <!-- Grid Kartu Project / Media (Kosong secara default, diisi dari modal upload) -->
             <div class="projects-grid media-showcase-grid" id="projectsGrid">
-                <!-- Kartu bawaan yang bisa diedit/dihapus -->
-                <div class="project-card glass-card interactive-card reveal" data-category="MikroTik">
-                    <div class="card-glare"></div>
-                    <div class="project-header">
-                        <div class="icon-badge icon-picker-trigger" title="Klik untuk ganti ikon">
-                            <i class="fas fa-wifi editable-icon" data-icon-key="proj1Icon"></i>
-                        </div>
-                        <span class="tag editable" data-key="proj1Tag">MikroTik</span>
-                    </div>
-                    <h3 class="editable" data-key="proj1Title">Hotspot Voucher & Load Balancing</h3>
-                    <p class="editable" data-key="proj1Desc">Membangun sistem RT/RW Net skala lab menggunakan metode Load Balancing PCC 2 ISP dan manajemen user dengan Mikhmon.</p>
-                </div>
-
-                <div class="project-card glass-card interactive-card reveal" data-category="Linux Server">
-                    <div class="card-glare"></div>
-                    <div class="project-header">
-                        <div class="icon-badge icon-picker-trigger" title="Klik untuk ganti ikon">
-                            <i class="fas fa-terminal editable-icon" data-icon-key="proj2Icon"></i>
-                        </div>
-                        <span class="tag editable" data-key="proj2Tag">Linux Server</span>
-                    </div>
-                    <h3 class="editable" data-key="proj2Title">Web Hosting & DNS Server Lokal</h3>
-                    <p class="editable" data-key="proj2Desc">Implementasi Debian 11 Server menggunakan Nginx, MariaDB, Bind9, dan sertifikat SSL lokal untuk layanan intranet sekolah.</p>
-                </div>
-
-                <div class="project-card glass-card interactive-card reveal" data-category="Fiber Optik">
-                    <div class="card-glare"></div>
-                    <div class="project-header">
-                        <div class="icon-badge icon-picker-trigger" title="Klik untuk ganti ikon">
-                            <i class="fas fa-network-wired editable-icon" data-icon-key="proj3Icon"></i>
-                        </div>
-                        <span class="tag editable" data-key="proj3Tag">Fiber Optik</span>
-                    </div>
-                    <h3 class="editable" data-key="proj3Title">Instalasi Jaringan FTTH</h3>
-                    <p class="editable" data-key="proj3Desc">Simulasi penarikan kabel dropcore dari ODP ke OTP, melakukan fusion splicing, dan memastikan redaman di bawah -20 dBm.</p>
-                </div>
-
-                <div class="project-card glass-card interactive-card reveal" data-category="MikroTik">
-                    <div class="card-glare"></div>
-                    <div class="project-header">
-                        <div class="icon-badge icon-picker-trigger" title="Klik untuk ganti ikon">
-                            <i class="fas fa-lock editable-icon" data-icon-key="proj4Icon"></i>
-                        </div>
-                        <span class="tag editable" data-key="proj4Tag">MikroTik</span>
-                    </div>
-                    <h3 class="editable" data-key="proj4Title">Segmentasi Jaringan dengan VLAN</h3>
-                    <p class="editable" data-key="proj4Desc">Memisahkan trafik jaringan Guru, Siswa, dan Tamu menggunakan Router-on-a-Stick dan Manageable Switch.</p>
+                <div class="empty-projects-placeholder glass-card" id="emptyProjectsPlaceholder">
+                    <i class="fas fa-photo-video"></i>
+                    <p>Belum ada tugas atau project yang ditambahkan.</p>
+                    <small>Aktifkan Mode Edit lalu klik <strong>"Tambah Konten / Project Baru"</strong> untuk mengunggah video YouTube, TikTok, foto, atau tautan.</small>
                 </div>
             </div>
         </section>
@@ -269,9 +228,7 @@
         </div>
     </div>
 
-    <!-- =========================================================
-         MODAL TAMBAH KONTEN / PROJECT BARU (SEPERTI GAMBAR 2)
-         ========================================================= -->
+    <!-- Modal Tambah Konten / Project Baru -->
     <div id="addProjectModal" class="modal">
         <div class="modal-content glass-modal modal-scrollable">
             <span class="close-modal" data-close="addProjectModal">&times;</span>
@@ -299,14 +256,12 @@
                 </select>
             </div>
 
-            <!-- Input Dinamis: Link YouTube / TikTok / Eksternal -->
             <div class="form-group" id="projUrlGroup">
                 <label id="projUrlLabel">Tempel Link Video YouTube</label>
                 <input type="url" id="projMediaUrlInput" class="glass-input" placeholder="https://www.youtube.com/watch?v=...">
                 <small class="field-hint" id="projUrlHint">Video akan langsung bisa diputar di dalam kartu project.</small>
             </div>
 
-            <!-- Input Dinamis: Upload Foto Langsung -->
             <div class="form-group hidden" id="projFileGroup">
                 <label>Pilih File Foto (JPG / PNG / WebP)</label>
                 <input type="file" id="projMediaFileInput" accept="image/*" class="glass-input file-input-custom">
