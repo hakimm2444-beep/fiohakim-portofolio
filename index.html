@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Portofolio TJKT | Network & System Engineer</title>
+    <link rel="stylesheet" href="style.css">
+    <!-- Font Awesome untuk Ikon -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+
+    <!-- Navbar -->
+    <nav class="navbar">
+        <div class="logo">TJKT<span>.net</span></div>
+        <ul class="nav-links" id="navLinks">
+            <li><a href="#home">Beranda</a></li>
+            <li><a href="#about">Tentang</a></li>
+            <li><a href="#skills">Keahlian</a></li>
+            <li><a href="#projects">Proyek Lab</a></li>
+            <li><a href="#contact">Kontak</a></li>
+        </ul>
+        <div class="menu-toggle" id="mobile-menu">
+            <i class="fas fa-bars"></i>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section id="home" class="hero">
+        <div class="hero-content">
+            <p class="terminal-text">&gt; root@tjkt-portfolio:~# ./init_profile.sh</p>
+            <h1>Halo, Saya <span class="highlight">Rizky Pratama</span></h1>
+            <h2>Siswa Jurusan <span class="typing-text"></span></h2>
+            <p class="hero-desc">
+                Membangun infrastruktur jaringan yang handal, mengamankan server, dan menghubungkan konektivitas masa depan.
+            </p>
+            <div class="hero-buttons">
+                <a href="#projects" class="btn primary">Lihat Proyek</a>
+                <a href="#contact" class="btn secondary">Hubungi Saya</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Tentang Saya -->
+    <section id="about" class="section">
+        <h2 class="section-title">Tentang <span>Saya</span></h2>
+        <div class="about-container">
+            <div class="about-card">
+                <i class="fas fa-network-wired icon-large"></i>
+                <h3>Profil Singkat</h3>
+                <p>
+                    Saya adalah pelajar SMK jurusan <strong>Teknik Jaringan Komputer dan Telekomunikasi (TJKT)</strong> yang memiliki antusiasme tinggi di bidang administrasi jaringan, Linux Server, Fiber Optik, dan keamanan siber dasar. Terbiasa melakukan konfigurasi perangkat keras jaringan serta troubleshooting konektivitas.
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Keahlian (Skills) -->
+    <section id="skills" class="section bg-darker">
+        <h2 class="section-title">Keahlian <span>Teknis</span></h2>
+        <div class="skills-grid">
+            <div class="skill-card">
+                <i class="fas fa-route"></i>
+                <h3>Routing & Switching</h3>
+                <p>Konfigurasi MikroTik (MTCNA), Cisco Packet Tracer, VLAN, OSPF, dan Manajemen Bandwidth.</p>
+            </div>
+            <div class="skill-card">
+                <i class="fas fa-server"></i>
+                <h3>System Administration</h3>
+                <p>Instalasi & konfigurasi Linux Debian/Ubuntu Server (DNS, DHCP, Web Server, Mail Server).</p>
+            </div>
+            <div class="skill-card">
+                <i class="fas fa-wave-square"></i>
+                <h3>Fiber Optik (FTTH)</h3>
+                <p>Penyambungan kabel FO (Splicing), pengukuran redaman dengan OTDR & OPM, instalasi ODP/ONT.</p>
+            </div>
+            <div class="skill-card">
+                <i class="fas fa-shield-alt"></i>
+                <h3>Network Security</h3>
+                <p>Konfigurasi Firewall, VPN (PPTP/L2TP/WireGuard), serta pemantauan trafik jaringan.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Proyek Praktikum -->
+    <section id="projects" class="section">
+        <h2 class="section-title">Proyek & <span>Praktikum</span></h2>
+        
+        <!-- Filter Tombol -->
+        <div class="filter-buttons">
+            <button class="filter-btn active" data-filter="all">Semua</button>
+            <button class="filter-btn" data-filter="mikrotik">MikroTik</button>
+            <button class="filter-btn" data-filter="server">Linux Server</button>
+            <button class="filter-btn" data-filter="fo">Fiber Optik</button>
+        </div>
+
+        <div class="projects-grid">
+            <!-- Proyek 1 -->
+            <div class="project-card" data-category="mikrotik">
+                <div class="project-header">
+                    <i class="fas fa-wifi"></i>
+                    <span class="tag">MikroTik</span>
+                </div>
+                <h3>Hotspot Voucher & Load Balancing</h3>
+                <p>Membangun sistem RT/RW Net skala lab menggunakan metode Load Balancing PCC 2 ISP dan manajemen user dengan Mikhmon.</p>
+            </div>
+
+            <!-- Proyek 2 -->
+            <div class="project-card" data-category="server">
+                <div class="project-header">
+                    <i class="fas fa-terminal"></i>
+                    <span class="tag">Linux Server</span>
+                </div>
+                <h3>Web Hosting & DNS Server Lokal</h3>
+                <p>Implementasi Debian 11 Server menggunakan Nginx, MariaDB, Bind9, dan sertifikat SSL lokal untuk layanan intranet sekolah.</p>
+            </div>
+
+            <!-- Proyek 3 -->
+            <div class="project-card" data-category="fo">
+                <div class="project-header">
+                    <i class="fas fa-network-wired"></i>
+                    <span class="tag">Fiber Optik</span>
+                </div>
+                <h3>Instalasi Jaringan FTTH</h3>
+                <p>Simulasi penarikan kabel dropcore dari ODP ke OTP, melakukan fusion splicing, dan memastikan redaman di bawah -20 dBm.</p>
+            </div>
+
+            <!-- Proyek 4 -->
+            <div class="project-card" data-category="mikrotik">
+                <div class="project-header">
+                    <i class="fas fa-lock"></i>
+                    <span class="tag">MikroTik</span>
+                </div>
+                <h3>Segmentasi Jaringan dengan VLAN</h3>
+                <p>Memisahkan trafik jaringan Guru, Siswa, dan Tamu menggunakan Router-on-a-Stick dan Manageable Switch.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Kontak -->
+    <section id="contact" class="section bg-darker">
+        <h2 class="section-title">Hubungi <span>Saya</span></h2>
+        <div class="contact-container">
+            <form id="contactForm" class="contact-form">
+                <input type="text" id="name" placeholder="Nama Anda / Perusahaan" required>
+                <input type="email" id="email" placeholder="Email Anda" required>
+                <textarea id="message" rows="5" placeholder="Pesan (misal: Tawaran PKL / Magang)" required></textarea>
+                <button type="submit" class="btn primary">Kirim Pesan</button>
+            </form>
+            <div class="social-links">
+                <a href="#"><i class="fab fa-github"></i> GitHub</a>
+                <a href="#"><i class="fab fa-linkedin"></i> LinkedIn</a>
+                <a href="#"><i class="fas fa-envelope"></i> Email</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <p>&copy; 2026 Portofolio TJKT. Dibuat dengan kode & kopi.</p>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>
