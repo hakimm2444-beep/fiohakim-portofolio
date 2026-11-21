@@ -3,16 +3,15 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Portofolio TJKT | Network & System Engineer</title>
+    <title>Portofolio TJKT | Fio Hakim</title>
     <link rel="stylesheet" href="style.css">
-    <!-- Font Awesome untuk Ikon -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
-<body>
+<body id="mainBody">
 
     <!-- Navbar -->
     <nav class="navbar">
-        <div class="logo">TJKT<span>.net</span></div>
+        <div class="logo editable" data-key="logo">TJKT<span>.net</span></div>
         <ul class="nav-links" id="navLinks">
             <li><a href="#home">Beranda</a></li>
             <li><a href="#about">Tentang</a></li>
@@ -25,18 +24,28 @@
         </div>
     </nav>
 
-    <!-- Hero Section -->
+    <!-- Hero Section dengan Banner -->
     <section id="home" class="hero">
-        <div class="hero-content">
-            <p class="terminal-text">&gt; root@tjkt-portfolio:~# ./init_profile.sh</p>
-            <h1>Halo, Saya <span class="highlight">Rizky Pratama</span></h1>
-            <h2>Siswa Jurusan <span class="typing-text"></span></h2>
-            <p class="hero-desc">
-                Membangun infrastruktur jaringan yang handal, mengamankan server, dan menghubungkan konektivitas masa depan.
-            </p>
-            <div class="hero-buttons">
-                <a href="#projects" class="btn primary">Lihat Proyek</a>
-                <a href="#contact" class="btn secondary">Hubungi Saya</a>
+        <div class="hero-overlay"></div>
+        <div class="hero-wrapper">
+            <div class="hero-content">
+                <p class="terminal-text editable" data-key="terminal">&gt; root@fiohakim-tjkt:~# ./init_profile.sh</p>
+                <h1>Halo, Saya <span class="highlight editable" data-key="heroName">Fio Hakim</span></h1>
+                <h2>Siswa Jurusan <span class="typing-text"></span></h2>
+                <p class="hero-desc editable" data-key="heroDesc">
+                    Membangun infrastruktur jaringan yang handal, mengamankan server, dan menghubungkan konektivitas masa depan.
+                </p>
+                <div class="hero-buttons">
+                    <a href="#projects" class="btn primary">Lihat Proyek</a>
+                    <a href="#contact" class="btn secondary">Hubungi Saya</a>
+                </div>
+            </div>
+            
+            <!-- Foto Profil -->
+            <div class="hero-profile">
+                <div class="profile-frame">
+                    <img id="profileImage" src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&w=600&q=80" alt="Foto Profil">
+                </div>
             </div>
         </div>
     </section>
@@ -47,8 +56,8 @@
         <div class="about-container">
             <div class="about-card">
                 <i class="fas fa-network-wired icon-large"></i>
-                <h3>Profil Singkat</h3>
-                <p>
+                <h3 class="editable" data-key="aboutTitle">Profil Singkat</h3>
+                <p class="editable" data-key="aboutDesc">
                     Saya adalah pelajar SMK jurusan <strong>Teknik Jaringan Komputer dan Telekomunikasi (TJKT)</strong> yang memiliki antusiasme tinggi di bidang administrasi jaringan, Linux Server, Fiber Optik, dan keamanan siber dasar. Terbiasa melakukan konfigurasi perangkat keras jaringan serta troubleshooting konektivitas.
                 </p>
             </div>
@@ -61,23 +70,23 @@
         <div class="skills-grid">
             <div class="skill-card">
                 <i class="fas fa-route"></i>
-                <h3>Routing & Switching</h3>
-                <p>Konfigurasi MikroTik (MTCNA), Cisco Packet Tracer, VLAN, OSPF, dan Manajemen Bandwidth.</p>
+                <h3 class="editable" data-key="skill1Title">Routing & Switching</h3>
+                <p class="editable" data-key="skill1Desc">Konfigurasi MikroTik (MTCNA), Cisco Packet Tracer, VLAN, OSPF, dan Manajemen Bandwidth.</p>
             </div>
             <div class="skill-card">
                 <i class="fas fa-server"></i>
-                <h3>System Administration</h3>
-                <p>Instalasi & konfigurasi Linux Debian/Ubuntu Server (DNS, DHCP, Web Server, Mail Server).</p>
+                <h3 class="editable" data-key="skill2Title">System Administration</h3>
+                <p class="editable" data-key="skill2Desc">Instalasi & konfigurasi Linux Debian/Ubuntu Server (DNS, DHCP, Web Server, Mail Server).</p>
             </div>
             <div class="skill-card">
                 <i class="fas fa-wave-square"></i>
-                <h3>Fiber Optik (FTTH)</h3>
-                <p>Penyambungan kabel FO (Splicing), pengukuran redaman dengan OTDR & OPM, instalasi ODP/ONT.</p>
+                <h3 class="editable" data-key="skill3Title">Fiber Optik (FTTH)</h3>
+                <p class="editable" data-key="skill3Desc">Penyambungan kabel FO (Splicing), pengukuran redaman dengan OTDR & OPM, instalasi ODP/ONT.</p>
             </div>
             <div class="skill-card">
                 <i class="fas fa-shield-alt"></i>
-                <h3>Network Security</h3>
-                <p>Konfigurasi Firewall, VPN (PPTP/L2TP/WireGuard), serta pemantauan trafik jaringan.</p>
+                <h3 class="editable" data-key="skill4Title">Network Security</h3>
+                <p class="editable" data-key="skill4Desc">Konfigurasi Firewall, VPN (PPTP/L2TP/WireGuard), serta pemantauan trafik jaringan.</p>
             </div>
         </div>
     </section>
@@ -86,7 +95,6 @@
     <section id="projects" class="section">
         <h2 class="section-title">Proyek & <span>Praktikum</span></h2>
         
-        <!-- Filter Tombol -->
         <div class="filter-buttons">
             <button class="filter-btn active" data-filter="all">Semua</button>
             <button class="filter-btn" data-filter="mikrotik">MikroTik</button>
@@ -95,44 +103,40 @@
         </div>
 
         <div class="projects-grid">
-            <!-- Proyek 1 -->
             <div class="project-card" data-category="mikrotik">
                 <div class="project-header">
                     <i class="fas fa-wifi"></i>
                     <span class="tag">MikroTik</span>
                 </div>
-                <h3>Hotspot Voucher & Load Balancing</h3>
-                <p>Membangun sistem RT/RW Net skala lab menggunakan metode Load Balancing PCC 2 ISP dan manajemen user dengan Mikhmon.</p>
+                <h3 class="editable" data-key="proj1Title">Hotspot Voucher & Load Balancing</h3>
+                <p class="editable" data-key="proj1Desc">Membangun sistem RT/RW Net skala lab menggunakan metode Load Balancing PCC 2 ISP dan manajemen user dengan Mikhmon.</p>
             </div>
 
-            <!-- Proyek 2 -->
             <div class="project-card" data-category="server">
                 <div class="project-header">
                     <i class="fas fa-terminal"></i>
                     <span class="tag">Linux Server</span>
                 </div>
-                <h3>Web Hosting & DNS Server Lokal</h3>
-                <p>Implementasi Debian 11 Server menggunakan Nginx, MariaDB, Bind9, dan sertifikat SSL lokal untuk layanan intranet sekolah.</p>
+                <h3 class="editable" data-key="proj2Title">Web Hosting & DNS Server Lokal</h3>
+                <p class="editable" data-key="proj2Desc">Implementasi Debian 11 Server menggunakan Nginx, MariaDB, Bind9, dan sertifikat SSL lokal untuk layanan intranet sekolah.</p>
             </div>
 
-            <!-- Proyek 3 -->
             <div class="project-card" data-category="fo">
                 <div class="project-header">
                     <i class="fas fa-network-wired"></i>
                     <span class="tag">Fiber Optik</span>
                 </div>
-                <h3>Instalasi Jaringan FTTH</h3>
-                <p>Simulasi penarikan kabel dropcore dari ODP ke OTP, melakukan fusion splicing, dan memastikan redaman di bawah -20 dBm.</p>
+                <h3 class="editable" data-key="proj3Title">Instalasi Jaringan FTTH</h3>
+                <p class="editable" data-key="proj3Desc">Simulasi penarikan kabel dropcore dari ODP ke OTP, melakukan fusion splicing, dan memastikan redaman di bawah -20 dBm.</p>
             </div>
 
-            <!-- Proyek 4 -->
             <div class="project-card" data-category="mikrotik">
                 <div class="project-header">
                     <i class="fas fa-lock"></i>
                     <span class="tag">MikroTik</span>
                 </div>
-                <h3>Segmentasi Jaringan dengan VLAN</h3>
-                <p>Memisahkan trafik jaringan Guru, Siswa, dan Tamu menggunakan Router-on-a-Stick dan Manageable Switch.</p>
+                <h3 class="editable" data-key="proj4Title">Segmentasi Jaringan dengan VLAN</h3>
+                <p class="editable" data-key="proj4Desc">Memisahkan trafik jaringan Guru, Siswa, dan Tamu menggunakan Router-on-a-Stick dan Manageable Switch.</p>
             </div>
         </div>
     </section>
@@ -157,9 +161,74 @@
 
     <!-- Footer -->
     <footer>
-        <p>&copy; 2026 Portofolio TJKT. Dibuat dengan kode & kopi.</p>
+        <p class="editable" data-key="footerText">&copy; 2026 Portofolio TJKT - Fio Hakim. Dibuat dengan kode & kopi.</p>
     </footer>
 
-    <script src="script.js"></script>
+    <!-- Tombol Akses Admin Mengambang -->
+    <button id="adminLoginBtn" class="admin-fab" title="Mode Admin Firebase">
+        <i class="fas fa-user-shield"></i>
+    </button>
+
+    <!-- Modal Login Firebase Admin -->
+    <div id="loginModal" class="modal">
+        <div class="modal-content">
+            <span class="close-modal">&times;</span>
+            <h3><i class="fas fa-fire"></i> Login Admin Firebase</h3>
+            <p class="modal-hint">Masukkan Email & Password akun admin dari Firebase Authentication.</p>
+            <input type="email" id="adminEmailInput" placeholder="Email Admin" style="margin-bottom: 10px;">
+            <input type="password" id="adminPasswordInput" placeholder="Password Admin">
+            <button id="submitLoginBtn" class="btn primary" style="width: 100%; margin-top: 12px;">Masuk</button>
+        </div>
+    </div>
+
+    <!-- Panel Kontrol Admin (Muncul setelah login Firebase) -->
+    <div id="adminPanel" class="admin-panel hidden">
+        <div class="admin-header">
+            <span><i class="fas fa-cloud"></i> Admin Cloud</span>
+            <button id="logoutAdminBtn" class="btn-danger-sm">Keluar</button>
+        </div>
+        
+        <div class="admin-body">
+            <!-- Sakelar Bebas Pilih Mode Edit atau View -->
+            <div class="control-group toggle-row">
+                <label for="editModeToggle"><strong>Aktifkan Edit Teks Langsung</strong></label>
+                <label class="switch">
+                    <input type="checkbox" id="editModeToggle">
+                    <span class="slider round"></span>
+                </label>
+            </div>
+            <p class="helper-text" id="editStatusText">Status: Mode Lihat (Teks terkunci aman)</p>
+
+            <hr class="admin-divider">
+
+            <!-- Upload Gambar Resolusi Tinggi ke Firebase Storage -->
+            <div class="control-group">
+                <label><i class="fas fa-user-circle"></i> Ganti Foto Profil (HD)</label>
+                <input type="file" id="uploadProfile" accept="image/*" class="file-input">
+            </div>
+
+            <div class="control-group">
+                <label><i class="fas fa-image"></i> Ganti Banner Hero (HD)</label>
+                <input type="file" id="uploadBanner" accept="image/*" class="file-input">
+            </div>
+
+            <div class="control-group">
+                <label><i class="fas fa-fill-drip"></i> Ganti Background Web (HD)</label>
+                <input type="file" id="uploadBg" accept="image/*" class="file-input">
+            </div>
+
+            <p id="uploadProgressText" class="helper-text" style="color: #fbbf24;"></p>
+
+            <hr class="admin-divider">
+
+            <div class="admin-actions">
+                <button id="saveChangesBtn" class="btn primary btn-sm"><i class="fas fa-cloud-upload-alt"></i> Simpan ke Cloud</button>
+                <button id="resetAllBtn" class="btn secondary btn-sm"><i class="fas fa-undo"></i> Reset</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Load script.js sebagai ES Module -->
+    <script type="module" src="script.js"></script>
 </body>
 </html>
