@@ -9,6 +9,9 @@
 </head>
 <body id="mainBody">
 
+    <!-- Lapisan Kontras Halus di Atas Background agar Teks Selalu Terbaca -->
+    <div class="bg-readability-tint" aria-hidden="true"></div>
+
     <!-- Efek Cahaya Ambient di Belakang Lapisan Kaca -->
     <div class="ambient-orbs" aria-hidden="true">
         <div class="orb orb-1"></div>
@@ -24,12 +27,12 @@
         </div>
         
         <ul class="sidebar-links" id="sidebarLinks">
-            <li><a href="#home" class="nav-item active"><i class="fas fa-home"></i> <span class="editable" data-key="navHome">Beranda</span></a></li>
-            <li><a href="#about" class="nav-item"><i class="fas fa-user"></i> <span class="editable" data-key="navAbout">Tentang</span></a></li>
-            <li><a href="#skills" class="nav-item"><i class="fas fa-microchip"></i> <span class="editable" data-key="navSkills">Keahlian</span></a></li>
-            <li><a href="#projects" class="nav-item"><i class="fas fa-network-wired"></i> <span class="editable" data-key="navProjects">Proyek Lab</span></a></li>
-            <li><a href="#custom-columns" class="nav-item"><i class="fas fa-columns"></i> <span class="editable" data-key="navCustom">Kolom Ekstra</span></a></li>
-            <li><a href="#contact" class="nav-item"><i class="fas fa-envelope"></i> <span class="editable" data-key="navContact">Kontak</span></a></li>
+            <li><a href="#home" class="nav-item active"><i class="fas fa-home editable-icon" data-icon-key="navHomeIcon"></i> <span class="editable" data-key="navHome">Beranda</span></a></li>
+            <li><a href="#about" class="nav-item"><i class="fas fa-user editable-icon" data-icon-key="navAboutIcon"></i> <span class="editable" data-key="navAbout">Tentang</span></a></li>
+            <li><a href="#skills" class="nav-item"><i class="fas fa-microchip editable-icon" data-icon-key="navSkillsIcon"></i> <span class="editable" data-key="navSkills">Keahlian</span></a></li>
+            <li><a href="#projects" class="nav-item"><i class="fas fa-network-wired editable-icon" data-icon-key="navProjectsIcon"></i> <span class="editable" data-key="navProjects">Proyek Lab</span></a></li>
+            <li><a href="#custom-columns" class="nav-item"><i class="fas fa-columns editable-icon" data-icon-key="navCustomIcon"></i> <span class="editable" data-key="navCustom">Kolom Ekstra</span></a></li>
+            <li><a href="#contact" class="nav-item"><i class="fas fa-envelope editable-icon" data-icon-key="navContactIcon"></i> <span class="editable" data-key="navContact">Kontak</span></a></li>
         </ul>
 
         <!-- Tombol Tambah Menu Sidebar (Hanya muncul saat Mode Edit) -->
@@ -48,16 +51,8 @@
     <!-- Konten Utama -->
     <main class="main-content">
 
-        <!-- Hero Section dengan Banner -->
+        <!-- Hero Section (Menyatu Langsung dengan Background Utama) -->
         <section id="home" class="hero">
-            <img id="bannerImage" class="hero-banner-img" src="https://images.unsplash.com/photo-1558494949-ef010cbdcc31?auto=format&fit=crop&w=1920&q=85" alt="Banner Jaringan TJKT">
-            <div class="hero-overlay"></div>
-
-            <!-- Tombol Ganti Banner Pojok Kiri Atas (Hanya muncul saat Mode Edit) -->
-            <label for="uploadBanner" class="edit-only-box banner-change-badge glass-pill">
-                <i class="fas fa-image"></i> FOTO BANNER
-            </label>
-
             <div class="hero-wrapper">
                 <div class="hero-content glass-hero-card reveal">
                     <h1>
@@ -92,7 +87,9 @@
             <div class="about-container reveal">
                 <div class="about-card glass-card interactive-card">
                     <div class="card-glare"></div>
-                    <i class="fas fa-network-wired icon-large"></i>
+                    <div class="icon-badge center-badge icon-picker-trigger" title="Klik untuk ganti ikon">
+                        <i class="fas fa-network-wired editable-icon" data-icon-key="aboutIcon"></i>
+                    </div>
                     <h3 class="editable" data-key="aboutTitle">Profil Singkat</h3>
                     <p class="editable" data-key="aboutDesc">
                         Saya adalah pelajar SMK jurusan <strong>Teknik Jaringan Komputer dan Telekomunikasi (TJKT)</strong> yang memiliki antusiasme tinggi di bidang administrasi jaringan, Linux Server, Fiber Optik, dan keamanan siber dasar. Terbiasa melakukan konfigurasi perangkat keras jaringan serta troubleshooting konektivitas.
@@ -113,25 +110,33 @@
             <div class="skills-grid" id="skillsGrid">
                 <div class="skill-card glass-card interactive-card reveal">
                     <div class="card-glare"></div>
-                    <div class="icon-badge"><i class="fas fa-route"></i></div>
+                    <div class="icon-badge icon-picker-trigger" title="Klik untuk ganti ikon">
+                        <i class="fas fa-route editable-icon" data-icon-key="skill1Icon"></i>
+                    </div>
                     <h3 class="editable" data-key="skill1Title">Routing & Switching</h3>
                     <p class="editable" data-key="skill1Desc">Konfigurasi MikroTik (MTCNA), Cisco Packet Tracer, VLAN, OSPF, dan Manajemen Bandwidth.</p>
                 </div>
                 <div class="skill-card glass-card interactive-card reveal">
                     <div class="card-glare"></div>
-                    <div class="icon-badge"><i class="fas fa-server"></i></div>
+                    <div class="icon-badge icon-picker-trigger" title="Klik untuk ganti ikon">
+                        <i class="fas fa-server editable-icon" data-icon-key="skill2Icon"></i>
+                    </div>
                     <h3 class="editable" data-key="skill2Title">System Administration</h3>
                     <p class="editable" data-key="skill2Desc">Instalasi & konfigurasi Linux Debian/Ubuntu Server (DNS, DHCP, Web Server, Mail Server).</p>
                 </div>
                 <div class="skill-card glass-card interactive-card reveal">
                     <div class="card-glare"></div>
-                    <div class="icon-badge"><i class="fas fa-wave-square"></i></div>
+                    <div class="icon-badge icon-picker-trigger" title="Klik untuk ganti ikon">
+                        <i class="fas fa-wave-square editable-icon" data-icon-key="skill3Icon"></i>
+                    </div>
                     <h3 class="editable" data-key="skill3Title">Fiber Optik (FTTH)</h3>
                     <p class="editable" data-key="skill3Desc">Penyambungan kabel FO (Splicing), pengukuran redaman dengan OTDR & OPM, instalasi ODP/ONT.</p>
                 </div>
                 <div class="skill-card glass-card interactive-card reveal">
                     <div class="card-glare"></div>
-                    <div class="icon-badge"><i class="fas fa-shield-alt"></i></div>
+                    <div class="icon-badge icon-picker-trigger" title="Klik untuk ganti ikon">
+                        <i class="fas fa-shield-alt editable-icon" data-icon-key="skill4Icon"></i>
+                    </div>
                     <h3 class="editable" data-key="skill4Title">Network Security</h3>
                     <p class="editable" data-key="skill4Desc">Konfigurasi Firewall, VPN (PPTP/L2TP/WireGuard), serta pemantauan trafik jaringan.</p>
                 </div>
@@ -158,7 +163,9 @@
                 <div class="project-card glass-card interactive-card reveal" data-category="mikrotik">
                     <div class="card-glare"></div>
                     <div class="project-header">
-                        <div class="icon-badge"><i class="fas fa-wifi"></i></div>
+                        <div class="icon-badge icon-picker-trigger" title="Klik untuk ganti ikon">
+                            <i class="fas fa-wifi editable-icon" data-icon-key="proj1Icon"></i>
+                        </div>
                         <span class="tag editable" data-key="proj1Tag">MikroTik</span>
                     </div>
                     <h3 class="editable" data-key="proj1Title">Hotspot Voucher & Load Balancing</h3>
@@ -168,7 +175,9 @@
                 <div class="project-card glass-card interactive-card reveal" data-category="server">
                     <div class="card-glare"></div>
                     <div class="project-header">
-                        <div class="icon-badge"><i class="fas fa-terminal"></i></div>
+                        <div class="icon-badge icon-picker-trigger" title="Klik untuk ganti ikon">
+                            <i class="fas fa-terminal editable-icon" data-icon-key="proj2Icon"></i>
+                        </div>
                         <span class="tag editable" data-key="proj2Tag">Linux Server</span>
                     </div>
                     <h3 class="editable" data-key="proj2Title">Web Hosting & DNS Server Lokal</h3>
@@ -178,7 +187,9 @@
                 <div class="project-card glass-card interactive-card reveal" data-category="fo">
                     <div class="card-glare"></div>
                     <div class="project-header">
-                        <div class="icon-badge"><i class="fas fa-network-wired"></i></div>
+                        <div class="icon-badge icon-picker-trigger" title="Klik untuk ganti ikon">
+                            <i class="fas fa-network-wired editable-icon" data-icon-key="proj3Icon"></i>
+                        </div>
                         <span class="tag editable" data-key="proj3Tag">Fiber Optik</span>
                     </div>
                     <h3 class="editable" data-key="proj3Title">Instalasi Jaringan FTTH</h3>
@@ -188,7 +199,9 @@
                 <div class="project-card glass-card interactive-card reveal" data-category="mikrotik">
                     <div class="card-glare"></div>
                     <div class="project-header">
-                        <div class="icon-badge"><i class="fas fa-lock"></i></div>
+                        <div class="icon-badge icon-picker-trigger" title="Klik untuk ganti ikon">
+                            <i class="fas fa-lock editable-icon" data-icon-key="proj4Icon"></i>
+                        </div>
                         <span class="tag editable" data-key="proj4Tag">MikroTik</span>
                     </div>
                     <h3 class="editable" data-key="proj4Title">Segmentasi Jaringan dengan VLAN</h3>
@@ -208,7 +221,9 @@
             <div class="skills-grid" id="customColumnsGrid">
                 <div class="skill-card glass-card interactive-card reveal">
                     <div class="card-glare"></div>
-                    <div class="icon-badge"><i class="fas fa-certificate"></i></div>
+                    <div class="icon-badge icon-picker-trigger" title="Klik untuk ganti ikon">
+                        <i class="fas fa-certificate editable-icon" data-icon-key="customCol1Icon"></i>
+                    </div>
                     <h3 class="editable" data-key="customCol1Title">Sertifikasi MTCNA</h3>
                     <p class="editable" data-key="customCol1Desc">MikroTik Certified Network Associate - Menguasai dasar routing, firewall, wireless, dan QoS.</p>
                 </div>
@@ -240,7 +255,6 @@
     </main>
 
     <!-- Input File Tersembunyi -->
-    <input type="file" id="uploadBanner" accept="image/*" hidden>
     <input type="file" id="uploadProfile" accept="image/*" hidden>
     <input type="file" id="uploadBg" accept="image/*" hidden>
 
@@ -269,6 +283,18 @@
             <button id="toggleEditModeBtn" class="btn-pill-finish">
                 <i class="fas fa-check"></i> Selesai Edit
             </button>
+        </div>
+    </div>
+
+    <!-- Modal Pemilih Ikon (Icon Picker) -->
+    <div id="iconPickerModal" class="modal">
+        <div class="modal-content glass-modal">
+            <span class="close-modal" data-close="iconPickerModal">&times;</span>
+            <h3><i class="fas fa-icons"></i> Pilih Ikon</h3>
+            <p class="modal-hint">Pilih ikon jaringan, server, atau perangkat untuk bagian ini:</p>
+            <div class="icon-grid-picker" id="iconGridPicker">
+                <!-- Daftar ikon akan dirender otomatis oleh JS -->
+            </div>
         </div>
     </div>
 

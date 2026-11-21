@@ -34,24 +34,131 @@ const analytics = getAnalytics(app);
 const auth = getAuth(app);
 const db = getFirestore(app);
 
-// Simpan sesi login admin secara permanen di browser
 setPersistence(auth, browserLocalPersistence);
-
-// Dokumen teks & struktur di Firestore
 const portfolioDocRef = doc(db, "portfolio", "mainData");
 
 let extraSidebarItems = [];
 let extraSkills = [];
 let extraProjects = [];
 let extraCustomCols = [];
+let savedIcons = {};
 let isEditingMode = false;
 let currentUser = null;
 
-// =========================================
-// 2. PENYIMPANAN GAMBAR HD GRATIS DI CLOUD FIRESTORE (CHUNKED)
-// =========================================
+// Daftar Pilihan Ikon TJKT, Jaringan, Server & Umum
+const ICON_OPTIONS = [
+    "fas fa-network-wired", "fas fa-server", "fas fa-router", "fas fa-wifi",
+    "fas fa-shield-alt", "fas fa-terminal", "fas fa-microchip", "fas fa-wave-square",
+    "fas fa-ethernet", "fas fa-satellite-dish", "fas fa-broadcast-tower", "fas fa-cloud",
+    "fas fa-database", "fas fa-lock", "fas fa-key", "fas fa-code",
+    "fas fa-laptop-code", "fas fa-desktop", "fas fa-hdd", "fas fa-memory",
+    "fas fa-tools", "fas fa-cogs", "fas fa-project-diagram", "fas fa-sitemap",
+    "fas fa-certificate", "fas fa-award", "fas fa-medal", "fas fa-star",
+    "fas fa-graduation-cap", "fas fa-briefcase", "fas fa-folder-open", "fas fa-home",
+    "fas fa-user", "fas fa-user-tie", "fas fa-envelope", "fas fa-globe"
+];
 
-// Konversi gambar pilihan menjadi WebP/JPEG berkualitas tajam (maksimal ~700KB agar muat di 1 dokumen Firestore)
+// =========================================
+// 2. PEMILIH IKON (ICON PICKER) INTERAKTIF
+// =========================================
+let activeIconTarget = null; // Menyimpan referensi ikon yang sedang dipilih untuk diganti
+
+function initIconPicker() {
+    const grid = document.getElementById('iconGridPicker');
+    grid.innerHTML = '';
+
+    ICON_OPTIONS.forEach(iconClass => {
+        const btn = document.createElement('button');
+        btn.type = 'button';
+        btn.className = 'icon-option-btn';
+        btn.title = iconClass;
+        btn.innerHTML = `<i class="${iconClass}"></i>`;
+
+        btn.addEventListener('click', () => {
+            if (!activeIconTarget) return;
+
+            if (activeIconTarget.type === 'static') {
+                const key = activeIconTarget.key;
+                savedIcons[key] = iconClass;
+                const iconEl = document.querySelector(`.editable-icon[data-icon-key="${key}"]`);
+                if (iconEl) {
+                    iconEl.className = `${iconClass} editable-icon`;
+                }
+            } else if (activeIconTarget.type === 'dynamic') {
+                const { arrName, index } = activeIconTarget;
+                if (arrName === 'extraSkills') extraSkills[index].icon = iconClass;
+                if (arrName === 'extraProjects') extraProjects[index].icon = iconClass;
+                if (arrName === 'extraCustomCols') extraCustomCols[index].icon = iconClass;
+                if (arrName === 'extraSidebarItems') extraSidebarItems[index].icon = iconClass;
+                renderDynamicElements();
+            }
+
+            document.getElementById('iconPickerModal').style.display = 'none';
+            saveAllToCloud(true);
+        });
+
+        grid.appendChild(btn);
+    });
+}
+
+// Delegasi klik untuk mengganti ikon saat Mode Edit aktif
+document.addEventListener('click', (e) => {
+    if (!isEditingMode) return;
+
+    // 1. Klik pada lencana ikon kartu (About, Skills, Projects, Custom)
+    const badgeTrigger = e.target.closest('.icon-picker-trigger');
+    if (badgeTrigger) {
+        e.preventDefault();
+        e.stopPropagation();
+
+        const staticIcon = badgeTrigger.querySelector('.editable-icon[data-icon-key]');
+        if (staticIcon) {
+            activeIconTarget = {
+                type: 'static',
+                key: staticIcon.getAttribute('data-icon-key')
+            };
+            document.getElementById('iconPickerModal').style.display = 'flex';
+            return;
+        }
+
+        const dynIcon = badgeTrigger.querySelector('.dynamic-icon');
+        if (dynIcon) {
+            activeIconTarget = {
+                type: 'dynamic',
+                arrName: dynIcon.getAttribute('data-array'),
+                index: parseInt(dynIcon.getAttribute('data-index'))
+            };
+            document.getElementById('iconPickerModal').style.display = 'flex';
+            return;
+        }
+    }
+
+    // 2. Klik langsung pada ikon menu sidebar
+    const sidebarIcon = e.target.closest('.sidebar-links a i');
+    if (sidebarIcon) {
+        e.preventDefault();
+        e.stopPropagation();
+
+        if (sidebarIcon.hasAttribute('data-icon-key')) {
+            activeIconTarget = {
+                type: 'static',
+                key: sidebarIcon.getAttribute('data-icon-key')
+            };
+            document.getElementById('iconPickerModal').style.display = 'flex';
+        } else if (sidebarIcon.hasAttribute('data-sidebar-index')) {
+            activeIconTarget = {
+                type: 'dynamic',
+                arrName: 'extraSidebarItems',
+                index: parseInt(sidebarIcon.getAttribute('data-sidebar-index'))
+            };
+            document.getElementById('iconPickerModal').style.display = 'flex';
+        }
+    }
+});
+
+// =========================================
+// 3. PENYIMPANAN GAMBAR HD GRATIS DI CLOUD FIRESTORE
+// =========================================
 function compressImageForFirestore(file, maxWidth = 1600, quality = 0.85) {
     return new Promise((resolve, reject) => {
         const reader = new FileReader();
@@ -70,9 +177,7 @@ function compressImageForFirestore(file, maxWidth = 1600, quality = 0.85) {
                 const ctx = canvas.getContext('2d');
                 ctx.drawImage(img, 0, 0, width, height);
 
-                // Gunakan WebP karena ukurannya 30-40% lebih kecil dengan ketajaman tetap tinggi
                 let dataUrl = canvas.toDataURL('image/webp', quality);
-                // Jika masih di atas 850KB (batas dokumen Firestore 1MB), turunkan sedikit kualitasnya
                 if (dataUrl.length > 850000) {
                     dataUrl = canvas.toDataURL('image/webp', 0.65);
                 }
@@ -86,7 +191,6 @@ function compressImageForFirestore(file, maxWidth = 1600, quality = 0.85) {
     });
 }
 
-// Simpan setiap media ke dokumen terpisah di koleksi "portfolio_media" (masing-masing punya jatah 1MB penuh)
 async function saveMediaToFirestore(mediaKey, dataUrl) {
     const mediaDocRef = doc(db, "portfolio_media", mediaKey);
     await setDoc(mediaDocRef, {
@@ -102,7 +206,7 @@ async function loadMediaFromFirestore(mediaKey) {
 }
 
 // =========================================
-// 3. MICROINTERACTIONS ENGINE (TILT, GLARE, REVEAL)
+// 4. MICROINTERACTIONS ENGINE (TILT, GLARE, REVEAL)
 // =========================================
 function initMicrointeractions() {
     document.querySelectorAll('.interactive-card').forEach(card => {
@@ -179,7 +283,7 @@ window.addEventListener('scroll', () => {
 });
 
 // =========================================
-// 4. SIMPAN OTOMATIS TEKS & KOLOM KE FIRESTORE
+// 5. SIMPAN OTOMATIS TEKS, IKON & KOLOM KE FIRESTORE
 // =========================================
 async function saveAllToCloud(showAlert = false) {
     if (!currentUser) return;
@@ -193,6 +297,7 @@ async function saveAllToCloud(showAlert = false) {
     try {
         await setDoc(portfolioDocRef, { 
             texts: textData,
+            savedIcons,
             extraSidebarItems,
             extraSkills,
             extraProjects,
@@ -200,7 +305,7 @@ async function saveAllToCloud(showAlert = false) {
         }, { merge: true });
 
         if (showAlert) {
-            showToast("Semua perubahan tersimpan ke Cloud!");
+            showToast("Perubahan tersimpan ke Cloud!");
         }
     } catch (error) {
         console.error("Gagal menyimpan ke Cloud:", error);
@@ -219,7 +324,7 @@ function showToast(msg, duration = 2500) {
 }
 
 // =========================================
-// 5. RENDER SIDEBAR & KOLOM DINAMIS
+// 6. RENDER SIDEBAR & KOLOM DINAMIS
 // =========================================
 function renderDynamicElements() {
     const sidebarList = document.getElementById('sidebarLinks');
@@ -230,7 +335,8 @@ function renderDynamicElements() {
         li.className = 'dynamic-sidebar-item';
         li.innerHTML = `
             <a href="${item.link}">
-                <i class="${item.icon}"></i> <span class="editable dynamic-sidebar-label" data-index="${index}">${item.label}</span>
+                <i class="${item.icon}" data-sidebar-index="${index}"></i> 
+                <span class="editable dynamic-sidebar-label" data-index="${index}">${item.label}</span>
             </a>
             <button class="edit-only-box delete-sidebar-item" data-index="${index}" title="Hapus Menu">&times;</button>
         `;
@@ -261,7 +367,9 @@ function renderDynamicElements() {
         card.innerHTML = `
             <div class="card-glare"></div>
             <button class="edit-only-box delete-card-btn" data-type="skill" data-index="${index}"><i class="fas fa-trash"></i></button>
-            <div class="icon-badge"><i class="fas fa-microchip"></i></div>
+            <div class="icon-badge icon-picker-trigger" title="Klik untuk ganti ikon">
+                <i class="${col.icon || 'fas fa-microchip'} dynamic-icon" data-array="extraSkills" data-index="${index}"></i>
+            </div>
             <h3 class="editable dynamic-field" data-array="extraSkills" data-index="${index}" data-field="title">${col.title}</h3>
             <p class="editable dynamic-field" data-array="extraSkills" data-index="${index}" data-field="desc">${col.desc}</p>
         `;
@@ -278,7 +386,9 @@ function renderDynamicElements() {
             <div class="card-glare"></div>
             <button class="edit-only-box delete-card-btn" data-type="project" data-index="${index}"><i class="fas fa-trash"></i></button>
             <div class="project-header">
-                <div class="icon-badge"><i class="fas fa-project-diagram"></i></div>
+                <div class="icon-badge icon-picker-trigger" title="Klik untuk ganti ikon">
+                    <i class="${col.icon || 'fas fa-project-diagram'} dynamic-icon" data-array="extraProjects" data-index="${index}"></i>
+                </div>
                 <span class="tag editable dynamic-field" data-array="extraProjects" data-index="${index}" data-field="tag">${col.tag}</span>
             </div>
             <h3 class="editable dynamic-field" data-array="extraProjects" data-index="${index}" data-field="title">${col.title}</h3>
@@ -295,7 +405,9 @@ function renderDynamicElements() {
         card.innerHTML = `
             <div class="card-glare"></div>
             <button class="edit-only-box delete-card-btn" data-type="custom" data-index="${index}"><i class="fas fa-trash"></i></button>
-            <div class="icon-badge"><i class="fas fa-star"></i></div>
+            <div class="icon-badge icon-picker-trigger" title="Klik untuk ganti ikon">
+                <i class="${col.icon || 'fas fa-star'} dynamic-icon" data-array="extraCustomCols" data-index="${index}"></i>
+            </div>
             <h3 class="editable dynamic-field" data-array="extraCustomCols" data-index="${index}" data-field="title">${col.title}</h3>
             <p class="editable dynamic-field" data-array="extraCustomCols" data-index="${index}" data-field="desc">${col.desc}</p>
         `;
@@ -330,11 +442,10 @@ function renderDynamicElements() {
 }
 
 // =========================================
-// 6. MUAT DATA & FOTO DARI CLOUD FIRESTORE
+// 7. MUAT DATA, IKON & FOTO DARI CLOUD FIRESTORE
 // =========================================
 async function loadCloudContent() {
     try {
-        // Muat teks & struktur utama
         const docSnap = await getDoc(portfolioDocRef);
         if (docSnap.exists()) {
             const data = docSnap.data();
@@ -348,6 +459,16 @@ async function loadCloudContent() {
                 });
             }
 
+            if (data.savedIcons) {
+                savedIcons = data.savedIcons;
+                Object.keys(savedIcons).forEach(key => {
+                    const iconEl = document.querySelector(`.editable-icon[data-icon-key="${key}"]`);
+                    if (iconEl) {
+                        iconEl.className = `${savedIcons[key]} editable-icon`;
+                    }
+                });
+            }
+
             extraSidebarItems = data.extraSidebarItems || [];
             extraSkills = data.extraSkills || [];
             extraProjects = data.extraProjects || [];
@@ -355,15 +476,12 @@ async function loadCloudContent() {
             renderDynamicElements();
         }
 
-        // Muat masing-masing foto dari dokumen terpisah di Firestore
-        const [profileData, bannerData, bgData] = await Promise.all([
+        const [profileData, bgData] = await Promise.all([
             loadMediaFromFirestore('profileImage'),
-            loadMediaFromFirestore('bannerImage'),
             loadMediaFromFirestore('bgImage')
         ]);
 
         if (profileData) document.getElementById('profileImage').src = profileData;
-        if (bannerData) document.getElementById('bannerImage').src = bannerData;
         if (bgData) document.body.style.backgroundImage = `url('${bgData}')`;
 
     } catch (error) {
@@ -372,7 +490,7 @@ async function loadCloudContent() {
 }
 
 // =========================================
-// 7. KONTROL ADMIN RINGKAS (EDIT <-> SELESAI EDIT)
+// 8. KONTROL ADMIN RINGKAS (EDIT <-> SELESAI EDIT)
 // =========================================
 const adminLoginBtn = document.getElementById('adminLoginBtn');
 const adminQuickControls = document.getElementById('adminQuickControls');
@@ -469,7 +587,7 @@ logoutAdminBtn.addEventListener('click', async () => {
 });
 
 // =========================================
-// 8. AKSI TAMBAH SIDEBAR & TAMBAH KOLOM
+// 9. AKSI TAMBAH SIDEBAR & TAMBAH KOLOM
 // =========================================
 document.getElementById('openAddSidebarModal').addEventListener('click', () => {
     document.getElementById('addSidebarModal').style.display = 'flex';
@@ -492,6 +610,7 @@ document.getElementById('confirmAddSidebarBtn').addEventListener('click', () => 
 
 document.getElementById('addSkillColBtn').addEventListener('click', () => {
     extraSkills.push({
+        icon: "fas fa-microchip",
         title: "Keahlian Baru",
         desc: "Klik teks ini untuk menuliskan deskripsi keahlian jaringan atau server."
     });
@@ -501,6 +620,7 @@ document.getElementById('addSkillColBtn').addEventListener('click', () => {
 
 document.getElementById('addProjectColBtn').addEventListener('click', () => {
     extraProjects.push({
+        icon: "fas fa-project-diagram",
         category: "mikrotik",
         tag: "Praktikum",
         title: "Judul Proyek Baru",
@@ -512,6 +632,7 @@ document.getElementById('addProjectColBtn').addEventListener('click', () => {
 
 document.getElementById('addCustomColBtn').addEventListener('click', () => {
     extraCustomCols.push({
+        icon: "fas fa-star",
         title: "Kolom Informasi Baru",
         desc: "Klik teks ini untuk mengisi konten tambahan."
     });
@@ -520,7 +641,7 @@ document.getElementById('addCustomColBtn').addEventListener('click', () => {
 });
 
 // =========================================
-// 9. UPLOAD GAMBAR LANGSUNG KE CLOUD FIRESTORE (GRATIS)
+// 10. UPLOAD GAMBAR LANGSUNG KE CLOUD FIRESTORE (GRATIS)
 // =========================================
 function setupFirestoreImageUpload(inputId, mediaKey, maxWidth, applyCallback) {
     const inputEl = document.getElementById(inputId);
@@ -538,13 +659,11 @@ function setupFirestoreImageUpload(inputId, mediaKey, maxWidth, applyCallback) {
             return alert("Harap pilih file gambar yang valid (JPG, PNG, WEBP).");
         }
 
-        // 1. Tampilkan preview langsung di layar seketika
         const instantUrl = URL.createObjectURL(file);
         applyCallback(instantUrl);
-        showToast("Memproses & menyimpan foto ke Firestore...", 0);
+        showToast("Memproses & menyimpan foto ke Cloud...", 0);
 
         try {
-            // 2. Optimasi resolusi & simpan langsung ke Cloud Firestore (paket gratis Spark)
             const optimizedDataUrl = await compressImageForFirestore(file, maxWidth, 0.85);
             await saveMediaToFirestore(mediaKey, optimizedDataUrl);
 
@@ -559,9 +678,6 @@ function setupFirestoreImageUpload(inputId, mediaKey, maxWidth, applyCallback) {
     });
 }
 
-setupFirestoreImageUpload('uploadBanner', 'bannerImage', 1600, (url) => {
-    document.getElementById('bannerImage').src = url;
-});
 setupFirestoreImageUpload('uploadProfile', 'profileImage', 700, (url) => {
     document.getElementById('profileImage').src = url;
 });
@@ -569,14 +685,12 @@ setupFirestoreImageUpload('uploadBg', 'bgImage', 1600, (url) => {
     document.body.style.backgroundImage = `url('${url}')`;
 });
 
-// Reset Semua Data & Foto di Cloud
 document.getElementById('resetAllBtn').addEventListener('click', async () => {
     if (!currentUser) return;
     if (confirm("Yakin ingin mereset seluruh konten dan foto di Cloud ke pengaturan awal?")) {
         await Promise.all([
             deleteDoc(portfolioDocRef),
             deleteDoc(doc(db, "portfolio_media", "profileImage")),
-            deleteDoc(doc(db, "portfolio_media", "bannerImage")),
             deleteDoc(doc(db, "portfolio_media", "bgImage"))
         ]);
         location.reload();
@@ -584,7 +698,7 @@ document.getElementById('resetAllBtn').addEventListener('click', async () => {
 });
 
 // =========================================
-// 10. SIDEBAR MOBILE & FILTER PROYEK
+// 11. SIDEBAR MOBILE & FILTER PROYEK
 // =========================================
 const sidebar = document.getElementById('sidebar');
 document.getElementById('openSidebarBtn').addEventListener('click', () => {
@@ -618,6 +732,7 @@ document.getElementById('contactForm').addEventListener('submit', (e) => {
 });
 
 document.addEventListener('DOMContentLoaded', () => {
+    initIconPicker();
     initMicrointeractions();
     loadCloudContent();
 });
