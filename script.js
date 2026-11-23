@@ -37,21 +37,214 @@ const db = getFirestore(app);
 setPersistence(auth, browserLocalPersistence);
 const portfolioDocRef = doc(db, "portfolio", "mainData");
 
+// Daftar Sub-Menu di Bawah "Tugas Projek >"
+let projectSubmenus = [
+    { id: "sem-1", label: "Semester 1" },
+    { id: "sem-2", label: "Semester 2" },
+    { id: "sem-3", label: "Semester 3" }
+];
+
 let extraSidebarItems = [];
 let extraSkills = [];
 let showcaseProjects = [];
 let savedIcons = {};
-let deletedStaticCards = []; // Menyimpan daftar kartu bawaan yang dihapus
-let deletedTextKeys = [];    // Menyimpan daftar key teks yang dihapus
-let activeProjectFilter = 'all';
+let deletedStaticCards = [];
+let deletedTextKeys = [];
+
+let activePage = 'home';
+let activeSemesterId = 'sem-1';
+let activeCategoryFilter = 'all';
 let isEditingMode = false;
 let currentUser = null;
 
 // =========================================
-// 2. KONTROL HAPUS SEMUA TEKS SAAT MODE EDIT
+// 2. SISTEM MULTI-HALAMAN & SIDEBAR ACCORDION
+// =========================================
+const sidebar = document.getElementById('sidebar');
+const sidebarBackdrop = document.getElementById('sidebarBackdrop');
+
+function closeMobileSidebar() {
+    sidebar.classList.remove('open');
+    sidebarBackdrop.classList.remove('active');
+}
+
+document.getElementById('openSidebarBtn').addEventListener('click', () => {
+    sidebar.classList.add('open');
+    sidebarBackdrop.classList.add('active');
+});
+
+document.getElementById('closeSidebarBtn').addEventListener('click', closeMobileSidebar);
+sidebarBackdrop.addEventListener('click', closeMobileSidebar);
+
+// Toggle buka/tutup sub-menu "Tugas Projek >"
+const projectAccordionGroup = document.getElementById('projectAccordionGroup');
+document.getElementById('toggleProjectMenuBtn').addEventListener('click', () => {
+    projectAccordionGroup.classList.toggle('open');
+});
+
+// Fungsi berpindah antar halaman portofolio
+function switchPage(pageName, semesterId = null) {
+    activePage = pageName;
+
+    // Sembunyikan semua halaman & aktifkan halaman tujuan
+    document.querySelectorAll('.page-view').forEach(sec => sec.classList.remove('active'));
+    const targetSection = document.getElementById(`page-${pageName}`);
+    if (targetSection) targetSection.classList.add('active');
+
+    // Reset active pada seluruh menu sidebar
+    document.querySelectorAll('.sidebar-links a.nav-item, .submenu-link').forEach(el => {
+        el.classList.remove('active');
+    });
+
+    if (pageName === 'projects') {
+        if (semesterId) activeSemesterId = semesterId;
+        projectAccordionGroup.classList.add('open');
+
+        const activeSub = projectSubmenus.find(s => s.id === activeSemesterId) || projectSubmenus[0];
+        if (activeSub) {
+            activeSemesterId = activeSub.id;
+            document.getElementById('projectBreadcrumbSemester').textContent = activeSub.label;
+            document.getElementById('projectPageMainTitle').innerHTML = `Tugas Projek — <span>${activeSub.label}</span>`;
+            document.getElementById('mobilePageTitle').textContent = activeSub.label;
+
+            const subLink = document.querySelector(`.submenu-link[data-sem-id="${activeSub.id}"]`);
+            if (subLink) subLink.classList.add('active');
+        }
+
+        activeCategoryFilter = 'all';
+        renderProjectsForActiveSemester();
+    } else {
+        const navLink = document.querySelector(`.sidebar-links a.nav-item[data-page="${pageName}"]`);
+        if (navLink) {
+            navLink.classList.add('active');
+            document.getElementById('mobilePageTitle').textContent = navLink.textContent.trim();
+        }
+    }
+
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+    closeMobileSidebar();
+}
+
+// Event klik menu utama di sidebar
+document.querySelectorAll('.sidebar-links a.nav-item[data-page]').forEach(link => {
+    link.addEventListener('click', (e) => {
+        e.preventDefault();
+        const page = link.getAttribute('data-page');
+        switchPage(page);
+    });
+});
+
+// Tombol navigasi cepat di Beranda
+document.getElementById('heroExploreProjectsBtn').addEventListener('click', () => {
+    const firstSem = projectSubmenus[0] ? projectSubmenus[0].id : 'sem-1';
+    switchPage('projects', firstSem);
+});
+
+document.getElementById('statTotalProjectsBox').addEventListener('click', () => {
+    const firstSem = projectSubmenus[0] ? projectSubmenus[0].id : 'sem-1';
+    switchPage('projects', firstSem);
+});
+
+document.querySelectorAll('[data-goto-page]').forEach(el => {
+    el.addEventListener('click', () => {
+        switchPage(el.getAttribute('data-goto-page'));
+    });
+});
+
+// Render Sub-Menu Semester di Sidebar ("Tugas Projek > Semester 1...")
+function renderProjectSubmenus() {
+    const submenuList = document.getElementById('projectSubmenuList');
+    const semesterSelect = document.getElementById('projSemesterSelect');
+    submenuList.innerHTML = '';
+    semesterSelect.innerHTML = '';
+
+    projectSubmenus.forEach((sub, index) => {
+        const count = showcaseProjects.filter(p => (p.semesterId || 'sem-1') === sub.id).length;
+
+        // 1. Item Sub-Menu Sidebar
+        const li = document.createElement('li');
+        li.className = 'submenu-item-row';
+        li.innerHTML = `
+            <a href="#projects-${sub.id}" class="submenu-link ${activePage === 'projects' && activeSemesterId === sub.id ? 'active' : ''}" data-sem-id="${sub.id}">
+                <span class="editable submenu-label-text" data-sub-index="${index}">${sub.label}</span>
+                <span class="submenu-count">${count}</span>
+            </a>
+            ${projectSubmenus.length > 1 ? `<button type="button" class="edit-only-box delete-submenu-btn" data-sub-index="${index}" title="Hapus Sub-Menu">&times;</button>` : ''}
+        `;
+        submenuList.appendChild(li);
+
+        // 2. Opsi Dropdown di Modal Tambah Project
+        const opt = document.createElement('option');
+        opt.value = sub.id;
+        opt.textContent = sub.label;
+        semesterSelect.appendChild(opt);
+    });
+
+    // Event klik pindah ke halaman semester tersebut
+    submenuList.querySelectorAll('.submenu-link').forEach(link => {
+        link.addEventListener('click', (e) => {
+            e.preventDefault();
+            if (isEditingMode && e.target.classList.contains('editable')) return;
+            const semId = link.getAttribute('data-sem-id');
+            switchPage('projects', semId);
+        });
+    });
+
+    // Event edit nama sub-menu semester
+    submenuList.querySelectorAll('.submenu-label-text').forEach(el => {
+        el.addEventListener('input', () => {
+            const idx = parseInt(el.getAttribute('data-sub-index'));
+            projectSubmenus[idx].label = el.textContent.trim() || `Semester ${idx + 1}`;
+        });
+    });
+
+    // Event hapus sub-menu semester
+    submenuList.querySelectorAll('.delete-submenu-btn').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            const idx = parseInt(btn.getAttribute('data-sub-index'));
+            if (confirm(`Hapus folder "${projectSubmenus[idx].label}"?`)) {
+                projectSubmenus.splice(idx, 1);
+                if (!projectSubmenus.find(s => s.id === activeSemesterId)) {
+                    activeSemesterId = projectSubmenus[0].id;
+                }
+                renderProjectSubmenus();
+                saveAllToCloud(true);
+            }
+        });
+    });
+
+    // Perbarui statistik di halaman Beranda
+    document.getElementById('homeTotalProjects').textContent = showcaseProjects.length;
+    document.getElementById('homeTotalSemesters').textContent = projectSubmenus.length;
+}
+
+// Modal Tambah Sub-Menu Semester
+document.getElementById('addSubmenuBtn').addEventListener('click', (e) => {
+    e.stopPropagation();
+    document.getElementById('addSubmenuModal').style.display = 'flex';
+});
+
+document.getElementById('confirmAddSubmenuBtn').addEventListener('click', () => {
+    const label = document.getElementById('newSubmenuLabel').value.trim();
+    if (!label) return alert("Nama sub-menu tidak boleh kosong!");
+
+    const newId = `sem-${Date.now()}`;
+    projectSubmenus.push({ id: newId, label });
+    document.getElementById('newSubmenuLabel').value = '';
+    document.getElementById('addSubmenuModal').style.display = 'none';
+
+    renderProjectSubmenus();
+    saveAllToCloud(true);
+    switchPage('projects', newId);
+});
+
+// =========================================
+// 3. KONTROL HAPUS SEMUA TEKS SAAT MODE EDIT
 // =========================================
 function attachTextDeleteControls() {
     document.querySelectorAll('.editable').forEach(el => {
+        if (el.classList.contains('submenu-label-text')) return;
         if (el.parentElement && el.parentElement.classList.contains('editable-wrapper')) return;
 
         const wrapper = document.createElement('span');
@@ -75,15 +268,14 @@ function attachTextDeleteControls() {
                 deletedTextKeys.push(key);
             }
 
-            // Jika merupakan field di kartu dinamis
             if (el.classList.contains('dynamic-field')) {
                 const idx = parseInt(el.getAttribute('data-index'));
                 const field = el.getAttribute('data-field');
                 if (extraSkills[idx]) extraSkills[idx][field] = '';
             } else if (el.classList.contains('dynamic-proj-field')) {
-                const idx = parseInt(el.getAttribute('data-index'));
+                const realIdx = parseInt(el.getAttribute('data-real-index'));
                 const field = el.getAttribute('data-field');
-                if (showcaseProjects[idx]) showcaseProjects[idx][field] = '';
+                if (showcaseProjects[realIdx]) showcaseProjects[realIdx][field] = '';
             }
 
             wrapper.style.display = 'none';
@@ -95,7 +287,7 @@ function attachTextDeleteControls() {
 }
 
 // =========================================
-// 3. PARSER VIDEO YOUTUBE & TIKTOK
+// 4. PARSER VIDEO YOUTUBE & TIKTOK
 // =========================================
 function extractYouTubeId(url) {
     if (!url) return null;
@@ -111,7 +303,7 @@ function extractTikTokId(url) {
 }
 
 // =========================================
-// 4. PEMILIH IKON (ICON PICKER)
+// 5. PEMILIH IKON (ICON PICKER)
 // =========================================
 const ICON_OPTIONS = [
     "fas fa-network-wired", "fas fa-server", "fas fa-router", "fas fa-wifi",
@@ -121,7 +313,7 @@ const ICON_OPTIONS = [
     "fas fa-laptop-code", "fas fa-desktop", "fas fa-hdd", "fas fa-memory",
     "fas fa-tools", "fas fa-cogs", "fas fa-project-diagram", "fas fa-sitemap",
     "fas fa-certificate", "fas fa-award", "fas fa-star", "fas fa-graduation-cap",
-    "fas fa-folder-open", "fas fa-home", "fas fa-user", "fas fa-envelope"
+    "fas fa-folder-open", "fas fa-home", "fas fa-user-astronaut", "fas fa-envelope"
 ];
 
 let activeIconTarget = null;
@@ -186,28 +378,21 @@ document.addEventListener('click', (e) => {
         }
     }
 
-    const sidebarIcon = e.target.closest('.sidebar-links a i');
+    const sidebarIcon = e.target.closest('.sidebar-links a.nav-item i, .accordion-left i');
     if (sidebarIcon) {
         e.preventDefault();
         e.stopPropagation();
         if (sidebarIcon.hasAttribute('data-icon-key')) {
             activeIconTarget = { type: 'static', key: sidebarIcon.getAttribute('data-icon-key') };
             document.getElementById('iconPickerModal').style.display = 'flex';
-        } else if (sidebarIcon.hasAttribute('data-sidebar-index')) {
-            activeIconTarget = {
-                type: 'dynamic',
-                arrName: 'extraSidebarItems',
-                index: parseInt(sidebarIcon.getAttribute('data-sidebar-index'))
-            };
-            document.getElementById('iconPickerModal').style.display = 'flex';
         }
     }
 });
 
 // =========================================
-// 5. PENYIMPANAN GAMBAR HD GRATIS DI CLOUD FIRESTORE
+// 6. PENYIMPANAN GAMBAR HD RINGAN DI FIRESTORE
 // =========================================
-function compressImageForFirestore(file, maxWidth = 1400, quality = 0.82) {
+function compressImageForFirestore(file, maxWidth = 1280, quality = 0.8) {
     return new Promise((resolve, reject) => {
         const reader = new FileReader();
         reader.onload = (event) => {
@@ -226,8 +411,8 @@ function compressImageForFirestore(file, maxWidth = 1400, quality = 0.82) {
                 ctx.drawImage(img, 0, 0, width, height);
 
                 let dataUrl = canvas.toDataURL('image/webp', quality);
-                if (dataUrl.length > 820000) {
-                    dataUrl = canvas.toDataURL('image/webp', 0.62);
+                if (dataUrl.length > 780000) {
+                    dataUrl = canvas.toDataURL('image/webp', 0.6);
                 }
                 resolve(dataUrl);
             };
@@ -251,9 +436,12 @@ async function loadMediaFromFirestore(mediaKey) {
 }
 
 // =========================================
-// 6. MICROINTERACTIONS ENGINE
+// 7. MICROINTERACTIONS RINGAN (HANYA AKTIF DI DESKTOP)
 // =========================================
 function initMicrointeractions() {
+    const isTouchDevice = ('ontouchstart' in window) || (navigator.maxTouchPoints > 0);
+    if (isTouchDevice) return; // Ringan di HP: lewati kalkulasi mousemove tilt
+
     document.querySelectorAll('.interactive-card').forEach(card => {
         if (card.dataset.tiltBound) return;
         card.dataset.tiltBound = "true";
@@ -266,31 +454,12 @@ function initMicrointeractions() {
 
             card.style.setProperty('--mouse-x', `${x}px`);
             card.style.setProperty('--mouse-y', `${y}px`);
-
-            const centerX = rect.width / 2;
-            const centerY = rect.height / 2;
-            const rotateX = ((y - centerY) / centerY) * -3;
-            const rotateY = ((x - centerX) / centerX) * 3;
-
-            card.style.transform = `perspective(900px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) translateY(-4px)`;
-        });
-
-        card.addEventListener('mouseleave', () => {
-            card.style.transform = '';
         });
     });
-
-    const observer = new IntersectionObserver((entries) => {
-        entries.forEach(entry => {
-            if (entry.isIntersecting) entry.target.classList.add('visible');
-        });
-    }, { threshold: 0.1 });
-
-    document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
 }
 
 // =========================================
-// 7. SIMPAN OTOMATIS KE CLOUD FIRESTORE
+// 8. SIMPAN KE CLOUD FIRESTORE
 // =========================================
 async function saveAllToCloud(showAlert = false) {
     if (!currentUser) return;
@@ -311,19 +480,20 @@ async function saveAllToCloud(showAlert = false) {
             deletedTextKeys,
             deletedStaticCards,
             savedIcons,
+            projectSubmenus,
             extraSidebarItems,
             extraSkills,
             showcaseProjects
         }, { merge: true });
 
-        if (showAlert) showToast("Perubahan tersimpan ke Cloud!");
+        if (showAlert) showToast("Tersimpan ke Cloud!");
     } catch (error) {
         console.error("Gagal menyimpan ke Cloud:", error);
         showToast("Gagal menyimpan: " + error.message, 4000);
     }
 }
 
-function showToast(msg, duration = 2500) {
+function showToast(msg, duration = 2400) {
     const toast = document.getElementById('uploadToast');
     const text = document.getElementById('uploadProgressText');
     text.textContent = msg;
@@ -332,47 +502,22 @@ function showToast(msg, duration = 2500) {
 }
 
 // =========================================
-// 8. RENDER SIDEBAR, KEAHLIAN & PROJECT MEDIA
+// 9. RENDER KEAHLIAN & HALAMAN PROJECT SEMESTER
 // =========================================
 function renderDynamicElements() {
-    // Sembunyikan kartu statis yang sudah dihapus
     deletedStaticCards.forEach(staticKey => {
         const el = document.querySelector(`[data-static-card="${staticKey}"]`);
         if (el) el.remove();
     });
 
-    // 1. Render Sidebar Tambahan
-    const sidebarList = document.getElementById('sidebarLinks');
-    sidebarList.querySelectorAll('.dynamic-sidebar-item').forEach(el => el.remove());
+    renderProjectSubmenus();
 
-    extraSidebarItems.forEach((item, index) => {
-        const li = document.createElement('li');
-        li.className = 'dynamic-sidebar-item';
-        li.innerHTML = `
-            <a href="${item.link}">
-                <i class="${item.icon}" data-sidebar-index="${index}"></i> 
-                <span class="editable dynamic-sidebar-label" data-index="${index}">${item.label}</span>
-            </a>
-            <button class="edit-only-box delete-sidebar-item" data-index="${index}" title="Hapus Menu">&times;</button>
-        `;
-        sidebarList.appendChild(li);
-    });
-
-    sidebarList.querySelectorAll('.delete-sidebar-item').forEach(btn => {
-        btn.addEventListener('click', (e) => {
-            const idx = parseInt(e.currentTarget.getAttribute('data-index'));
-            extraSidebarItems.splice(idx, 1);
-            renderDynamicElements();
-            saveAllToCloud();
-        });
-    });
-
-    // 2. Render Keahlian Tambahan
+    // Render Keahlian Tambahan
     const skillsGrid = document.getElementById('skillsGrid');
     skillsGrid.querySelectorAll('.dynamic-col').forEach(el => el.remove());
     extraSkills.forEach((col, index) => {
         const card = document.createElement('div');
-        card.className = 'skill-card glass-card interactive-card dynamic-col reveal visible';
+        card.className = 'skill-card glass-card interactive-card dynamic-col';
         card.innerHTML = `
             <div class="card-glare"></div>
             <button class="edit-only-box delete-card-btn" data-type="skill" data-index="${index}" title="Hapus Kartu"><i class="fas fa-trash"></i></button>
@@ -385,21 +530,102 @@ function renderDynamicElements() {
         skillsGrid.appendChild(card);
     });
 
-    // 3. Render Kartu Project Media
-    const projectsGrid = document.getElementById('projectsGrid');
-    const placeholder = document.getElementById('emptyProjectsPlaceholder');
-    projectsGrid.querySelectorAll('.dynamic-project-card').forEach(el => el.remove());
+    document.querySelectorAll('#skillsGrid .delete-card-btn').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+            const staticKey = e.currentTarget.getAttribute('data-static-key');
+            if (staticKey) {
+                if (!deletedStaticCards.includes(staticKey)) deletedStaticCards.push(staticKey);
+                renderDynamicElements();
+                saveAllToCloud(true);
+                return;
+            }
+            const idx = parseInt(e.currentTarget.getAttribute('data-index'));
+            extraSkills.splice(idx, 1);
+            renderDynamicElements();
+            saveAllToCloud(true);
+        });
+    });
 
-    if (showcaseProjects.length === 0) {
-        if (placeholder) placeholder.classList.remove('hidden');
-    } else {
-        if (placeholder) placeholder.classList.add('hidden');
+    document.querySelectorAll('.dynamic-field').forEach(el => {
+        el.addEventListener('input', () => {
+            const idx = parseInt(el.getAttribute('data-index'));
+            const field = el.getAttribute('data-field');
+            extraSkills[idx][field] = el.innerHTML;
+        });
+    });
+
+    renderProjectsForActiveSemester();
+    attachTextDeleteControls();
+    applyEditModeState();
+    initMicrointeractions();
+}
+
+// Render khusus project milik semester yang sedang aktif dibuka (ringan di HP!)
+function renderProjectsForActiveSemester() {
+    const projectsGrid = document.getElementById('projectsGrid');
+    const filterContainer = document.getElementById('projectFilterButtons');
+    projectsGrid.innerHTML = '';
+    filterContainer.innerHTML = '';
+
+    // Filter hanya project milik semester aktif
+    const semesterProjects = showcaseProjects
+        .map((proj, realIndex) => ({ ...proj, realIndex }))
+        .filter(proj => (proj.semesterId || 'sem-1') === activeSemesterId);
+
+    // Hitung kategori/mata pelajaran di semester ini
+    const categoryCounts = {};
+    semesterProjects.forEach(p => {
+        const cat = p.category || 'Umum';
+        categoryCounts[cat] = (categoryCounts[cat] || 0) + 1;
+    });
+
+    // Tombol Filter "Semua"
+    const allBtn = document.createElement('button');
+    allBtn.className = `filter-btn glass-pill ${activeCategoryFilter === 'all' ? 'active' : ''}`;
+    allBtn.innerHTML = `<i class="fas fa-layer-group"></i> Semua <span class="filter-count">${semesterProjects.length}</span>`;
+    allBtn.addEventListener('click', () => {
+        activeCategoryFilter = 'all';
+        renderProjectsForActiveSemester();
+    });
+    filterContainer.appendChild(allBtn);
+
+    Object.keys(categoryCounts).forEach(cat => {
+        const btn = document.createElement('button');
+        btn.className = `filter-btn glass-pill ${activeCategoryFilter === cat ? 'active' : ''}`;
+        btn.innerHTML = `<i class="fas fa-tag"></i> ${cat} <span class="filter-count">${categoryCounts[cat]}</span>`;
+        btn.addEventListener('click', () => {
+            activeCategoryFilter = cat;
+            renderProjectsForActiveSemester();
+        });
+        filterContainer.appendChild(btn);
+    });
+
+    const filteredList = semesterProjects.filter(p => 
+        activeCategoryFilter === 'all' || (p.category || 'Umum') === activeCategoryFilter
+    );
+
+    const activeSub = projectSubmenus.find(s => s.id === activeSemesterId);
+    const semName = activeSub ? activeSub.label : 'Semester';
+    const filterLabel = activeCategoryFilter === 'all' ? `Semua di ${semName}` : activeCategoryFilter;
+
+    document.getElementById('activeFilterLabel').innerHTML = `Menampilkan: <strong>${filterLabel}</strong>`;
+    document.getElementById('totalProjectCountBadge').textContent = `${filteredList.length} item`;
+
+    if (filteredList.length === 0) {
+        projectsGrid.innerHTML = `
+            <div class="empty-projects-placeholder glass-card">
+                <i class="fas fa-folder-open"></i>
+                <p>Belum ada tugas atau project di ${semName}.</p>
+                <small>Masuk sebagai admin lalu klik <strong>"Tambah Konten / Project"</strong> di pojok kanan atas untuk menambahkan video YouTube, TikTok, foto, atau tautan.</small>
+            </div>
+        `;
+        return;
     }
 
-    showcaseProjects.forEach((proj, index) => {
+    // Tampilkan dari yang terbaru
+    filteredList.slice().reverse().forEach(proj => {
         const card = document.createElement('div');
-        card.className = 'project-card glass-card interactive-card dynamic-project-card reveal visible';
-        card.setAttribute('data-category', proj.category || 'Tugas');
+        card.className = 'project-card glass-card interactive-card';
 
         let mediaHtml = '';
         if (proj.mediaType === 'youtube' && proj.youtubeId) {
@@ -446,7 +672,7 @@ function renderDynamicElements() {
 
         card.innerHTML = `
             <div class="card-glare"></div>
-            <button class="edit-only-box delete-card-btn" data-type="showcaseProject" data-index="${index}" title="Hapus Project">
+            <button class="edit-only-box delete-card-btn" data-real-index="${proj.realIndex}" title="Hapus Project">
                 <i class="fas fa-trash"></i>
             </button>
             ${mediaHtml}
@@ -454,135 +680,46 @@ function renderDynamicElements() {
                 <span class="tag">${proj.tag || 'PROJECT'}</span>
                 ${proj.category ? `<span class="teacher-tag"><i class="fas fa-user-tie"></i> ${proj.category}</span>` : ''}
             </div>
-            <h3 class="editable dynamic-proj-field" data-index="${index}" data-field="title">${proj.title}</h3>
-            <p class="editable dynamic-proj-field" data-index="${index}" data-field="desc">${proj.desc}</p>
+            <h3 class="editable dynamic-proj-field" data-real-index="${proj.realIndex}" data-field="title">${proj.title}</h3>
+            <p class="editable dynamic-proj-field" data-real-index="${proj.realIndex}" data-field="desc">${proj.desc}</p>
             ${extraLinkHtml}
-            <button type="button" class="btn-card-fullscreen" data-index="${index}">
+            <button type="button" class="btn-card-fullscreen" data-real-index="${proj.realIndex}">
                 <i class="fas fa-play"></i> Putar / Lihat Layar Penuh
             </button>
         `;
 
-        projectsGrid.insertBefore(card, projectsGrid.firstChild);
+        projectsGrid.appendChild(card);
     });
 
-    // Event Hapus Kartu (Statis maupun Dinamis)
-    document.querySelectorAll('.delete-card-btn').forEach(btn => {
-        btn.addEventListener('click', async (e) => {
-            const staticKey = e.currentTarget.getAttribute('data-static-key');
-            if (staticKey) {
-                if (!deletedStaticCards.includes(staticKey)) deletedStaticCards.push(staticKey);
-                renderDynamicElements();
-                saveAllToCloud(true);
-                return;
-            }
-
-            const type = e.currentTarget.getAttribute('data-type');
-            const idx = parseInt(e.currentTarget.getAttribute('data-index'));
-            if (type === 'skill') extraSkills.splice(idx, 1);
-            if (type === 'showcaseProject') {
-                const removed = showcaseProjects.splice(idx, 1)[0];
-                if (removed && removed.mediaDocId) {
-                    await deleteDoc(doc(db, "portfolio_media", removed.mediaDocId));
-                }
+    projectsGrid.querySelectorAll('.delete-card-btn').forEach(btn => {
+        btn.addEventListener('click', async () => {
+            const realIdx = parseInt(btn.getAttribute('data-real-index'));
+            const removed = showcaseProjects.splice(realIdx, 1)[0];
+            if (removed && removed.mediaDocId) {
+                await deleteDoc(doc(db, "portfolio_media", removed.mediaDocId));
             }
             renderDynamicElements();
             saveAllToCloud(true);
         });
     });
 
-    document.querySelectorAll('.dynamic-field').forEach(el => {
+    projectsGrid.querySelectorAll('.dynamic-proj-field').forEach(el => {
         el.addEventListener('input', () => {
-            const idx = parseInt(el.getAttribute('data-index'));
+            const realIdx = parseInt(el.getAttribute('data-real-index'));
             const field = el.getAttribute('data-field');
-            extraSkills[idx][field] = el.innerHTML;
+            if (showcaseProjects[realIdx]) showcaseProjects[realIdx][field] = el.innerHTML;
         });
     });
 
-    document.querySelectorAll('.dynamic-proj-field').forEach(el => {
-        el.addEventListener('input', () => {
-            const idx = parseInt(el.getAttribute('data-index'));
-            const field = el.getAttribute('data-field');
-            showcaseProjects[idx][field] = el.innerHTML;
-        });
-    });
-
-    document.querySelectorAll('.btn-card-fullscreen').forEach(btn => {
+    projectsGrid.querySelectorAll('.btn-card-fullscreen').forEach(btn => {
         btn.addEventListener('click', () => {
-            const idx = parseInt(btn.getAttribute('data-index'));
-            openFullscreenProject(showcaseProjects[idx]);
+            const realIdx = parseInt(btn.getAttribute('data-real-index'));
+            openFullscreenProject(showcaseProjects[realIdx]);
         });
     });
 
     attachTextDeleteControls();
-    rebuildProjectFilters();
     applyEditModeState();
-    initMicrointeractions();
-}
-
-// =========================================
-// 9. FILTER KATEGORI / GURU OTOMATIS & COUNTER ITEM
-// =========================================
-function rebuildProjectFilters() {
-    const filterContainer = document.getElementById('projectFilterButtons');
-    const allCards = Array.from(document.querySelectorAll('#projectsGrid .project-card'));
-
-    const categoryCounts = {};
-    allCards.forEach(card => {
-        const cat = card.getAttribute('data-category') || 'Lainnya';
-        categoryCounts[cat] = (categoryCounts[cat] || 0) + 1;
-    });
-
-    filterContainer.innerHTML = '';
-
-    const allBtn = document.createElement('button');
-    allBtn.className = `filter-btn glass-pill ${activeProjectFilter === 'all' ? 'active' : ''}`;
-    allBtn.innerHTML = `<i class="fas fa-layer-group"></i> Semua Tugas <span class="filter-count">${allCards.length}</span>`;
-    allBtn.addEventListener('click', () => {
-        activeProjectFilter = 'all';
-        applyProjectFilter();
-    });
-    filterContainer.appendChild(allBtn);
-
-    Object.keys(categoryCounts).forEach(cat => {
-        const btn = document.createElement('button');
-        btn.className = `filter-btn glass-pill ${activeProjectFilter === cat ? 'active' : ''}`;
-        btn.innerHTML = `<i class="fas fa-folder"></i> ${cat} <span class="filter-count">${categoryCounts[cat]}</span>`;
-        btn.addEventListener('click', () => {
-            activeProjectFilter = cat;
-            applyProjectFilter();
-        });
-        filterContainer.appendChild(btn);
-    });
-
-    applyProjectFilter();
-}
-
-function applyProjectFilter() {
-    const allCards = Array.from(document.querySelectorAll('#projectsGrid .project-card'));
-    let visibleCount = 0;
-
-    allCards.forEach(card => {
-        const cat = card.getAttribute('data-category') || 'Lainnya';
-        if (activeProjectFilter === 'all' || cat === activeProjectFilter) {
-            card.classList.remove('hide');
-            visibleCount++;
-        } else {
-            card.classList.add('hide');
-        }
-    });
-
-    document.querySelectorAll('#projectFilterButtons .filter-btn').forEach(btn => {
-        btn.classList.remove('active');
-        if (activeProjectFilter === 'all' && btn.textContent.includes('Semua Tugas')) {
-            btn.classList.add('active');
-        } else if (btn.textContent.includes(activeProjectFilter)) {
-            btn.classList.add('active');
-        }
-    });
-
-    const labelText = activeProjectFilter === 'all' ? 'Semua Tugas' : activeProjectFilter;
-    document.getElementById('activeFilterLabel').innerHTML = `Menampilkan: <strong>${labelText}</strong>`;
-    document.getElementById('totalProjectCountBadge').textContent = `${visibleCount} item`;
 }
 
 function openFullscreenProject(proj) {
@@ -617,16 +754,15 @@ function openFullscreenProject(proj) {
 // =========================================
 // 10. MODAL TAMBAH KONTEN / PROJECT BARU
 // =========================================
-const openAddProjectModalBtn = document.getElementById('openAddProjectModalBtn');
 const addProjectModal = document.getElementById('addProjectModal');
 const projMediaType = document.getElementById('projMediaType');
 const projUrlGroup = document.getElementById('projUrlGroup');
 const projFileGroup = document.getElementById('projFileGroup');
 const projUrlLabel = document.getElementById('projUrlLabel');
 const projMediaUrlInput = document.getElementById('projMediaUrlInput');
-const projUrlHint = document.getElementById('projUrlHint');
 
-openAddProjectModalBtn.addEventListener('click', () => {
+document.getElementById('openAddProjectModalBtn').addEventListener('click', () => {
+    document.getElementById('projSemesterSelect').value = activeSemesterId;
     addProjectModal.style.display = 'flex';
 });
 
@@ -642,15 +778,12 @@ projMediaType.addEventListener('change', () => {
         if (val === 'youtube') {
             projUrlLabel.textContent = "Tempel Link Video YouTube";
             projMediaUrlInput.placeholder = "https://www.youtube.com/watch?v=... atau https://youtu.be/...";
-            projUrlHint.textContent = "Video YouTube akan langsung terpasang dan bisa diputar di kartu.";
         } else if (val === 'tiktok') {
             projUrlLabel.textContent = "Tempel Link Video TikTok";
             projMediaUrlInput.placeholder = "https://www.tiktok.com/@username/video/...";
-            projUrlHint.textContent = "Tempelkan tautan lengkap video TikTok.";
         } else {
             projUrlLabel.textContent = "Tempel Tautan Link / Google Drive";
             projMediaUrlInput.placeholder = "https://drive.google.com/... atau https://...";
-            projUrlHint.textContent = "Tautan akan ditampilkan sebagai link yang bisa diklik langsung.";
         }
     }
 });
@@ -658,7 +791,8 @@ projMediaType.addEventListener('change', () => {
 document.getElementById('submitNewProjectBtn').addEventListener('click', async () => {
     if (!currentUser) return alert("Harap login admin terlebih dahulu.");
 
-    const category = document.getElementById('projCategoryInput').value.trim() || "Tugas Umum";
+    const semesterId = document.getElementById('projSemesterSelect').value || activeSemesterId;
+    const category = document.getElementById('projCategoryInput').value.trim() || "Umum";
     const mediaType = projMediaType.value;
     const mediaUrl = projMediaUrlInput.value.trim();
     const fileInput = document.getElementById('projMediaFileInput');
@@ -680,22 +814,21 @@ document.getElementById('submitNewProjectBtn').addEventListener('click', async (
 
         if (mediaType === 'youtube') {
             youtubeId = extractYouTubeId(mediaUrl);
-            if (!youtubeId) {
-                throw new Error("Link YouTube tidak valid. Pastikan menempelkan URL video YouTube.");
-            }
+            if (!youtubeId) throw new Error("Link YouTube tidak valid.");
         } else if (mediaType === 'tiktok' || mediaType === 'link') {
             if (!mediaUrl) throw new Error("Harap tempelkan tautan URL terlebih dahulu.");
         } else if (mediaType === 'image') {
             const file = fileInput.files[0];
             if (!file) throw new Error("Harap pilih file foto terlebih dahulu.");
             showToast("Memproses foto HD...", 0);
-            imageData = await compressImageForFirestore(file, 1280, 0.82);
+            imageData = await compressImageForFirestore(file, 1280, 0.8);
             mediaDocId = `proj_img_${Date.now()}`;
             await saveMediaToFirestore(mediaDocId, imageData);
         }
 
         showcaseProjects.push({
             id: Date.now(),
+            semesterId,
             category,
             mediaType,
             mediaUrl,
@@ -709,7 +842,9 @@ document.getElementById('submitNewProjectBtn').addEventListener('click', async (
         });
 
         await saveAllToCloud(true);
+        activeSemesterId = semesterId;
         renderDynamicElements();
+        switchPage('projects', semesterId);
 
         document.getElementById('projCategoryInput').value = '';
         projMediaUrlInput.value = '';
@@ -739,6 +874,9 @@ async function loadCloudContent() {
 
             deletedTextKeys = data.deletedTextKeys || [];
             deletedStaticCards = data.deletedStaticCards || [];
+            if (data.projectSubmenus && data.projectSubmenus.length > 0) {
+                projectSubmenus = data.projectSubmenus;
+            }
 
             if (data.texts) {
                 document.querySelectorAll('.editable[data-key]').forEach(el => {
@@ -767,8 +905,8 @@ async function loadCloudContent() {
             showcaseProjects = data.showcaseProjects || [];
             renderDynamicElements();
         } else {
+            renderProjectSubmenus();
             attachTextDeleteControls();
-            rebuildProjectFilters();
         }
 
         const [profileData, bgData] = await Promise.all([
@@ -878,24 +1016,6 @@ logoutAdminBtn.addEventListener('click', async () => {
     await signOut(auth);
 });
 
-document.getElementById('openAddSidebarModal').addEventListener('click', () => {
-    document.getElementById('addSidebarModal').style.display = 'flex';
-});
-
-document.getElementById('confirmAddSidebarBtn').addEventListener('click', () => {
-    const label = document.getElementById('newSidebarLabel').value.trim();
-    const link = document.getElementById('newSidebarLink').value.trim() || '#projects';
-    const icon = document.getElementById('newSidebarIcon').value;
-    if (!label) return alert("Nama menu sidebar tidak boleh kosong!");
-
-    extraSidebarItems.push({ label, link, icon });
-    document.getElementById('newSidebarLabel').value = '';
-    document.getElementById('newSidebarLink').value = '';
-    document.getElementById('addSidebarModal').style.display = 'none';
-    renderDynamicElements();
-    saveAllToCloud();
-});
-
 document.getElementById('addSkillColBtn').addEventListener('click', () => {
     extraSkills.push({
         icon: "fas fa-microchip",
@@ -903,7 +1023,7 @@ document.getElementById('addSkillColBtn').addEventListener('click', () => {
         desc: "Klik teks ini untuk menuliskan deskripsi keahlian."
     });
     renderDynamicElements();
-    saveAllToCloud();
+    saveAllToCloud(true);
 });
 
 function setupFirestoreImageUpload(inputId, mediaKey, maxWidth, applyCallback) {
@@ -917,7 +1037,7 @@ function setupFirestoreImageUpload(inputId, mediaKey, maxWidth, applyCallback) {
         showToast("Menyimpan foto ke Cloud...", 0);
 
         try {
-            const optimizedDataUrl = await compressImageForFirestore(file, maxWidth, 0.85);
+            const optimizedDataUrl = await compressImageForFirestore(file, maxWidth, 0.82);
             await saveMediaToFirestore(mediaKey, optimizedDataUrl);
             applyCallback(optimizedDataUrl);
             showToast("Foto tersimpan di Cloud!", 3000);
@@ -947,10 +1067,6 @@ document.getElementById('resetAllBtn').addEventListener('click', async () => {
         location.reload();
     }
 });
-
-const sidebar = document.getElementById('sidebar');
-document.getElementById('openSidebarBtn').addEventListener('click', () => sidebar.classList.add('open'));
-document.getElementById('closeSidebarBtn').addEventListener('click', () => sidebar.classList.remove('open'));
 
 document.getElementById('contactForm').addEventListener('submit', (e) => {
     e.preventDefault();

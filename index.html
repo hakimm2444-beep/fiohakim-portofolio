@@ -9,183 +9,273 @@
 </head>
 <body id="mainBody">
 
-    <!-- Lapisan Kontras Tipis di Atas Background -->
+    <!-- Lapisan Kontras Halus di Atas Background -->
     <div class="bg-readability-tint" aria-hidden="true"></div>
 
-    <!-- Efek Cahaya Ambient Halus -->
+    <!-- Efek Cahaya Ambient Ringan -->
     <div class="ambient-orbs" aria-hidden="true">
         <div class="orb orb-1"></div>
         <div class="orb orb-2"></div>
     </div>
 
-    <!-- Sidebar Navigasi Frosted Glass -->
+    <!-- Overlay Gelap saat Sidebar Terbuka di HP -->
+    <div class="sidebar-backdrop" id="sidebarBackdrop"></div>
+
+    <!-- Sidebar Navigasi Frosted Glass dengan Accordion Bertingkat -->
     <aside class="sidebar glass-panel" id="sidebar">
         <div class="sidebar-header">
             <div class="logo editable" data-key="logo">TJKT<span>.net</span></div>
-            <button id="closeSidebarBtn" class="close-sidebar-btn"><i class="fas fa-times"></i></button>
+            <button id="closeSidebarBtn" class="close-sidebar-btn" aria-label="Tutup Menu"><i class="fas fa-times"></i></button>
         </div>
         
         <ul class="sidebar-links" id="sidebarLinks">
-            <li><a href="#home" class="nav-item active"><i class="fas fa-home editable-icon" data-icon-key="navHomeIcon"></i> <span class="editable" data-key="navHome">Beranda</span></a></li>
-            <li><a href="#about" class="nav-item"><i class="fas fa-user editable-icon" data-icon-key="navAboutIcon"></i> <span class="editable" data-key="navAbout">Tentang</span></a></li>
-            <li><a href="#skills" class="nav-item"><i class="fas fa-microchip editable-icon" data-icon-key="navSkillsIcon"></i> <span class="editable" data-key="navSkills">Keahlian</span></a></li>
-            <li><a href="#projects" class="nav-item"><i class="fas fa-folder-open editable-icon" data-icon-key="navProjectsIcon"></i> <span class="editable" data-key="navProjects">Tugas & Project</span></a></li>
-            <li><a href="#contact" class="nav-item"><i class="fas fa-envelope editable-icon" data-icon-key="navContactIcon"></i> <span class="editable" data-key="navContact">Kontak</span></a></li>
+            <!-- Halaman 1: Beranda -->
+            <li>
+                <a href="#page-home" class="nav-item active" data-page="home">
+                    <i class="fas fa-home editable-icon" data-icon-key="navHomeIcon"></i>
+                    <span class="editable" data-key="navHome">Beranda</span>
+                </a>
+            </li>
+
+            <!-- Halaman 2: Tentang & Keahlian -->
+            <li>
+                <a href="#page-about" class="nav-item" data-page="about">
+                    <i class="fas fa-user-astronaut editable-icon" data-icon-key="navAboutIcon"></i>
+                    <span class="editable" data-key="navAbout">Tentang & Keahlian</span>
+                </a>
+            </li>
+
+            <!-- Menu Accordion: Tugas Projek > Semester 1, 2, dst -->
+            <li class="sidebar-accordion-group open" id="projectAccordionGroup">
+                <div class="accordion-header-row">
+                    <button type="button" class="accordion-toggle-btn" id="toggleProjectMenuBtn">
+                        <span class="accordion-left">
+                            <i class="fas fa-folder-open editable-icon" data-icon-key="navProjectsIcon"></i>
+                            <span class="editable" data-key="navProjects">Tugas Projek</span>
+                        </span>
+                        <i class="fas fa-chevron-right accordion-arrow"></i>
+                    </button>
+                    <button type="button" class="edit-only-box btn-mini-add" id="addSubmenuBtn" title="Tambah Semester / Sub-Menu">
+                        <i class="fas fa-plus"></i>
+                    </button>
+                </div>
+
+                <!-- Sub-Menu Semester (Dirender Dinamis oleh JS) -->
+                <ul class="sidebar-submenu" id="projectSubmenuList"></ul>
+            </li>
+
+            <!-- Halaman Kontak -->
+            <li>
+                <a href="#page-contact" class="nav-item" data-page="contact">
+                    <i class="fas fa-envelope editable-icon" data-icon-key="navContactIcon"></i>
+                    <span class="editable" data-key="navContact">Kontak</span>
+                </a>
+            </li>
         </ul>
 
-        <!-- Tombol Tambah Menu Sidebar (Hanya muncul saat Mode Edit) -->
+        <!-- Tombol Tambah Halaman Menu Utama (Mode Edit) -->
         <div class="edit-only-box sidebar-add-box">
-            <button id="openAddSidebarModal" class="btn-add-item">
-                <i class="fas fa-plus-circle"></i> Tambah Menu Sidebar
+            <button id="openAddSidebarModal" class="btn-add-item" style="width: 100%; justify-content: center;">
+                <i class="fas fa-plus-circle"></i> Tambah Halaman Menu
             </button>
         </div>
     </aside>
 
-    <!-- Tombol Buka Sidebar di Layar Mobile -->
-    <button id="openSidebarBtn" class="mobile-sidebar-toggle glass-pill">
-        <i class="fas fa-bars"></i>
-    </button>
+    <!-- Header Mobile Ringan untuk HP -->
+    <header class="mobile-topbar glass-panel">
+        <button id="openSidebarBtn" class="mobile-sidebar-toggle" aria-label="Buka Menu">
+            <i class="fas fa-bars"></i>
+        </button>
+        <div class="mobile-topbar-title" id="mobilePageTitle">Beranda</div>
+        <div class="mobile-topbar-badge">TJKT</div>
+    </header>
 
-    <!-- Konten Utama -->
+    <!-- Konten Utama Multi-Halaman -->
     <main class="main-content">
 
-        <!-- Hero Section -->
-        <section id="home" class="hero">
-            <div class="hero-wrapper">
-                <div class="hero-content glass-hero-card reveal">
-                    <h1>
-                        <span class="editable" data-key="heroGreeting">Halo, Saya</span> 
-                        <span class="highlight editable" data-key="heroName">Fio Hakim</span>
-                    </h1>
-                    <h2 class="editable" data-key="heroSubtitle">Siswa Jurusan Teknik Jaringan Komputer & Telekomunikasi</h2>
-                    <p class="hero-desc editable" data-key="heroDesc">
-                        Membangun infrastruktur jaringan yang handal, mengamankan server, dan menghubungkan konektivitas masa depan.
-                    </p>
-                    <div class="hero-buttons">
-                        <a href="#projects" class="btn primary magnetic-btn editable" data-key="btnPrimary">Lihat Tugas & Project</a>
-                        <a href="#contact" class="btn secondary glass-pill magnetic-btn editable" data-key="btnSecondary">Hubungi Saya</a>
+        <!-- =========================================================
+             HALAMAN 1: BERANDA (HERO & SOROTAN)
+             ========================================================= -->
+        <section id="page-home" class="page-view active">
+            <div class="hero">
+                <div class="hero-wrapper">
+                    <div class="hero-content glass-hero-card">
+                        <div class="hero-status-pill">
+                            <span class="pulse-dot"></span>
+                            <span class="editable" data-key="heroBadge">Portofolio Digital • TJKT</span>
+                        </div>
+                        <h1>
+                            <span class="editable" data-key="heroGreeting">Halo, Saya</span> 
+                            <span class="highlight editable" data-key="heroName">Fio Hakim</span>
+                        </h1>
+                        <h2 class="editable" data-key="heroSubtitle">Siswa Jurusan Teknik Jaringan Komputer & Telekomunikasi</h2>
+                        <p class="hero-desc editable" data-key="heroDesc">
+                            Membangun infrastruktur jaringan yang handal, mengamankan server, dan mendokumentasikan setiap proyek praktikum dari semester ke semester.
+                        </p>
+                        <div class="hero-buttons">
+                            <button type="button" class="btn primary magnetic-btn" id="heroExploreProjectsBtn">
+                                <i class="fas fa-folder-open"></i> <span class="editable" data-key="btnPrimary">Jelajahi Tugas Projek</span>
+                            </button>
+                            <button type="button" class="btn secondary glass-pill magnetic-btn" data-goto-page="about">
+                                <i class="fas fa-user"></i> <span class="editable" data-key="btnSecondary">Profil & Keahlian</span>
+                            </button>
+                        </div>
+
+                        <!-- Kartu Ringkasan Cepat Interaktif -->
+                        <div class="quick-stats-row">
+                            <div class="stat-glass-box" id="statTotalProjectsBox" title="Klik untuk melihat semua tugas">
+                                <span class="stat-number" id="homeTotalProjects">0</span>
+                                <span class="stat-label">Total Projek</span>
+                            </div>
+                            <div class="stat-glass-box" data-goto-page="about">
+                                <span class="stat-number" id="homeTotalSemesters">3</span>
+                                <span class="stat-label">Folder Semester</span>
+                            </div>
+                            <div class="stat-glass-box" data-goto-page="contact">
+                                <span class="stat-number"><i class="fas fa-paper-plane" style="font-size: 1.25rem;"></i></span>
+                                <span class="stat-label">Hubungi Saya</span>
+                            </div>
+                        </div>
                     </div>
+                    
+                    <!-- Foto Profil -->
+                    <div class="hero-profile">
+                        <div class="profile-frame glass-ring">
+                            <img id="profileImage" src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&w=600&q=80" alt="Foto Profil">
+                            <label for="uploadProfile" class="edit-only-box profile-change-badge" title="Ganti Foto Profil">
+                                <i class="fas fa-camera"></i>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- =========================================================
+             HALAMAN 2: TENTANG SAYA & KEAHLIAN TEKNIS
+             ========================================================= -->
+        <section id="page-about" class="page-view">
+            <div class="page-container">
+                <div class="page-header-banner glass-bar">
+                    <div>
+                        <span class="breadcrumb-text">Portofolio / <strong>Tentang & Keahlian</strong></span>
+                        <h2 class="page-heading editable" data-key="aboutSectionTitle">Tentang Saya & <span>Keahlian</span></h2>
+                    </div>
+                    <button class="edit-only-box btn-add-item" id="addSkillColBtn">
+                        <i class="fas fa-plus"></i> Tambah Keahlian
+                    </button>
+                </div>
+
+                <!-- Kartu Profil Singkat -->
+                <div class="about-card glass-card interactive-card" style="margin-bottom: 2rem;">
+                    <div class="card-glare"></div>
+                    <div class="about-flex-inner">
+                        <div class="icon-badge center-badge icon-picker-trigger" title="Klik untuk ganti ikon">
+                            <i class="fas fa-network-wired editable-icon" data-icon-key="aboutIcon"></i>
+                        </div>
+                        <div class="about-text-body">
+                            <h3 class="editable" data-key="aboutTitle">Profil Singkat</h3>
+                            <p class="editable" data-key="aboutDesc">
+                                Saya adalah pelajar SMK jurusan <strong>Teknik Jaringan Komputer dan Telekomunikasi (TJKT)</strong> yang memiliki antusiasme tinggi di bidang administrasi jaringan, Linux Server, Fiber Optik, dan keamanan siber dasar. Terbiasa melakukan konfigurasi perangkat keras jaringan serta troubleshooting konektivitas.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Grid Keahlian Teknis -->
+                <div class="skills-grid" id="skillsGrid">
+                    <div class="skill-card glass-card interactive-card" data-static-card="skill1">
+                        <div class="card-glare"></div>
+                        <button class="edit-only-box delete-card-btn" data-static-key="skill1" title="Hapus Kartu"><i class="fas fa-trash"></i></button>
+                        <div class="icon-badge icon-picker-trigger" title="Klik untuk ganti ikon">
+                            <i class="fas fa-route editable-icon" data-icon-key="skill1Icon"></i>
+                        </div>
+                        <h3 class="editable" data-key="skill1Title">Routing & Switching</h3>
+                        <p class="editable" data-key="skill1Desc">Konfigurasi MikroTik (MTCNA), Cisco Packet Tracer, VLAN, OSPF, dan Manajemen Bandwidth.</p>
+                    </div>
+                    <div class="skill-card glass-card interactive-card" data-static-card="skill2">
+                        <div class="card-glare"></div>
+                        <button class="edit-only-box delete-card-btn" data-static-key="skill2" title="Hapus Kartu"><i class="fas fa-trash"></i></button>
+                        <div class="icon-badge icon-picker-trigger" title="Klik untuk ganti ikon">
+                            <i class="fas fa-server editable-icon" data-icon-key="skill2Icon"></i>
+                        </div>
+                        <h3 class="editable" data-key="skill2Title">System Administration</h3>
+                        <p class="editable" data-key="skill2Desc">Instalasi & konfigurasi Linux Debian/Ubuntu Server (DNS, DHCP, Web Server, Mail Server).</p>
+                    </div>
+                    <div class="skill-card glass-card interactive-card" data-static-card="skill3">
+                        <div class="card-glare"></div>
+                        <button class="edit-only-box delete-card-btn" data-static-key="skill3" title="Hapus Kartu"><i class="fas fa-trash"></i></button>
+                        <div class="icon-badge icon-picker-trigger" title="Klik untuk ganti ikon">
+                            <i class="fas fa-wave-square editable-icon" data-icon-key="skill3Icon"></i>
+                        </div>
+                        <h3 class="editable" data-key="skill3Title">Fiber Optik (FTTH)</h3>
+                        <p class="editable" data-key="skill3Desc">Penyambungan kabel FO (Splicing), pengukuran redaman dengan OTDR & OPM, instalasi ODP/ONT.</p>
+                    </div>
+                    <div class="skill-card glass-card interactive-card" data-static-card="skill4">
+                        <div class="card-glare"></div>
+                        <button class="edit-only-box delete-card-btn" data-static-key="skill4" title="Hapus Kartu"><i class="fas fa-trash"></i></button>
+                        <div class="icon-badge icon-picker-trigger" title="Klik untuk ganti ikon">
+                            <i class="fas fa-shield-alt editable-icon" data-icon-key="skill4Icon"></i>
+                        </div>
+                        <h3 class="editable" data-key="skill4Title">Network Security</h3>
+                        <p class="editable" data-key="skill4Desc">Konfigurasi Firewall, VPN (PPTP/L2TP/WireGuard), serta pemantauan trafik jaringan.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- =========================================================
+             HALAMAN 3: TUGAS PROJEK PER SEMESTER (DINAMIS & RINGAN)
+             ========================================================= -->
+        <section id="page-projects" class="page-view">
+            <div class="page-container">
+                <div class="page-header-banner glass-bar">
+                    <div>
+                        <span class="breadcrumb-text">Tugas Projek / <strong id="projectBreadcrumbSemester">Semester 1</strong></span>
+                        <h2 class="page-heading" id="projectPageMainTitle">Tugas Projek — <span>Semester 1</span></h2>
+                    </div>
+                    <button class="edit-only-box btn-add-item" id="openAddProjectModalBtn">
+                        <i class="fas fa-plus-square"></i> Tambah Konten / Project
+                    </button>
+                </div>
+
+                <!-- Bilah Status & Filter Tag/Guru di Dalam Halaman Semester -->
+                <div class="showcase-status-bar glass-bar">
+                    <span id="activeFilterLabel">Menampilkan: <strong>Semua Mata Pelajaran</strong></span>
+                    <span class="item-count-badge" id="totalProjectCountBadge">0 item</span>
                 </div>
                 
-                <!-- Foto Profil -->
-                <div class="hero-profile reveal">
-                    <div class="profile-frame glass-ring">
-                        <img id="profileImage" src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&w=600&q=80" alt="Foto Profil">
-                        <label for="uploadProfile" class="edit-only-box profile-change-badge" title="Ganti Foto Profil">
-                            <i class="fas fa-camera"></i>
-                        </label>
-                    </div>
-                </div>
+                <div class="filter-buttons" id="projectFilterButtons"></div>
+
+                <!-- Grid Kartu Project / Media -->
+                <div class="projects-grid media-showcase-grid" id="projectsGrid"></div>
             </div>
         </section>
 
-        <!-- Tentang Saya -->
-        <section id="about" class="section">
-            <h2 class="section-title reveal editable" data-key="aboutSectionTitle">Tentang <span>Saya</span></h2>
-            <div class="about-container reveal">
-                <div class="about-card glass-card interactive-card">
-                    <div class="card-glare"></div>
-                    <div class="icon-badge center-badge icon-picker-trigger" title="Klik untuk ganti ikon">
-                        <i class="fas fa-network-wired editable-icon" data-icon-key="aboutIcon"></i>
+        <!-- =========================================================
+             HALAMAN 4: KONTAK
+             ========================================================= -->
+        <section id="page-contact" class="page-view">
+            <div class="page-container">
+                <div class="page-header-banner glass-bar">
+                    <div>
+                        <span class="breadcrumb-text">Portofolio / <strong>Kontak</strong></span>
+                        <h2 class="page-heading editable" data-key="contactSectionTitle">Hubungi <span>Saya</span></h2>
                     </div>
-                    <h3 class="editable" data-key="aboutTitle">Profil Singkat</h3>
-                    <p class="editable" data-key="aboutDesc">
-                        Saya adalah pelajar SMK jurusan <strong>Teknik Jaringan Komputer dan Telekomunikasi (TJKT)</strong> yang memiliki antusiasme tinggi di bidang administrasi jaringan, Linux Server, Fiber Optik, dan keamanan siber dasar. Terbiasa melakukan konfigurasi perangkat keras jaringan serta troubleshooting konektivitas.
-                    </p>
                 </div>
-            </div>
-        </section>
 
-        <!-- Keahlian (Skills) -->
-        <section id="skills" class="section">
-            <div class="section-header-flex reveal">
-                <h2 class="section-title editable" data-key="skillsSectionTitle">Keahlian <span>Teknis</span></h2>
-                <button class="edit-only-box btn-add-item" id="addSkillColBtn">
-                    <i class="fas fa-plus"></i> Tambah Keahlian
-                </button>
-            </div>
-
-            <div class="skills-grid" id="skillsGrid">
-                <div class="skill-card glass-card interactive-card reveal" data-static-card="skill1">
-                    <div class="card-glare"></div>
-                    <button class="edit-only-box delete-card-btn" data-static-key="skill1" title="Hapus Kartu"><i class="fas fa-trash"></i></button>
-                    <div class="icon-badge icon-picker-trigger" title="Klik untuk ganti ikon">
-                        <i class="fas fa-route editable-icon" data-icon-key="skill1Icon"></i>
+                <div class="contact-container glass-card">
+                    <form id="contactForm" class="contact-form">
+                        <input type="text" id="name" class="glass-input" placeholder="Nama Anda / Perusahaan" required>
+                        <input type="email" id="email" class="glass-input" placeholder="Email Anda" required>
+                        <textarea id="message" rows="5" class="glass-input" placeholder="Pesan (misal: Tawaran PKL / Magang)" required></textarea>
+                        <button type="submit" class="btn primary magnetic-btn">Kirim Pesan</button>
+                    </form>
+                    <div class="social-links">
+                        <a href="#" class="glass-pill social-pill editable" data-key="socialGithub"><i class="fab fa-github"></i> GitHub</a>
+                        <a href="#" class="glass-pill social-pill editable" data-key="socialLinkedin"><i class="fab fa-linkedin"></i> LinkedIn</a>
+                        <a href="#" class="glass-pill social-pill editable" data-key="socialEmail"><i class="fas fa-envelope"></i> Email</a>
                     </div>
-                    <h3 class="editable" data-key="skill1Title">Routing & Switching</h3>
-                    <p class="editable" data-key="skill1Desc">Konfigurasi MikroTik (MTCNA), Cisco Packet Tracer, VLAN, OSPF, dan Manajemen Bandwidth.</p>
-                </div>
-                <div class="skill-card glass-card interactive-card reveal" data-static-card="skill2">
-                    <div class="card-glare"></div>
-                    <button class="edit-only-box delete-card-btn" data-static-key="skill2" title="Hapus Kartu"><i class="fas fa-trash"></i></button>
-                    <div class="icon-badge icon-picker-trigger" title="Klik untuk ganti ikon">
-                        <i class="fas fa-server editable-icon" data-icon-key="skill2Icon"></i>
-                    </div>
-                    <h3 class="editable" data-key="skill2Title">System Administration</h3>
-                    <p class="editable" data-key="skill2Desc">Instalasi & konfigurasi Linux Debian/Ubuntu Server (DNS, DHCP, Web Server, Mail Server).</p>
-                </div>
-                <div class="skill-card glass-card interactive-card reveal" data-static-card="skill3">
-                    <div class="card-glare"></div>
-                    <button class="edit-only-box delete-card-btn" data-static-key="skill3" title="Hapus Kartu"><i class="fas fa-trash"></i></button>
-                    <div class="icon-badge icon-picker-trigger" title="Klik untuk ganti ikon">
-                        <i class="fas fa-wave-square editable-icon" data-icon-key="skill3Icon"></i>
-                    </div>
-                    <h3 class="editable" data-key="skill3Title">Fiber Optik (FTTH)</h3>
-                    <p class="editable" data-key="skill3Desc">Penyambungan kabel FO (Splicing), pengukuran redaman dengan OTDR & OPM, instalasi ODP/ONT.</p>
-                </div>
-                <div class="skill-card glass-card interactive-card reveal" data-static-card="skill4">
-                    <div class="card-glare"></div>
-                    <button class="edit-only-box delete-card-btn" data-static-key="skill4" title="Hapus Kartu"><i class="fas fa-trash"></i></button>
-                    <div class="icon-badge icon-picker-trigger" title="Klik untuk ganti ikon">
-                        <i class="fas fa-shield-alt editable-icon" data-icon-key="skill4Icon"></i>
-                    </div>
-                    <h3 class="editable" data-key="skill4Title">Network Security</h3>
-                    <p class="editable" data-key="skill4Desc">Konfigurasi Firewall, VPN (PPTP/L2TP/WireGuard), serta pemantauan trafik jaringan.</p>
-                </div>
-            </div>
-        </section>
-
-        <!-- Tugas & Project (Kolom bawaan sudah dihapus, siap diisi video YouTube, TikTok, Foto & Link) -->
-        <section id="projects" class="section">
-            <div class="section-header-flex reveal">
-                <h2 class="section-title editable" data-key="projectsSectionTitle">Tugas & <span>Project</span></h2>
-                <button class="edit-only-box btn-add-item" id="openAddProjectModalBtn">
-                    <i class="fas fa-plus-square"></i> Tambah Konten / Project Baru
-                </button>
-            </div>
-
-            <!-- Bilah Status & Filter Kaca Transparan -->
-            <div class="showcase-status-bar glass-bar reveal">
-                <span id="activeFilterLabel">Menampilkan: <strong>Semua Tugas</strong></span>
-                <span class="item-count-badge" id="totalProjectCountBadge">0 item</span>
-            </div>
-            
-            <div class="filter-buttons reveal" id="projectFilterButtons"></div>
-
-            <!-- Grid Kartu Project / Media (Kosong secara default, diisi dari modal upload) -->
-            <div class="projects-grid media-showcase-grid" id="projectsGrid">
-                <div class="empty-projects-placeholder glass-card" id="emptyProjectsPlaceholder">
-                    <i class="fas fa-photo-video"></i>
-                    <p>Belum ada tugas atau project yang ditambahkan.</p>
-                    <small>Aktifkan Mode Edit lalu klik <strong>"Tambah Konten / Project Baru"</strong> untuk mengunggah video YouTube, TikTok, foto, atau tautan.</small>
-                </div>
-            </div>
-        </section>
-
-        <!-- Kontak -->
-        <section id="contact" class="section">
-            <h2 class="section-title reveal editable" data-key="contactSectionTitle">Hubungi <span>Saya</span></h2>
-            <div class="contact-container glass-card reveal">
-                <form id="contactForm" class="contact-form">
-                    <input type="text" id="name" class="glass-input" placeholder="Nama Anda / Perusahaan" required>
-                    <input type="email" id="email" class="glass-input" placeholder="Email Anda" required>
-                    <textarea id="message" rows="5" class="glass-input" placeholder="Pesan (misal: Tawaran PKL / Magang)" required></textarea>
-                    <button type="submit" class="btn primary magnetic-btn">Kirim Pesan</button>
-                </form>
-                <div class="social-links">
-                    <a href="#" class="glass-pill social-pill editable" data-key="socialGithub"><i class="fab fa-github"></i> GitHub</a>
-                    <a href="#" class="glass-pill social-pill editable" data-key="socialLinkedin"><i class="fab fa-linkedin"></i> LinkedIn</a>
-                    <a href="#" class="glass-pill social-pill editable" data-key="socialEmail"><i class="fas fa-envelope"></i> Email</a>
                 </div>
             </div>
         </section>
@@ -235,15 +325,20 @@
             <h3><i class="fas fa-folder-plus"></i> Tambah Konten / Tugas Baru</h3>
 
             <div class="form-group">
-                <label>Kategori / Nama Guru / Kelompok</label>
-                <input type="text" id="projCategoryInput" list="categorySuggestions" class="glass-input" placeholder="Pilih atau ketik nama guru / kategori...">
+                <label>Halaman Tujuan (Semester / Folder)</label>
+                <select id="projSemesterSelect" class="modal-select glass-input"></select>
+                <small class="field-hint">Konten akan tampil di halaman semester yang dipilih.</small>
+            </div>
+
+            <div class="form-group">
+                <label>Kategori / Nama Guru / Mata Pelajaran</label>
+                <input type="text" id="projCategoryInput" list="categorySuggestions" class="glass-input" placeholder="Contoh: Bu Faridah / MikroTik / Linux...">
                 <datalist id="categorySuggestions">
                     <option value="MikroTik">
                     <option value="Linux Server">
                     <option value="Fiber Optik">
                     <option value="Tugas Sekolah">
                 </datalist>
-                <small class="field-hint">Otomatis muncul sebagai tombol filter kategori baru.</small>
             </div>
 
             <div class="form-group">
@@ -265,7 +360,7 @@
             <div class="form-group hidden" id="projFileGroup">
                 <label>Pilih File Foto (JPG / PNG / WebP)</label>
                 <input type="file" id="projMediaFileInput" accept="image/*" class="glass-input file-input-custom">
-                <small class="field-hint">Foto diproses dengan kualitas tinggi (HD) agar tetap tajam dan jelas.</small>
+                <small class="field-hint">Foto dioptimasi agar cepat dimuat di HP maupun laptop.</small>
             </div>
 
             <div class="form-group">
@@ -274,13 +369,13 @@
             </div>
 
             <div class="form-group">
-                <label>Mata Pelajaran / Tag</label>
-                <input type="text" id="projTagInput" class="glass-input" placeholder="Contoh: VIDEO / MIKROTIK / IOT">
+                <label>Tag Label</label>
+                <input type="text" id="projTagInput" class="glass-input" placeholder="Contoh: VIDEO / PRAKTIKUM / IOT">
             </div>
 
             <div class="form-group">
                 <label>Tautan Tambahan / Link Lampiran (Opsional)</label>
-                <input type="url" id="projExtraLinkInput" class="glass-input" placeholder="Contoh: https://1drv.ms/... atau link Google Drive">
+                <input type="url" id="projExtraLinkInput" class="glass-input" placeholder="Contoh: https://drive.google.com/...">
             </div>
 
             <div class="form-group">
@@ -291,6 +386,17 @@
             <button id="submitNewProjectBtn" class="btn primary" style="width: 100%; margin-top: 8px;">
                 <i class="fas fa-cloud-upload-alt"></i> Simpan & Tampilkan Project
             </button>
+        </div>
+    </div>
+
+    <!-- Modal Tambah Sub-Menu Semester -->
+    <div id="addSubmenuModal" class="modal">
+        <div class="modal-content glass-modal">
+            <span class="close-modal" data-close="addSubmenuModal">&times;</span>
+            <h3><i class="fas fa-folder-plus"></i> Tambah Sub-Menu Tugas Projek</h3>
+            <p class="modal-hint">Tambahkan folder semester atau kelompok tugas baru di bawah menu Tugas Projek.</p>
+            <input type="text" id="newSubmenuLabel" class="glass-input" placeholder="Nama Sub-Menu (misal: Semester 4 / PKL)" style="margin-bottom: 12px;">
+            <button id="confirmAddSubmenuBtn" class="btn primary" style="width: 100%;">Tambahkan Sub-Menu</button>
         </div>
     </div>
 
@@ -325,20 +431,18 @@
         </div>
     </div>
 
-    <!-- Modal Tambah Menu Sidebar -->
+    <!-- Modal Tambah Halaman Menu Utama -->
     <div id="addSidebarModal" class="modal">
         <div class="modal-content glass-modal">
             <span class="close-modal" data-close="addSidebarModal">&times;</span>
             <h3><i class="fas fa-bars"></i> Tambah Menu Sidebar</h3>
-            <input type="text" id="newSidebarLabel" class="glass-input" placeholder="Nama Menu (misal: Galeri Lab)" style="margin: 10px 0;">
-            <input type="text" id="newSidebarLink" class="glass-input" placeholder="Target Link (misal: #projects)" style="margin-bottom: 10px;">
+            <input type="text" id="newSidebarLabel" class="glass-input" placeholder="Nama Menu (misal: Sertifikat)" style="margin: 10px 0;">
             <select id="newSidebarIcon" class="modal-select glass-input">
                 <option value="fas fa-folder">Ikon Folder</option>
                 <option value="fas fa-certificate">Ikon Sertifikat</option>
                 <option value="fas fa-server">Ikon Server</option>
                 <option value="fas fa-network-wired">Ikon Jaringan</option>
                 <option value="fas fa-play-circle">Ikon Video</option>
-                <option value="fas fa-link">Ikon Link</option>
             </select>
             <button id="confirmAddSidebarBtn" class="btn primary" style="width: 100%; margin-top: 12px;">Tambahkan</button>
         </div>
