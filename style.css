@@ -3,15 +3,15 @@
    ========================================= */
 :root {
     --bg-base: #060a14;
-    --frost-surface: rgba(12, 18, 34, 0.48);
-    --frost-surface-hover: rgba(18, 27, 48, 0.64);
-    --frost-panel: rgba(9, 14, 28, 0.64);
-    --frost-pill: rgba(15, 23, 42, 0.56);
-    --frost-border: rgba(255, 255, 255, 0.20);
-    --frost-specular: rgba(255, 255, 255, 0.42);
-    --frost-shadow: 0 18px 42px -8px rgba(0, 0, 0, 0.52),
-                    inset 0 1px 0 0 rgba(255, 255, 255, 0.28),
-                    inset 0 0 24px rgba(255, 255, 255, 0.04);
+    --frost-surface: rgba(12, 18, 34, 0.44);
+    --frost-surface-hover: rgba(18, 27, 48, 0.58);
+    --frost-panel: rgba(9, 14, 28, 0.58);
+    --frost-pill: rgba(15, 23, 42, 0.52);
+    --frost-border: rgba(255, 255, 255, 0.24);
+    --frost-specular: rgba(255, 255, 255, 0.46);
+    --frost-shadow: 0 20px 46px -8px rgba(0, 0, 0, 0.55),
+                    inset 0 1px 0 0 rgba(255, 255, 255, 0.34),
+                    inset 0 0 28px rgba(255, 255, 255, 0.06);
 
     --primary: #38bdf8;
     --secondary: #818cf8;
@@ -25,6 +25,7 @@
 
 html {
     scroll-behavior: smooth;
+    scrollbar-gutter: stable;
 }
 
 * {
@@ -44,6 +45,7 @@ body {
     line-height: 1.65;
     display: flex;
     overflow-x: hidden;
+    overflow-y: scroll;
 }
 
 /* =========================================
@@ -56,10 +58,10 @@ body {
     pointer-events: none;
     background: linear-gradient(
         -45deg,
-        rgba(14, 165, 233, 0.16),
-        rgba(99, 102, 241, 0.16),
-        rgba(16, 185, 129, 0.12),
-        rgba(236, 72, 153, 0.12)
+        rgba(14, 165, 233, 0.22),
+        rgba(99, 102, 241, 0.22),
+        rgba(16, 185, 129, 0.16),
+        rgba(236, 72, 153, 0.16)
     );
     background-size: 300% 300%;
     animation: gradientFlow 18s ease infinite;
@@ -74,7 +76,7 @@ body {
 .bg-readability-tint {
     position: fixed;
     inset: 0;
-    background: radial-gradient(circle at 25% 15%, rgba(6, 10, 20, 0.16), rgba(5, 9, 18, 0.48));
+    background: radial-gradient(circle at 25% 15%, rgba(6, 10, 20, 0.12), rgba(5, 9, 18, 0.42));
     z-index: -2;
     pointer-events: none;
 }
@@ -91,22 +93,22 @@ body {
 .orb {
     position: absolute;
     border-radius: 50%;
-    filter: blur(115px);
-    opacity: 0.28;
+    filter: blur(95px);
+    opacity: 0.38;
     animation: ambientFloat 14s ease-in-out infinite alternate;
 }
 
 .orb-1 {
-    width: 400px;
-    height: 400px;
+    width: 420px;
+    height: 420px;
     background: radial-gradient(circle, #38bdf8, transparent 70%);
     top: -100px;
     left: 15%;
 }
 
 .orb-2 {
-    width: 450px;
-    height: 450px;
+    width: 470px;
+    height: 470px;
     background: radial-gradient(circle, #818cf8, transparent 70%);
     bottom: 2%;
     right: 5%;
@@ -114,12 +116,12 @@ body {
 }
 
 .orb-3 {
-    width: 300px;
-    height: 300px;
+    width: 320px;
+    height: 320px;
     background: radial-gradient(circle, #2dd4bf, transparent 70%);
     top: 45%;
     left: 45%;
-    opacity: 0.16;
+    opacity: 0.24;
     animation-delay: -9s;
 }
 
@@ -129,21 +131,21 @@ body {
 }
 
 /* =========================================
-   2. MATERIAL FULL FROSTED GLASS & RIPPLE EFFECT
+   2. MATERIAL FULL FROSTED GLASS (EXTRA BLUR 42PX)
    ========================================= */
 .frosted-panel {
     background: var(--frost-panel);
-    backdrop-filter: blur(28px) saturate(190%);
-    -webkit-backdrop-filter: blur(28px) saturate(190%);
+    backdrop-filter: blur(42px) saturate(210%);
+    -webkit-backdrop-filter: blur(42px) saturate(210%);
     border-right: 1px solid var(--frost-border);
-    box-shadow: 10px 0 36px rgba(0, 0, 0, 0.45), inset -1px 0 0 rgba(255, 255, 255, 0.14);
+    box-shadow: 10px 0 38px rgba(0, 0, 0, 0.48), inset -1px 0 0 rgba(255, 255, 255, 0.16);
 }
 
 .frosted-card {
     position: relative;
     background: var(--frost-surface);
-    backdrop-filter: blur(26px) saturate(190%);
-    -webkit-backdrop-filter: blur(26px) saturate(190%);
+    backdrop-filter: blur(42px) saturate(210%);
+    -webkit-backdrop-filter: blur(42px) saturate(210%);
     border: 1px solid var(--frost-border);
     border-top: 1px solid var(--frost-specular);
     border-left: 1px solid var(--frost-specular);
@@ -159,16 +161,16 @@ body {
 
 .frosted-card:hover {
     background: var(--frost-surface-hover);
-    border-color: rgba(56, 189, 248, 0.58);
-    box-shadow: 0 24px 48px -10px rgba(0, 0, 0, 0.62),
-                0 0 30px rgba(56, 189, 248, 0.22),
-                inset 0 1px 0 0 rgba(255, 255, 255, 0.36);
+    border-color: rgba(56, 189, 248, 0.62);
+    box-shadow: 0 24px 50px -10px rgba(0, 0, 0, 0.64),
+                0 0 32px rgba(56, 189, 248, 0.24),
+                inset 0 1px 0 0 rgba(255, 255, 255, 0.4);
 }
 
 .frosted-bar {
-    background: rgba(12, 18, 34, 0.52);
-    backdrop-filter: blur(26px) saturate(190%);
-    -webkit-backdrop-filter: blur(26px) saturate(190%);
+    background: rgba(12, 18, 34, 0.46);
+    backdrop-filter: blur(42px) saturate(210%);
+    -webkit-backdrop-filter: blur(42px) saturate(210%);
     border: 1px solid var(--frost-border);
     border-top: 1px solid var(--frost-specular);
     border-radius: 20px;
@@ -184,11 +186,11 @@ body {
 
 .frosted-pill {
     background: var(--frost-pill);
-    backdrop-filter: blur(20px) saturate(185%);
-    -webkit-backdrop-filter: blur(20px) saturate(185%);
+    backdrop-filter: blur(32px) saturate(200%);
+    -webkit-backdrop-filter: blur(32px) saturate(200%);
     border: 1px solid var(--frost-border);
-    border-top: 1px solid rgba(255, 255, 255, 0.32);
-    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.28), inset 0 1px 0 rgba(255, 255, 255, 0.22);
+    border-top: 1px solid rgba(255, 255, 255, 0.36);
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.26);
 }
 
 .frosted-pill:hover {
@@ -231,17 +233,17 @@ body {
 }
 
 /* =========================================
-   3. SCROLL-TRIGGERED FADE-UP (0.38s CEPAT & HALUS)
+   3. SCROLL-TRIGGERED FADE-UP (0.35s TANPA GESER)
    ========================================= */
 .scroll-reveal {
     opacity: 0;
-    transform: translateY(20px) scale(0.97);
-    transition: opacity 0.38s var(--ios-fluid), transform 0.42s var(--ios-spring);
+    transform: translate3d(0, 12px, 0);
+    transition: opacity 0.35s var(--ios-fluid), transform 0.38s var(--ios-fluid);
 }
 
 .scroll-reveal.revealed {
     opacity: 1;
-    transform: translateY(0) scale(1);
+    transform: translate3d(0, 0, 0);
 }
 
 /* =========================================
@@ -350,7 +352,7 @@ body {
     pointer-events: none;
     background: radial-gradient(
         circle 260px at var(--mouse-x, 50%) var(--mouse-y, 50%),
-        rgba(255, 255, 255, 0.18),
+        rgba(255, 255, 255, 0.2),
         transparent 75%
     );
     opacity: 0;
@@ -383,7 +385,7 @@ body {
     position: fixed;
     inset: 0;
     background: rgba(3, 7, 18, 0.62);
-    backdrop-filter: blur(6px);
+    backdrop-filter: blur(8px);
     z-index: 1150;
 }
 
@@ -493,7 +495,7 @@ body {
     background: rgba(56, 189, 248, 0.22);
     border-color: rgba(56, 189, 248, 0.46);
     color: #fff;
-    transform: translateX(5px);
+    transform: translateX(4px);
     box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.25);
 }
 
@@ -574,12 +576,12 @@ body {
 
 .sidebar-accordion-group.open .sidebar-submenu {
     display: flex;
-    animation: iosMenuDrop 0.38s var(--ios-spring) forwards;
+    animation: iosMenuDrop 0.32s var(--ios-fluid) forwards;
 }
 
 @keyframes iosMenuDrop {
-    from { opacity: 0; transform: translateY(-10px) scale(0.95); }
-    to { opacity: 1; transform: translateY(0) scale(1); }
+    from { opacity: 0; transform: translateY(-6px); }
+    to { opacity: 1; transform: translateY(0); }
 }
 
 .submenu-item-row {
@@ -609,7 +611,7 @@ body {
     border-color: rgba(56, 189, 248, 0.58);
     color: #ffffff;
     font-weight: 600;
-    transform: translateX(4px);
+    transform: translateX(3px);
     box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.25);
 }
 
@@ -682,7 +684,7 @@ body {
 }
 
 /* =========================================
-   KONTEN UTAMA & TRANSISI HALAMAN
+   KONTEN UTAMA & TRANSISI HALAMAN BEBAS KEDUT
    ========================================= */
 .main-content {
     margin-left: var(--sidebar-width);
@@ -690,6 +692,7 @@ body {
     min-height: 100vh;
     display: flex;
     flex-direction: column;
+    overflow-x: clip;
 }
 
 .page-view {
@@ -699,38 +702,39 @@ body {
 
 .page-view.active {
     display: block;
-    animation: pageTransitionIn 0.35s var(--ios-fluid) both;
+    animation: pageCrossfade 0.26s ease-out both;
 }
 
-@keyframes pageTransitionIn {
-    from { opacity: 0; transform: translateY(10px); }
-    to { opacity: 1; transform: translateY(0); }
+@keyframes pageCrossfade {
+    from { opacity: 0; }
+    to { opacity: 1; }
 }
 
 .page-view.active .ios-stagger-1 {
-    animation: iosSpringPop 0.45s var(--ios-spring) 0.02s both;
+    animation: iosSubtleRise 0.34s var(--ios-fluid) 0.02s both;
 }
 .page-view.active .ios-stagger-2 {
-    animation: iosSpringPop 0.48s var(--ios-spring) 0.08s both;
+    animation: iosSubtleRise 0.36s var(--ios-fluid) 0.06s both;
 }
 .page-view.active .ios-stagger-3 {
-    animation: iosSpringPop 0.52s var(--ios-spring) 0.14s both;
+    animation: iosSubtleRise 0.38s var(--ios-fluid) 0.1s both;
 }
 
-@keyframes iosSpringPop {
+@keyframes iosSubtleRise {
     0% {
         opacity: 0;
-        transform: translateY(18px) scale(0.95);
+        transform: translate3d(0, 8px, 0);
     }
     100% {
         opacity: 1;
-        transform: translateY(0) scale(1);
+        transform: translate3d(0, 0, 0);
     }
 }
 
 .page-container {
     padding: 2.5rem 5%;
     max-width: 1240px;
+    width: 100%;
     margin: 0 auto;
 }
 
@@ -752,7 +756,7 @@ body {
     color: var(--primary);
 }
 
-/* Hero Beranda Full Frosted Glass */
+/* Hero Beranda Full Frosted Glass (Blur 42px) */
 .hero {
     min-height: calc(100vh - 65px);
     display: flex;
@@ -773,9 +777,9 @@ body {
 .frosted-hero-card {
     position: relative;
     flex: 1;
-    background: rgba(12, 18, 34, 0.48);
-    backdrop-filter: blur(28px) saturate(190%);
-    -webkit-backdrop-filter: blur(28px) saturate(190%);
+    background: rgba(12, 18, 34, 0.44);
+    backdrop-filter: blur(42px) saturate(210%);
+    -webkit-backdrop-filter: blur(42px) saturate(210%);
     border: 1px solid var(--frost-border);
     border-top: 1px solid var(--frost-specular);
     border-left: 1px solid var(--frost-specular);
@@ -789,7 +793,8 @@ body {
     display: inline-flex;
     align-items: center;
     gap: 8px;
-    background: rgba(15, 23, 42, 0.62);
+    background: rgba(15, 23, 42, 0.56);
+    backdrop-filter: blur(28px);
     border: 1px solid rgba(56, 189, 248, 0.45);
     border-top: 1px solid rgba(255, 255, 255, 0.35);
     padding: 0.36rem 1rem;
@@ -858,25 +863,25 @@ body {
     grid-template-columns: repeat(3, 1fr);
     gap: 0.95rem;
     padding-top: 1.45rem;
-    border-top: 1px solid rgba(255, 255, 255, 0.18);
+    border-top: 1px solid rgba(255, 255, 255, 0.2);
 }
 
 .stat-frosted-box {
-    background: rgba(255, 255, 255, 0.09);
-    backdrop-filter: blur(16px);
-    -webkit-backdrop-filter: blur(16px);
-    border: 1px solid rgba(255, 255, 255, 0.2);
-    border-top: 1px solid rgba(255, 255, 255, 0.38);
+    background: rgba(255, 255, 255, 0.08);
+    backdrop-filter: blur(30px) saturate(190%);
+    -webkit-backdrop-filter: blur(30px) saturate(190%);
+    border: 1px solid rgba(255, 255, 255, 0.22);
+    border-top: 1px solid rgba(255, 255, 255, 0.4);
     border-radius: 18px;
     padding: 0.92rem 0.7rem;
     text-align: center;
     cursor: pointer;
-    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.2);
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.24);
 }
 
 .stat-frosted-box:hover {
-    background: rgba(56, 189, 248, 0.26);
-    border-color: rgba(56, 189, 248, 0.55);
+    background: rgba(56, 189, 248, 0.24);
+    border-color: rgba(56, 189, 248, 0.58);
 }
 
 .stat-number {
@@ -906,13 +911,13 @@ body {
     height: 252px;
     border-radius: 50%;
     padding: 12px;
-    background: rgba(12, 18, 34, 0.48);
-    backdrop-filter: blur(26px) saturate(190%);
-    -webkit-backdrop-filter: blur(26px) saturate(190%);
+    background: rgba(12, 18, 34, 0.44);
+    backdrop-filter: blur(42px) saturate(210%);
+    -webkit-backdrop-filter: blur(42px) saturate(210%);
     border: 1px solid var(--frost-specular);
     box-shadow: 0 20px 44px rgba(0, 0, 0, 0.52),
                 0 0 36px rgba(56, 189, 248, 0.28),
-                inset 0 1px 0 rgba(255, 255, 255, 0.4);
+                inset 0 1px 0 rgba(255, 255, 255, 0.44);
     cursor: pointer;
 }
 
@@ -926,7 +931,7 @@ body {
     object-fit: cover;
     border-radius: 50%;
     background-color: var(--bg-base);
-    border: 2px solid rgba(255, 255, 255, 0.3);
+    border: 2px solid rgba(255, 255, 255, 0.34);
 }
 
 .profile-change-badge {
@@ -975,7 +980,7 @@ body {
 
 .btn-add-item {
     background: rgba(16, 185, 129, 0.36);
-    backdrop-filter: blur(16px);
+    backdrop-filter: blur(28px);
     border: 1px dashed #34d399;
     color: #ffffff;
     padding: 0.62rem 1.18rem;
@@ -1406,8 +1411,8 @@ body.editing-active .editable-wrapper:focus-within > .delete-text-btn {
 .frosted-input {
     width: 100%;
     padding: 0.84rem 1rem;
-    background: rgba(9, 14, 28, 0.62);
-    backdrop-filter: blur(18px);
+    background: rgba(9, 14, 28, 0.56);
+    backdrop-filter: blur(28px);
     border: 1px solid var(--frost-border);
     border-radius: 14px;
     color: #ffffff;
@@ -1440,8 +1445,9 @@ body.editing-active .editable-wrapper:focus-within > .delete-text-btn {
 .frosted-footer {
     text-align: center;
     padding: 1.35rem;
-    background: rgba(9, 14, 28, 0.6);
-    backdrop-filter: blur(22px);
+    background: rgba(9, 14, 28, 0.56);
+    backdrop-filter: blur(36px) saturate(200%);
+    -webkit-backdrop-filter: blur(36px) saturate(200%);
     border-top: 1px solid var(--frost-border);
     color: #f1f5f9;
     font-size: 0.88rem;
@@ -1522,8 +1528,8 @@ body.editing-active .editable {
 }
 
 .btn-pill-finish.view-mode-state {
-    background: rgba(9, 14, 28, 0.82);
-    backdrop-filter: blur(20px);
+    background: rgba(9, 14, 28, 0.78);
+    backdrop-filter: blur(32px);
     color: var(--primary);
     border: 1px solid var(--primary);
     box-shadow: 0 8px 22px rgba(0, 0, 0, 0.48);
@@ -1558,18 +1564,17 @@ body.editing-active .editable {
     border-radius: 999px;
     font-size: 0.82rem;
     z-index: 1650;
-    animation: iosSpringPop 0.4s var(--ios-spring);
 }
 
 /* =========================================
-   MODALS DENGAN POP KENYAL ALA iOS
+   MODALS DENGAN FROSTED BLUR 44PX
    ========================================= */
 .modal {
     display: none;
     position: fixed;
     inset: 0;
-    background: rgba(3, 7, 18, 0.66);
-    backdrop-filter: blur(12px);
+    background: rgba(3, 7, 18, 0.58);
+    backdrop-filter: blur(18px);
     z-index: 2000;
     justify-content: center;
     align-items: center;
@@ -1577,22 +1582,22 @@ body.editing-active .editable {
 }
 
 .frosted-modal {
-    background: rgba(12, 19, 36, 0.84);
-    backdrop-filter: blur(30px) saturate(190%);
-    -webkit-backdrop-filter: blur(30px) saturate(190%);
+    background: rgba(12, 19, 36, 0.72);
+    backdrop-filter: blur(44px) saturate(210%);
+    -webkit-backdrop-filter: blur(44px) saturate(210%);
     padding: 1.9rem;
     border-radius: 26px;
     border: 1px solid var(--frost-specular);
-    box-shadow: 0 30px 64px rgba(0, 0, 0, 0.82), inset 0 1px 0 rgba(255, 255, 255, 0.3);
+    box-shadow: 0 30px 64px rgba(0, 0, 0, 0.82), inset 0 1px 0 rgba(255, 255, 255, 0.34);
     width: 100%;
     max-width: 480px;
     position: relative;
-    animation: iosModalBounce 0.44s var(--ios-spring) both;
+    animation: iosModalBounce 0.36s var(--ios-spring) both;
 }
 
 @keyframes iosModalBounce {
-    0% { opacity: 0; transform: scale(0.86) translateY(16px); }
-    100% { opacity: 1; transform: scale(1) translateY(0); }
+    0% { opacity: 0; transform: scale(0.92); }
+    100% { opacity: 1; transform: scale(1); }
 }
 
 .modal-scrollable {

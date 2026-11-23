@@ -66,7 +66,6 @@ let isInitialCloudLoaded = false;
 // =========================================
 // 2. RIPPLE CLICK, SCROLL-REVEAL, PARALLAX & SKELETON
 // =========================================
-// A. Efek Ripple Gelombang saat Klik
 document.addEventListener('click', (e) => {
     const target = e.target.closest('.ripple-trigger');
     if (!target) return;
@@ -83,17 +82,16 @@ document.addEventListener('click', (e) => {
     setTimeout(() => ripple.remove(), 580);
 });
 
-// B. Scroll-Triggered Fade-Up Animations (0.38s)
 const scrollRevealObserver = new IntersectionObserver((entries) => {
     entries.forEach((entry, idx) => {
         if (entry.isIntersecting) {
             setTimeout(() => {
                 entry.target.classList.add('revealed');
-            }, idx * 55);
+            }, idx * 45);
             scrollRevealObserver.unobserve(entry.target);
         }
     });
-}, { threshold: 0.08 });
+}, { threshold: 0.06 });
 
 function observeScrollRevealElements() {
     document.querySelectorAll('.scroll-reveal').forEach(el => {
@@ -103,7 +101,6 @@ function observeScrollRevealElements() {
     });
 }
 
-// C. Parallax Halus saat Di-scroll (Kedalaman 3D Ringan)
 let parallaxTicking = false;
 window.addEventListener('scroll', () => {
     if (parallaxTicking) return;
@@ -125,7 +122,6 @@ window.addEventListener('scroll', () => {
 
 const isTouchDevice = ('ontouchstart' in window) || (navigator.maxTouchPoints > 0);
 
-// D. Skeleton Loading Helper
 function showProjectsSkeleton(show) {
     const skel = document.getElementById('projectsSkeletonGrid');
     const grid = document.getElementById('projectsGrid');
@@ -141,7 +137,7 @@ function showProjectsSkeleton(show) {
 }
 
 // =========================================
-// 3. SISTEM MULTI-HALAMAN & SIDEBAR ACCORDION
+// 3. SISTEM MULTI-HALAMAN (TRANSISI MULUS BEBAS KEDUT)
 // =========================================
 const sidebar = document.getElementById('sidebar');
 const sidebarBackdrop = document.getElementById('sidebarBackdrop');
@@ -165,12 +161,20 @@ document.getElementById('toggleProjectMenuBtn').addEventListener('click', () => 
 });
 
 function switchPage(pageName, semesterId = null) {
+    if (activePage === pageName && (!semesterId || activeSemesterId === semesterId)) {
+        closeMobileSidebar();
+        return;
+    }
+
     activePage = pageName;
+
+    if (window.scrollY > 0) {
+        window.scrollTo({ top: 0, behavior: 'instant' });
+    }
 
     document.querySelectorAll('.page-view').forEach(sec => sec.classList.remove('active'));
     const targetSection = document.getElementById(`page-${pageName}`);
     if (targetSection) {
-        void targetSection.offsetWidth;
         targetSection.classList.add('active');
     }
 
@@ -197,11 +201,8 @@ function switchPage(pageName, semesterId = null) {
         if (!isInitialCloudLoaded) {
             showProjectsSkeleton(true);
         } else {
-            showProjectsSkeleton(true);
-            setTimeout(() => {
-                showProjectsSkeleton(false);
-                renderProjectsForActiveSemester();
-            }, 220);
+            showProjectsSkeleton(false);
+            renderProjectsForActiveSemester();
         }
     } else {
         const navLink = document.querySelector(`.sidebar-links a.nav-item[data-page="${pageName}"]`);
@@ -212,7 +213,6 @@ function switchPage(pageName, semesterId = null) {
     }
 
     observeScrollRevealElements();
-    window.scrollTo({ top: 0, behavior: 'smooth' });
     closeMobileSidebar();
 }
 
@@ -263,7 +263,7 @@ function animateCounter(el, targetValue) {
     if (!el) return;
     const startVal = parseInt(el.textContent) || 0;
     if (startVal === targetValue) return;
-    const duration = 480;
+    const duration = 450;
     const startTime = performance.now();
 
     function step(now) {
