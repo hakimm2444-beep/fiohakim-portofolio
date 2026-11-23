@@ -37,12 +37,17 @@ const db = getFirestore(app);
 setPersistence(auth, browserLocalPersistence);
 const portfolioDocRef = doc(db, "portfolio", "mainData");
 
-// Daftar Sub-Menu di Bawah "Tugas Projek >"
 let projectSubmenus = [
     { id: "sem-1", label: "Semester 1" },
     { id: "sem-2", label: "Semester 2" },
     { id: "sem-3", label: "Semester 3" }
 ];
+
+let contactLinks = {
+    waLink: "https://wa.me/6281234567890",
+    ytLink: "https://www.youtube.com",
+    ttLink: "https://www.tiktok.com"
+};
 
 let extraSidebarItems = [];
 let extraSkills = [];
@@ -76,22 +81,18 @@ document.getElementById('openSidebarBtn').addEventListener('click', () => {
 document.getElementById('closeSidebarBtn').addEventListener('click', closeMobileSidebar);
 sidebarBackdrop.addEventListener('click', closeMobileSidebar);
 
-// Toggle buka/tutup sub-menu "Tugas Projek >"
 const projectAccordionGroup = document.getElementById('projectAccordionGroup');
 document.getElementById('toggleProjectMenuBtn').addEventListener('click', () => {
     projectAccordionGroup.classList.toggle('open');
 });
 
-// Fungsi berpindah antar halaman portofolio
 function switchPage(pageName, semesterId = null) {
     activePage = pageName;
 
-    // Sembunyikan semua halaman & aktifkan halaman tujuan
     document.querySelectorAll('.page-view').forEach(sec => sec.classList.remove('active'));
     const targetSection = document.getElementById(`page-${pageName}`);
     if (targetSection) targetSection.classList.add('active');
 
-    // Reset active pada seluruh menu sidebar
     document.querySelectorAll('.sidebar-links a.nav-item, .submenu-link').forEach(el => {
         el.classList.remove('active');
     });
@@ -125,7 +126,6 @@ function switchPage(pageName, semesterId = null) {
     closeMobileSidebar();
 }
 
-// Event klik menu utama di sidebar
 document.querySelectorAll('.sidebar-links a.nav-item[data-page]').forEach(link => {
     link.addEventListener('click', (e) => {
         e.preventDefault();
@@ -134,7 +134,6 @@ document.querySelectorAll('.sidebar-links a.nav-item[data-page]').forEach(link =
     });
 });
 
-// Tombol navigasi cepat di Beranda
 document.getElementById('heroExploreProjectsBtn').addEventListener('click', () => {
     const firstSem = projectSubmenus[0] ? projectSubmenus[0].id : 'sem-1';
     switchPage('projects', firstSem);
@@ -145,13 +144,34 @@ document.getElementById('statTotalProjectsBox').addEventListener('click', () => 
     switchPage('projects', firstSem);
 });
 
+// Semua tombol/kartu dengan data-goto-page (termasuk Hubungi Saya -> Kontak)
 document.querySelectorAll('[data-goto-page]').forEach(el => {
     el.addEventListener('click', () => {
         switchPage(el.getAttribute('data-goto-page'));
     });
 });
 
-// Render Sub-Menu Semester di Sidebar ("Tugas Projek > Semester 1...")
+// Sinkronisasi input link WA, YouTube, TikTok di halaman Kontak
+function syncContactLinksToUI() {
+    Object.keys(contactLinks).forEach(key => {
+        const inputEl = document.querySelector(`.link-sync-input[data-link-key="${key}"]`);
+        const anchorEl = document.querySelector(`a[data-link-target="${key}"]`);
+        if (inputEl) inputEl.value = contactLinks[key];
+        if (anchorEl) anchorEl.href = contactLinks[key] || '#';
+    });
+}
+
+document.querySelectorAll('.link-sync-input').forEach(input => {
+    input.addEventListener('input', () => {
+        const key = input.getAttribute('data-link-key');
+        const val = input.value.trim();
+        contactLinks[key] = val;
+        const anchorEl = document.querySelector(`a[data-link-target="${key}"]`);
+        if (anchorEl) anchorEl.href = val || '#';
+    });
+});
+
+// Render Sub-Menu Semester di Sidebar
 function renderProjectSubmenus() {
     const submenuList = document.getElementById('projectSubmenuList');
     const semesterSelect = document.getElementById('projSemesterSelect');
@@ -161,7 +181,6 @@ function renderProjectSubmenus() {
     projectSubmenus.forEach((sub, index) => {
         const count = showcaseProjects.filter(p => (p.semesterId || 'sem-1') === sub.id).length;
 
-        // 1. Item Sub-Menu Sidebar
         const li = document.createElement('li');
         li.className = 'submenu-item-row';
         li.innerHTML = `
@@ -173,14 +192,12 @@ function renderProjectSubmenus() {
         `;
         submenuList.appendChild(li);
 
-        // 2. Opsi Dropdown di Modal Tambah Project
         const opt = document.createElement('option');
         opt.value = sub.id;
         opt.textContent = sub.label;
         semesterSelect.appendChild(opt);
     });
 
-    // Event klik pindah ke halaman semester tersebut
     submenuList.querySelectorAll('.submenu-link').forEach(link => {
         link.addEventListener('click', (e) => {
             e.preventDefault();
@@ -190,7 +207,6 @@ function renderProjectSubmenus() {
         });
     });
 
-    // Event edit nama sub-menu semester
     submenuList.querySelectorAll('.submenu-label-text').forEach(el => {
         el.addEventListener('input', () => {
             const idx = parseInt(el.getAttribute('data-sub-index'));
@@ -198,7 +214,6 @@ function renderProjectSubmenus() {
         });
     });
 
-    // Event hapus sub-menu semester
     submenuList.querySelectorAll('.delete-submenu-btn').forEach(btn => {
         btn.addEventListener('click', (e) => {
             e.stopPropagation();
@@ -214,12 +229,10 @@ function renderProjectSubmenus() {
         });
     });
 
-    // Perbarui statistik di halaman Beranda
     document.getElementById('homeTotalProjects').textContent = showcaseProjects.length;
     document.getElementById('homeTotalSemesters').textContent = projectSubmenus.length;
 }
 
-// Modal Tambah Sub-Menu Semester
 document.getElementById('addSubmenuBtn').addEventListener('click', (e) => {
     e.stopPropagation();
     document.getElementById('addSubmenuModal').style.display = 'flex';
@@ -436,11 +449,11 @@ async function loadMediaFromFirestore(mediaKey) {
 }
 
 // =========================================
-// 7. MICROINTERACTIONS RINGAN (HANYA AKTIF DI DESKTOP)
+// 7. MICROINTERACTIONS RINGAN (HANYA DESKTOP)
 // =========================================
 function initMicrointeractions() {
     const isTouchDevice = ('ontouchstart' in window) || (navigator.maxTouchPoints > 0);
-    if (isTouchDevice) return; // Ringan di HP: lewati kalkulasi mousemove tilt
+    if (isTouchDevice) return;
 
     document.querySelectorAll('.interactive-card').forEach(card => {
         if (card.dataset.tiltBound) return;
@@ -477,6 +490,7 @@ async function saveAllToCloud(showAlert = false) {
     try {
         await setDoc(portfolioDocRef, { 
             texts: textData,
+            contactLinks,
             deletedTextKeys,
             deletedStaticCards,
             savedIcons,
@@ -511,8 +525,8 @@ function renderDynamicElements() {
     });
 
     renderProjectSubmenus();
+    syncContactLinksToUI();
 
-    // Render Keahlian Tambahan
     const skillsGrid = document.getElementById('skillsGrid');
     skillsGrid.querySelectorAll('.dynamic-col').forEach(el => el.remove());
     extraSkills.forEach((col, index) => {
@@ -560,26 +574,22 @@ function renderDynamicElements() {
     initMicrointeractions();
 }
 
-// Render khusus project milik semester yang sedang aktif dibuka (ringan di HP!)
 function renderProjectsForActiveSemester() {
     const projectsGrid = document.getElementById('projectsGrid');
     const filterContainer = document.getElementById('projectFilterButtons');
     projectsGrid.innerHTML = '';
     filterContainer.innerHTML = '';
 
-    // Filter hanya project milik semester aktif
     const semesterProjects = showcaseProjects
         .map((proj, realIndex) => ({ ...proj, realIndex }))
         .filter(proj => (proj.semesterId || 'sem-1') === activeSemesterId);
 
-    // Hitung kategori/mata pelajaran di semester ini
     const categoryCounts = {};
     semesterProjects.forEach(p => {
         const cat = p.category || 'Umum';
         categoryCounts[cat] = (categoryCounts[cat] || 0) + 1;
     });
 
-    // Tombol Filter "Semua"
     const allBtn = document.createElement('button');
     allBtn.className = `filter-btn glass-pill ${activeCategoryFilter === 'all' ? 'active' : ''}`;
     allBtn.innerHTML = `<i class="fas fa-layer-group"></i> Semua <span class="filter-count">${semesterProjects.length}</span>`;
@@ -622,7 +632,6 @@ function renderProjectsForActiveSemester() {
         return;
     }
 
-    // Tampilkan dari yang terbaru
     filteredList.slice().reverse().forEach(proj => {
         const card = document.createElement('div');
         card.className = 'project-card glass-card interactive-card';
@@ -877,6 +886,9 @@ async function loadCloudContent() {
             if (data.projectSubmenus && data.projectSubmenus.length > 0) {
                 projectSubmenus = data.projectSubmenus;
             }
+            if (data.contactLinks) {
+                contactLinks = { ...contactLinks, ...data.contactLinks };
+            }
 
             if (data.texts) {
                 document.querySelectorAll('.editable[data-key]').forEach(el => {
@@ -906,6 +918,7 @@ async function loadCloudContent() {
             renderDynamicElements();
         } else {
             renderProjectSubmenus();
+            syncContactLinksToUI();
             attachTextDeleteControls();
         }
 
@@ -1066,13 +1079,6 @@ document.getElementById('resetAllBtn').addEventListener('click', async () => {
         ]);
         location.reload();
     }
-});
-
-document.getElementById('contactForm').addEventListener('submit', (e) => {
-    e.preventDefault();
-    const name = document.getElementById('name').value;
-    showToast(`Terima kasih, ${name}! Pesan terkirim.`);
-    e.target.reset();
 });
 
 document.addEventListener('DOMContentLoaded', () => {

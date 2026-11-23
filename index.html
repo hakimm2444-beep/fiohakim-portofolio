@@ -116,8 +116,9 @@
                             <button type="button" class="btn primary magnetic-btn" id="heroExploreProjectsBtn">
                                 <i class="fas fa-folder-open"></i> <span class="editable" data-key="btnPrimary">Jelajahi Tugas Projek</span>
                             </button>
-                            <button type="button" class="btn secondary glass-pill magnetic-btn" data-goto-page="about">
-                                <i class="fas fa-user"></i> <span class="editable" data-key="btnSecondary">Profil & Keahlian</span>
+                            <!-- Langsung mengarah ke halaman Kontak -->
+                            <button type="button" class="btn secondary glass-pill magnetic-btn" data-goto-page="contact">
+                                <i class="fas fa-address-book"></i> <span class="editable" data-key="btnSecondary">Hubungi Saya</span>
                             </button>
                         </div>
 
@@ -131,7 +132,7 @@
                                 <span class="stat-number" id="homeTotalSemesters">3</span>
                                 <span class="stat-label">Folder Semester</span>
                             </div>
-                            <div class="stat-glass-box" data-goto-page="contact">
+                            <div class="stat-glass-box" data-goto-page="contact" title="Klik untuk membuka kontak WA, YouTube & TikTok">
                                 <span class="stat-number"><i class="fas fa-paper-plane" style="font-size: 1.25rem;"></i></span>
                                 <span class="stat-label">Hubungi Saya</span>
                             </div>
@@ -253,7 +254,7 @@
         </section>
 
         <!-- =========================================================
-             HALAMAN 4: KONTAK
+             HALAMAN 4: KONTAK (3 KOLOM: WHATSAPP, YOUTUBE, TIKTOK)
              ========================================================= -->
         <section id="page-contact" class="page-view">
             <div class="page-container">
@@ -264,17 +265,69 @@
                     </div>
                 </div>
 
-                <div class="contact-container glass-card">
-                    <form id="contactForm" class="contact-form">
-                        <input type="text" id="name" class="glass-input" placeholder="Nama Anda / Perusahaan" required>
-                        <input type="email" id="email" class="glass-input" placeholder="Email Anda" required>
-                        <textarea id="message" rows="5" class="glass-input" placeholder="Pesan (misal: Tawaran PKL / Magang)" required></textarea>
-                        <button type="submit" class="btn primary magnetic-btn">Kirim Pesan</button>
-                    </form>
-                    <div class="social-links">
-                        <a href="#" class="glass-pill social-pill editable" data-key="socialGithub"><i class="fab fa-github"></i> GitHub</a>
-                        <a href="#" class="glass-pill social-pill editable" data-key="socialLinkedin"><i class="fab fa-linkedin"></i> LinkedIn</a>
-                        <a href="#" class="glass-pill social-pill editable" data-key="socialEmail"><i class="fas fa-envelope"></i> Email</a>
+                <!-- 3 Kolom Kontak: WhatsApp, YouTube, TikTok -->
+                <div class="contact-cards-grid">
+                    <!-- Kolom 1: WhatsApp -->
+                    <div class="contact-channel-card glass-card interactive-card wa-card">
+                        <div class="card-glare"></div>
+                        <div class="channel-icon-circle wa-icon">
+                            <i class="fab fa-whatsapp"></i>
+                        </div>
+                        <h3 class="editable" data-key="waTitle">WhatsApp</h3>
+                        <p class="channel-handle editable" data-key="waNumber">+62 812-3456-7890</p>
+                        <p class="channel-desc editable" data-key="waDesc">Hubungi langsung untuk diskusi proyek, PKL, atau kerja sama jaringan.</p>
+
+                        <!-- Input Edit Link WhatsApp (Hanya muncul saat Mode Edit) -->
+                        <div class="edit-only-box link-editor-box">
+                            <label>Link WhatsApp (wa.me):</label>
+                            <input type="url" id="waLinkInput" class="glass-input link-sync-input" data-link-key="waLink" value="https://wa.me/6281234567890" placeholder="https://wa.me/628...">
+                        </div>
+
+                        <a href="https://wa.me/6281234567890" id="waActionLink" data-link-target="waLink" target="_blank" rel="noopener" class="btn channel-btn wa-btn">
+                            <i class="fab fa-whatsapp"></i> Chat WhatsApp
+                        </a>
+                    </div>
+
+                    <!-- Kolom 2: YouTube -->
+                    <div class="contact-channel-card glass-card interactive-card yt-card">
+                        <div class="card-glare"></div>
+                        <div class="channel-icon-circle yt-icon">
+                            <i class="fab fa-youtube"></i>
+                        </div>
+                        <h3 class="editable" data-key="ytTitle">YouTube</h3>
+                        <p class="channel-handle editable" data-key="ytHandle">@FioHakimTJKT</p>
+                        <p class="channel-desc editable" data-key="ytDesc">Tonton video tutorial konfigurasi jaringan, MikroTik, dan dokumentasi lab.</p>
+
+                        <!-- Input Edit Link YouTube (Hanya muncul saat Mode Edit) -->
+                        <div class="edit-only-box link-editor-box">
+                            <label>Link Channel YouTube:</label>
+                            <input type="url" id="ytLinkInput" class="glass-input link-sync-input" data-link-key="ytLink" value="https://www.youtube.com" placeholder="https://www.youtube.com/@...">
+                        </div>
+
+                        <a href="https://www.youtube.com" id="ytActionLink" data-link-target="ytLink" target="_blank" rel="noopener" class="btn channel-btn yt-btn">
+                            <i class="fab fa-youtube"></i> Kunjungi YouTube
+                        </a>
+                    </div>
+
+                    <!-- Kolom 3: TikTok -->
+                    <div class="contact-channel-card glass-card interactive-card tt-card">
+                        <div class="card-glare"></div>
+                        <div class="channel-icon-circle tt-icon">
+                            <i class="fab fa-tiktok"></i>
+                        </div>
+                        <h3 class="editable" data-key="ttTitle">TikTok</h3>
+                        <p class="channel-handle editable" data-key="ttHandle">@fiohakim.net</p>
+                        <p class="channel-desc editable" data-key="ttDesc">Konten singkat seputar dunia jaringan, praktik lab, dan teknologi.</p>
+
+                        <!-- Input Edit Link TikTok (Hanya muncul saat Mode Edit) -->
+                        <div class="edit-only-box link-editor-box">
+                            <label>Link Profil TikTok:</label>
+                            <input type="url" id="ttLinkInput" class="glass-input link-sync-input" data-link-key="ttLink" value="https://www.tiktok.com" placeholder="https://www.tiktok.com/@...">
+                        </div>
+
+                        <a href="https://www.tiktok.com" id="ttActionLink" data-link-target="ttLink" target="_blank" rel="noopener" class="btn channel-btn tt-btn">
+                            <i class="fab fa-tiktok"></i> Kunjungi TikTok
+                        </a>
                     </div>
                 </div>
             </div>

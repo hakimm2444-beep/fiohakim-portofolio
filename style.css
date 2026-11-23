@@ -256,7 +256,6 @@ body {
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.25);
 }
 
-/* Grup Accordion: Tugas Projek > */
 .sidebar-accordion-group {
     display: flex;
     flex-direction: column;
@@ -328,7 +327,6 @@ body {
     font-size: 0.78rem;
 }
 
-/* Sub-Menu Semester di Bawah Tugas Projek */
 .sidebar-submenu {
     list-style: none;
     display: none;
@@ -404,7 +402,6 @@ body {
     border-top: 1px solid var(--glass-border);
 }
 
-/* Header Mobile untuk HP */
 .mobile-topbar {
     display: none;
     position: fixed;
@@ -585,7 +582,6 @@ body {
     margin-bottom: 1.8rem;
 }
 
-/* Kartu Statistik Cepat di Beranda */
 .quick-stats-row {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
@@ -622,7 +618,6 @@ body {
     color: #e2e8f0;
 }
 
-/* Foto Profil */
 .hero-profile {
     flex-shrink: 0;
 }
@@ -790,7 +785,107 @@ body.editing-active .icon-picker-trigger {
 }
 
 /* =========================================
-   KARTU PROJECT & MEDIA (YOUTUBE, TIKTOK, FOTO, LINK)
+   HALAMAN KONTAK (3 KOLOM: WA, YOUTUBE, TIKTOK)
+   ========================================= */
+.contact-cards-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.6rem;
+}
+
+.contact-channel-card {
+    padding: 2.2rem 1.7rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+}
+
+.channel-icon-circle {
+    width: 72px;
+    height: 72px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2.1rem;
+    margin-bottom: 1.15rem;
+    border: 1px solid rgba(255, 255, 255, 0.35);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.35);
+}
+
+.wa-icon {
+    background: linear-gradient(135deg, rgba(37, 211, 102, 0.3), rgba(16, 185, 129, 0.45));
+    color: #6ee7b7;
+}
+
+.yt-icon {
+    background: linear-gradient(135deg, rgba(239, 68, 68, 0.32), rgba(220, 38, 38, 0.48));
+    color: #fca5a5;
+}
+
+.tt-icon {
+    background: linear-gradient(135deg, rgba(6, 182, 212, 0.28), rgba(236, 72, 153, 0.38));
+    color: #f9a8d4;
+}
+
+.contact-channel-card h3 {
+    font-size: 1.35rem;
+    margin-bottom: 0.3rem;
+    color: #ffffff;
+}
+
+.channel-handle {
+    font-size: 1.02rem;
+    font-weight: 700;
+    color: #38bdf8;
+    margin-bottom: 0.75rem;
+}
+
+.channel-desc {
+    font-size: 0.92rem;
+    color: #e2e8f0;
+    margin-bottom: 1.5rem;
+}
+
+.link-editor-box {
+    width: 100%;
+    flex-direction: column;
+    align-items: flex-start !important;
+    margin-bottom: 1rem;
+    text-align: left;
+}
+
+.link-editor-box label {
+    font-size: 0.78rem;
+    color: #34d399;
+    font-weight: 600;
+}
+
+.channel-btn {
+    margin-top: auto;
+    width: 100%;
+    color: #ffffff;
+    border: 1px solid rgba(255, 255, 255, 0.25);
+}
+
+.wa-btn {
+    background: linear-gradient(135deg, #16a34a, #059669);
+    box-shadow: 0 6px 20px rgba(22, 163, 74, 0.4);
+}
+
+.yt-btn {
+    background: linear-gradient(135deg, #dc2626, #b91c1c);
+    box-shadow: 0 6px 20px rgba(220, 38, 38, 0.4);
+}
+
+.tt-btn {
+    background: linear-gradient(135deg, #0891b2, #db2777);
+    box-shadow: 0 6px 20px rgba(219, 39, 119, 0.38);
+}
+
+/* =========================================
+   KARTU PROJECT & MEDIA
    ========================================= */
 .showcase-status-bar {
     padding: 0.75rem 1.2rem;
@@ -935,7 +1030,6 @@ body.editing-active .icon-picker-trigger {
     justify-content: center;
 }
 
-/* Filter Buttons */
 .filter-buttons {
     display: flex;
     gap: 0.65rem;
@@ -965,10 +1059,6 @@ body.editing-active .icon-picker-trigger {
 .filter-btn.active {
     background: linear-gradient(135deg, #0ea5e9, #4f46e5);
     border-color: rgba(255, 255, 255, 0.45);
-}
-
-.project-card.hide {
-    display: none;
 }
 
 /* =========================================
@@ -1004,29 +1094,16 @@ body.editing-active .editable-wrapper:focus-within > .delete-text-btn {
     display: inline-flex;
 }
 
-/* Kontak */
-.contact-container {
-    max-width: 620px;
-    margin: 0 auto;
-    padding: 2.2rem;
-}
-
-.contact-form {
-    display: flex;
-    flex-direction: column;
-    gap: 1rem;
-    margin-bottom: 1.8rem;
-}
-
 .glass-input {
     width: 100%;
-    padding: 0.88rem 1.05rem;
+    padding: 0.8rem 1rem;
     background: rgba(10, 15, 28, 0.55);
     backdrop-filter: blur(14px);
     border: 1px solid var(--glass-border);
     border-radius: 12px;
     color: #ffffff;
     outline: none;
+    font-size: 0.88rem;
 }
 
 .glass-input::placeholder {
@@ -1042,24 +1119,6 @@ body.editing-active .editable-wrapper:focus-within > .delete-text-btn {
     font-weight: 600;
     cursor: pointer;
     margin-right: 10px;
-}
-
-.social-links {
-    display: flex;
-    justify-content: center;
-    gap: 0.9rem;
-    flex-wrap: wrap;
-}
-
-.social-pill {
-    color: #ffffff;
-    text-decoration: none;
-    padding: 0.55rem 1.1rem;
-    border-radius: 999px;
-    font-size: 0.9rem;
-    display: inline-flex;
-    align-items: center;
-    gap: 7px;
 }
 
 .glass-footer {
@@ -1089,6 +1148,10 @@ body.editing-active .edit-only-box {
 
 body.editing-active .sidebar-add-box.edit-only-box {
     display: block !important;
+}
+
+body.editing-active .link-editor-box.edit-only-box {
+    display: flex !important;
 }
 
 body.editing-active .editable {
@@ -1285,7 +1348,7 @@ body.editing-active .editable {
    ========================================= */
 @media (max-width: 900px) {
     body {
-        background-attachment: scroll; /* Menghindari lag scroll di HP */
+        background-attachment: scroll;
     }
     .sidebar {
         transform: translateX(-100%);
@@ -1339,7 +1402,8 @@ body.editing-active .editable {
     .page-container {
         padding: 1.5rem 4%;
     }
-    .media-showcase-grid {
+    .media-showcase-grid,
+    .contact-cards-grid {
         grid-template-columns: 1fr;
     }
 }
