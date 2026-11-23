@@ -92,7 +92,6 @@ function switchPage(pageName, semesterId = null) {
     document.querySelectorAll('.page-view').forEach(sec => sec.classList.remove('active'));
     const targetSection = document.getElementById(`page-${pageName}`);
     if (targetSection) {
-        // Trigger ulang animasi stagger saat halaman dibuka
         void targetSection.offsetWidth;
         targetSection.classList.add('active');
     }
@@ -173,12 +172,11 @@ document.querySelectorAll('.link-sync-input').forEach(input => {
     });
 });
 
-// Animasi Counter Angka Halus di Beranda
 function animateCounter(el, targetValue) {
     if (!el) return;
     const startVal = parseInt(el.textContent) || 0;
     if (startVal === targetValue) return;
-    const duration = 450;
+    const duration = 480;
     const startTime = performance.now();
 
     function step(now) {
@@ -190,7 +188,6 @@ function animateCounter(el, targetValue) {
     requestAnimationFrame(step);
 }
 
-// Render Sub-Menu Semester di Sidebar
 function renderProjectSubmenus() {
     const submenuList = document.getElementById('projectSubmenuList');
     const semesterSelect = document.getElementById('projSemesterSelect');
@@ -203,11 +200,11 @@ function renderProjectSubmenus() {
         const li = document.createElement('li');
         li.className = 'submenu-item-row';
         li.innerHTML = `
-            <a href="#projects-${sub.id}" class="submenu-link ${activePage === 'projects' && activeSemesterId === sub.id ? 'active' : ''}" data-sem-id="${sub.id}">
+            <a href="#projects-${sub.id}" class="submenu-link ios-squish ${activePage === 'projects' && activeSemesterId === sub.id ? 'active' : ''}" data-sem-id="${sub.id}">
                 <span class="editable submenu-label-text" data-sub-index="${index}">${sub.label}</span>
                 <span class="submenu-count">${count}</span>
             </a>
-            ${projectSubmenus.length > 1 ? `<button type="button" class="edit-only-box delete-submenu-btn" data-sub-index="${index}" title="Hapus Sub-Menu">&times;</button>` : ''}
+            ${projectSubmenus.length > 1 ? `<button type="button" class="edit-only-box delete-submenu-btn ios-squish" data-sub-index="${index}" title="Hapus Sub-Menu">&times;</button>` : ''}
         `;
         submenuList.appendChild(li);
 
@@ -357,7 +354,7 @@ function initIconPicker() {
     ICON_OPTIONS.forEach(iconClass => {
         const btn = document.createElement('button');
         btn.type = 'button';
-        btn.className = 'icon-option-btn';
+        btn.className = 'icon-option-btn ios-squish';
         btn.innerHTML = `<i class="${iconClass}"></i>`;
 
         btn.addEventListener('click', () => {
@@ -468,7 +465,7 @@ async function loadMediaFromFirestore(mediaKey) {
 }
 
 // =========================================
-// 7. MICROINTERACTIONS ENGINE (SPOTLIGHT & TILT HALUS)
+// 7. iOS 3D GLASS TILT & SPOTLIGHT GLARE ENGINE
 // =========================================
 function initMicrointeractions() {
     const isTouchDevice = ('ontouchstart' in window) || (navigator.maxTouchPoints > 0);
@@ -486,6 +483,20 @@ function initMicrointeractions() {
 
             card.style.setProperty('--mouse-x', `${x}px`);
             card.style.setProperty('--mouse-y', `${y}px`);
+
+            if (card.classList.contains('ios-spring-card')) {
+                const centerX = rect.width / 2;
+                const centerY = rect.height / 2;
+                const rotateX = ((y - centerY) / centerY) * -4.2;
+                const rotateY = ((x - centerX) / centerX) * 4.2;
+                card.style.transform = `perspective(950px) rotateX(${rotateX.toFixed(2)}deg) rotateY(${rotateY.toFixed(2)}deg) translateY(-6px) scale(1.015)`;
+            }
+        });
+
+        card.addEventListener('mouseleave', () => {
+            if (card.classList.contains('ios-spring-card')) {
+                card.style.transform = '';
+            }
         });
     });
 }
@@ -550,10 +561,10 @@ function renderDynamicElements() {
     skillsGrid.querySelectorAll('.dynamic-col').forEach(el => el.remove());
     extraSkills.forEach((col, index) => {
         const card = document.createElement('div');
-        card.className = 'skill-card softglass-card interactive-card spring-card dynamic-col';
+        card.className = 'skill-card frosted-card interactive-card ios-spring-card dynamic-col';
         card.innerHTML = `
             <div class="card-glare"></div>
-            <button class="edit-only-box delete-card-btn" data-type="skill" data-index="${index}" title="Hapus Kartu"><i class="fas fa-trash"></i></button>
+            <button class="edit-only-box delete-card-btn ios-squish" data-type="skill" data-index="${index}" title="Hapus Kartu"><i class="fas fa-trash"></i></button>
             <div class="icon-badge icon-picker-trigger" title="Klik untuk ganti ikon">
                 <i class="${col.icon || 'fas fa-microchip'} dynamic-icon" data-array="extraSkills" data-index="${index}"></i>
             </div>
@@ -610,7 +621,7 @@ function renderProjectsForActiveSemester() {
     });
 
     const allBtn = document.createElement('button');
-    allBtn.className = `filter-btn softglass-pill spring-btn ${activeCategoryFilter === 'all' ? 'active' : ''}`;
+    allBtn.className = `filter-btn frosted-pill ios-spring-btn ${activeCategoryFilter === 'all' ? 'active' : ''}`;
     allBtn.innerHTML = `<i class="fas fa-layer-group"></i> Semua <span class="filter-count">${semesterProjects.length}</span>`;
     allBtn.addEventListener('click', () => {
         activeCategoryFilter = 'all';
@@ -620,7 +631,7 @@ function renderProjectsForActiveSemester() {
 
     Object.keys(categoryCounts).forEach(cat => {
         const btn = document.createElement('button');
-        btn.className = `filter-btn softglass-pill spring-btn ${activeCategoryFilter === cat ? 'active' : ''}`;
+        btn.className = `filter-btn frosted-pill ios-spring-btn ${activeCategoryFilter === cat ? 'active' : ''}`;
         btn.innerHTML = `<i class="fas fa-tag"></i> ${cat} <span class="filter-count">${categoryCounts[cat]}</span>`;
         btn.addEventListener('click', () => {
             activeCategoryFilter = cat;
@@ -642,7 +653,7 @@ function renderProjectsForActiveSemester() {
 
     if (filteredList.length === 0) {
         projectsGrid.innerHTML = `
-            <div class="empty-projects-placeholder softglass-card">
+            <div class="empty-projects-placeholder frosted-card">
                 <i class="fas fa-folder-open"></i>
                 <p>Belum ada tugas atau project di ${semName}.</p>
                 <small>Masuk sebagai admin lalu klik <strong>"Tambah Konten / Project"</strong> di pojok kanan atas untuk menambahkan video YouTube, TikTok, foto, atau tautan.</small>
@@ -653,7 +664,7 @@ function renderProjectsForActiveSemester() {
 
     filteredList.slice().reverse().forEach(proj => {
         const card = document.createElement('div');
-        card.className = 'project-card softglass-card interactive-card spring-card';
+        card.className = 'project-card frosted-card interactive-card ios-spring-card';
 
         let mediaHtml = '';
         if (proj.mediaType === 'youtube' && proj.youtubeId) {
@@ -675,7 +686,7 @@ function renderProjectsForActiveSemester() {
                     <div class="project-media-wrapper">
                         <div class="tiktok-embed-box">
                             <i class="fab fa-tiktok"></i>
-                            <a href="${proj.mediaUrl}" target="_blank" rel="noopener" class="btn primary spring-btn" style="padding: 0.45rem 1rem; font-size: 0.82rem;">Tonton di TikTok</a>
+                            <a href="${proj.mediaUrl}" target="_blank" rel="noopener" class="btn primary ios-spring-btn" style="padding: 0.45rem 1rem; font-size: 0.82rem;">Tonton di TikTok</a>
                         </div>
                     </div>
                 `;
@@ -700,7 +711,7 @@ function renderProjectsForActiveSemester() {
 
         card.innerHTML = `
             <div class="card-glare"></div>
-            <button class="edit-only-box delete-card-btn" data-real-index="${proj.realIndex}" title="Hapus Project">
+            <button class="edit-only-box delete-card-btn ios-squish" data-real-index="${proj.realIndex}" title="Hapus Project">
                 <i class="fas fa-trash"></i>
             </button>
             ${mediaHtml}
@@ -711,7 +722,7 @@ function renderProjectsForActiveSemester() {
             <h3 class="editable dynamic-proj-field" data-real-index="${proj.realIndex}" data-field="title">${proj.title}</h3>
             <p class="editable dynamic-proj-field" data-real-index="${proj.realIndex}" data-field="desc">${proj.desc}</p>
             ${extraLinkHtml}
-            <button type="button" class="btn-card-fullscreen spring-btn" data-real-index="${proj.realIndex}">
+            <button type="button" class="btn-card-fullscreen ios-spring-btn" data-real-index="${proj.realIndex}">
                 <i class="fas fa-play"></i> Putar / Lihat Layar Penuh
             </button>
         `;

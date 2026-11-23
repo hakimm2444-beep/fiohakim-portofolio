@@ -9,10 +9,10 @@
 </head>
 <body id="mainBody">
 
-    <!-- Lapisan Kontras Adaptif agar Teks Selalu Terbaca Jelas -->
+    <!-- Lapisan Kontras Adaptif agar Teks Selalu Terbaca Tajam -->
     <div class="bg-readability-tint" aria-hidden="true"></div>
 
-    <!-- Cahaya Ambient Softglass Halus -->
+    <!-- Cahaya Ambient Frosted Glass -->
     <div class="ambient-orbs" aria-hidden="true">
         <div class="orb orb-1"></div>
         <div class="orb orb-2"></div>
@@ -22,20 +22,20 @@
     <!-- Overlay Gelap saat Sidebar Terbuka di HP -->
     <div class="sidebar-backdrop" id="sidebarBackdrop"></div>
 
-    <!-- Sidebar Navigasi Softglass dengan Accordion Bertingkat -->
-    <aside class="sidebar softglass-panel" id="sidebar">
+    <!-- Sidebar Navigasi Full Frosted Glass -->
+    <aside class="sidebar frosted-panel" id="sidebar">
         <div class="sidebar-header">
-            <div class="logo-wrap">
+            <div class="logo-wrap ios-squish">
                 <span class="logo-dot"></span>
                 <div class="logo editable" data-key="logo">TJKT<span>.net</span></div>
             </div>
-            <button id="closeSidebarBtn" class="close-sidebar-btn" aria-label="Tutup Menu"><i class="fas fa-times"></i></button>
+            <button id="closeSidebarBtn" class="close-sidebar-btn ios-squish" aria-label="Tutup Menu"><i class="fas fa-times"></i></button>
         </div>
         
         <ul class="sidebar-links" id="sidebarLinks">
             <!-- Halaman 1: Beranda -->
             <li>
-                <a href="#page-home" class="nav-item active" data-page="home">
+                <a href="#page-home" class="nav-item ios-squish active" data-page="home">
                     <span class="nav-icon-wrap"><i class="fas fa-home editable-icon" data-icon-key="navHomeIcon"></i></span>
                     <span class="editable" data-key="navHome">Beranda</span>
                 </a>
@@ -43,7 +43,7 @@
 
             <!-- Halaman 2: Tentang & Keahlian -->
             <li>
-                <a href="#page-about" class="nav-item" data-page="about">
+                <a href="#page-about" class="nav-item ios-squish" data-page="about">
                     <span class="nav-icon-wrap"><i class="fas fa-user-astronaut editable-icon" data-icon-key="navAboutIcon"></i></span>
                     <span class="editable" data-key="navAbout">Tentang & Keahlian</span>
                 </a>
@@ -52,14 +52,14 @@
             <!-- Menu Accordion: Tugas Projek > Semester 1, 2, dst -->
             <li class="sidebar-accordion-group open" id="projectAccordionGroup">
                 <div class="accordion-header-row">
-                    <button type="button" class="accordion-toggle-btn" id="toggleProjectMenuBtn">
+                    <button type="button" class="accordion-toggle-btn ios-squish" id="toggleProjectMenuBtn">
                         <span class="accordion-left">
                             <span class="nav-icon-wrap folder-accent"><i class="fas fa-folder-open editable-icon" data-icon-key="navProjectsIcon"></i></span>
                             <span class="editable" data-key="navProjects">Tugas Projek</span>
                         </span>
                         <i class="fas fa-chevron-right accordion-arrow"></i>
                     </button>
-                    <button type="button" class="edit-only-box btn-mini-add" id="addSubmenuBtn" title="Tambah Semester / Sub-Menu">
+                    <button type="button" class="edit-only-box btn-mini-add ios-squish" id="addSubmenuBtn" title="Tambah Semester / Sub-Menu">
                         <i class="fas fa-plus"></i>
                     </button>
                 </div>
@@ -70,7 +70,7 @@
 
             <!-- Halaman Kontak -->
             <li>
-                <a href="#page-contact" class="nav-item" data-page="contact">
+                <a href="#page-contact" class="nav-item ios-squish" data-page="contact">
                     <span class="nav-icon-wrap"><i class="fas fa-envelope editable-icon" data-icon-key="navContactIcon"></i></span>
                     <span class="editable" data-key="navContact">Kontak</span>
                 </a>
@@ -79,15 +79,15 @@
 
         <!-- Tombol Tambah Halaman Menu Utama (Mode Edit) -->
         <div class="edit-only-box sidebar-add-box">
-            <button id="openAddSidebarModal" class="btn-add-item" style="width: 100%; justify-content: center;">
+            <button id="openAddSidebarModal" class="btn-add-item ios-squish" style="width: 100%; justify-content: center;">
                 <i class="fas fa-plus-circle"></i> Tambah Halaman Menu
             </button>
         </div>
     </aside>
 
-    <!-- Header Mobile Softglass untuk HP -->
-    <header class="mobile-topbar softglass-panel">
-        <button id="openSidebarBtn" class="mobile-sidebar-toggle" aria-label="Buka Menu">
+    <!-- Header Mobile Frosted Glass untuk HP -->
+    <header class="mobile-topbar frosted-panel">
+        <button id="openSidebarBtn" class="mobile-sidebar-toggle ios-squish" aria-label="Buka Menu">
             <i class="fas fa-bars"></i>
         </button>
         <div class="mobile-topbar-title" id="mobilePageTitle">Beranda</div>
@@ -103,9 +103,9 @@
         <section id="page-home" class="page-view active">
             <div class="hero">
                 <div class="hero-wrapper">
-                    <div class="hero-content softglass-hero-card interactive-card stagger-1">
+                    <div class="hero-content frosted-hero-card interactive-card ios-stagger-1">
                         <div class="card-glare"></div>
-                        <div class="hero-status-pill">
+                        <div class="hero-status-pill ios-squish">
                             <span class="pulse-dot"></span>
                             <span class="editable" data-key="heroBadge">Portofolio Digital • TJKT</span>
                         </div>
@@ -118,37 +118,37 @@
                             Membangun infrastruktur jaringan yang handal, mengamankan server, dan mendokumentasikan setiap proyek praktikum dari semester ke semester.
                         </p>
                         <div class="hero-buttons">
-                            <button type="button" class="btn primary spring-btn" id="heroExploreProjectsBtn">
+                            <button type="button" class="btn primary ios-spring-btn" id="heroExploreProjectsBtn">
                                 <i class="fas fa-folder-open"></i> <span class="editable" data-key="btnPrimary">Jelajahi Tugas Projek</span>
                             </button>
-                            <button type="button" class="btn secondary softglass-pill spring-btn" data-goto-page="contact">
+                            <button type="button" class="btn secondary frosted-pill ios-spring-btn" data-goto-page="contact">
                                 <i class="fas fa-address-book"></i> <span class="editable" data-key="btnSecondary">Hubungi Saya</span>
                             </button>
                         </div>
 
                         <!-- Kartu Ringkasan Cepat Interaktif -->
                         <div class="quick-stats-row">
-                            <div class="stat-softglass-box spring-card" id="statTotalProjectsBox" title="Klik untuk melihat semua tugas">
+                            <div class="stat-frosted-box ios-spring-card" id="statTotalProjectsBox" title="Klik untuk melihat semua tugas">
                                 <span class="stat-number" id="homeTotalProjects">0</span>
                                 <span class="stat-label">Total Projek</span>
                             </div>
-                            <div class="stat-softglass-box spring-card" data-goto-page="about">
+                            <div class="stat-frosted-box ios-spring-card" data-goto-page="about">
                                 <span class="stat-number" id="homeTotalSemesters">3</span>
                                 <span class="stat-label">Folder Semester</span>
                             </div>
-                            <div class="stat-softglass-box spring-card" data-goto-page="contact" title="Klik untuk membuka kontak WA, YouTube & TikTok">
+                            <div class="stat-frosted-box ios-spring-card" data-goto-page="contact" title="Klik untuk membuka kontak WA, YouTube & TikTok">
                                 <span class="stat-number"><i class="fas fa-paper-plane" style="font-size: 1.25rem;"></i></span>
                                 <span class="stat-label">Hubungi Saya</span>
                             </div>
                         </div>
                     </div>
                     
-                    <!-- Foto Profil dengan Cincin Softglass -->
-                    <div class="hero-profile stagger-2">
-                        <div class="profile-frame softglass-ring">
+                    <!-- Foto Profil dengan Cincin Frosted Glass Kenyal -->
+                    <div class="hero-profile ios-stagger-2">
+                        <div class="profile-frame frosted-ring ios-spring-card">
                             <div class="ring-aura"></div>
                             <img id="profileImage" src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&w=600&q=80" alt="Foto Profil">
-                            <label for="uploadProfile" class="edit-only-box profile-change-badge" title="Ganti Foto Profil">
+                            <label for="uploadProfile" class="edit-only-box profile-change-badge ios-squish" title="Ganti Foto Profil">
                                 <i class="fas fa-camera"></i>
                             </label>
                         </div>
@@ -162,21 +162,21 @@
              ========================================================= -->
         <section id="page-about" class="page-view">
             <div class="page-container">
-                <div class="page-header-banner softglass-bar stagger-1">
+                <div class="page-header-banner frosted-bar ios-stagger-1">
                     <div>
                         <span class="breadcrumb-text">Portofolio / <strong>Tentang & Keahlian</strong></span>
                         <h2 class="page-heading editable" data-key="aboutSectionTitle">Tentang Saya & <span>Keahlian</span></h2>
                     </div>
-                    <button class="edit-only-box btn-add-item spring-btn" id="addSkillColBtn">
+                    <button class="edit-only-box btn-add-item ios-spring-btn" id="addSkillColBtn">
                         <i class="fas fa-plus"></i> Tambah Keahlian
                     </button>
                 </div>
 
                 <!-- Kartu Profil Singkat -->
-                <div class="about-card softglass-card interactive-card stagger-2" style="margin-bottom: 1.8rem;">
+                <div class="about-card frosted-card interactive-card ios-stagger-2" style="margin-bottom: 1.8rem;">
                     <div class="card-glare"></div>
                     <div class="about-flex-inner">
-                        <div class="icon-badge center-badge icon-picker-trigger" title="Klik untuk ganti ikon">
+                        <div class="icon-badge center-badge icon-picker-trigger ios-squish" title="Klik untuk ganti ikon">
                             <i class="fas fa-network-wired editable-icon" data-icon-key="aboutIcon"></i>
                         </div>
                         <div class="about-text-body">
@@ -189,37 +189,37 @@
                 </div>
 
                 <!-- Grid Keahlian Teknis -->
-                <div class="skills-grid stagger-3" id="skillsGrid">
-                    <div class="skill-card softglass-card interactive-card spring-card" data-static-card="skill1">
+                <div class="skills-grid ios-stagger-3" id="skillsGrid">
+                    <div class="skill-card frosted-card interactive-card ios-spring-card" data-static-card="skill1">
                         <div class="card-glare"></div>
-                        <button class="edit-only-box delete-card-btn" data-static-key="skill1" title="Hapus Kartu"><i class="fas fa-trash"></i></button>
+                        <button class="edit-only-box delete-card-btn ios-squish" data-static-key="skill1" title="Hapus Kartu"><i class="fas fa-trash"></i></button>
                         <div class="icon-badge icon-picker-trigger" title="Klik untuk ganti ikon">
                             <i class="fas fa-route editable-icon" data-icon-key="skill1Icon"></i>
                         </div>
                         <h3 class="editable" data-key="skill1Title">Routing & Switching</h3>
                         <p class="editable" data-key="skill1Desc">Konfigurasi MikroTik (MTCNA), Cisco Packet Tracer, VLAN, OSPF, dan Manajemen Bandwidth.</p>
                     </div>
-                    <div class="skill-card softglass-card interactive-card spring-card" data-static-card="skill2">
+                    <div class="skill-card frosted-card interactive-card ios-spring-card" data-static-card="skill2">
                         <div class="card-glare"></div>
-                        <button class="edit-only-box delete-card-btn" data-static-key="skill2" title="Hapus Kartu"><i class="fas fa-trash"></i></button>
+                        <button class="edit-only-box delete-card-btn ios-squish" data-static-key="skill2" title="Hapus Kartu"><i class="fas fa-trash"></i></button>
                         <div class="icon-badge icon-picker-trigger" title="Klik untuk ganti ikon">
                             <i class="fas fa-server editable-icon" data-icon-key="skill2Icon"></i>
                         </div>
                         <h3 class="editable" data-key="skill2Title">System Administration</h3>
                         <p class="editable" data-key="skill2Desc">Instalasi & konfigurasi Linux Debian/Ubuntu Server (DNS, DHCP, Web Server, Mail Server).</p>
                     </div>
-                    <div class="skill-card softglass-card interactive-card spring-card" data-static-card="skill3">
+                    <div class="skill-card frosted-card interactive-card ios-spring-card" data-static-card="skill3">
                         <div class="card-glare"></div>
-                        <button class="edit-only-box delete-card-btn" data-static-key="skill3" title="Hapus Kartu"><i class="fas fa-trash"></i></button>
+                        <button class="edit-only-box delete-card-btn ios-squish" data-static-key="skill3" title="Hapus Kartu"><i class="fas fa-trash"></i></button>
                         <div class="icon-badge icon-picker-trigger" title="Klik untuk ganti ikon">
                             <i class="fas fa-wave-square editable-icon" data-icon-key="skill3Icon"></i>
                         </div>
                         <h3 class="editable" data-key="skill3Title">Fiber Optik (FTTH)</h3>
                         <p class="editable" data-key="skill3Desc">Penyambungan kabel FO (Splicing), pengukuran redaman dengan OTDR & OPM, instalasi ODP/ONT.</p>
                     </div>
-                    <div class="skill-card softglass-card interactive-card spring-card" data-static-card="skill4">
+                    <div class="skill-card frosted-card interactive-card ios-spring-card" data-static-card="skill4">
                         <div class="card-glare"></div>
-                        <button class="edit-only-box delete-card-btn" data-static-key="skill4" title="Hapus Kartu"><i class="fas fa-trash"></i></button>
+                        <button class="edit-only-box delete-card-btn ios-squish" data-static-key="skill4" title="Hapus Kartu"><i class="fas fa-trash"></i></button>
                         <div class="icon-badge icon-picker-trigger" title="Klik untuk ganti ikon">
                             <i class="fas fa-shield-alt editable-icon" data-icon-key="skill4Icon"></i>
                         </div>
@@ -235,26 +235,26 @@
              ========================================================= -->
         <section id="page-projects" class="page-view">
             <div class="page-container">
-                <div class="page-header-banner softglass-bar stagger-1">
+                <div class="page-header-banner frosted-bar ios-stagger-1">
                     <div>
                         <span class="breadcrumb-text">Tugas Projek / <strong id="projectBreadcrumbSemester">Semester 1</strong></span>
                         <h2 class="page-heading" id="projectPageMainTitle">Tugas Projek — <span>Semester 1</span></h2>
                     </div>
-                    <button class="edit-only-box btn-add-item spring-btn" id="openAddProjectModalBtn">
+                    <button class="edit-only-box btn-add-item ios-spring-btn" id="openAddProjectModalBtn">
                         <i class="fas fa-plus-square"></i> Tambah Konten / Project
                     </button>
                 </div>
 
                 <!-- Bilah Status & Filter Tag/Guru -->
-                <div class="showcase-status-bar softglass-bar stagger-2">
+                <div class="showcase-status-bar frosted-bar ios-stagger-2">
                     <span id="activeFilterLabel">Menampilkan: <strong>Semua Mata Pelajaran</strong></span>
                     <span class="item-count-badge" id="totalProjectCountBadge">0 item</span>
                 </div>
                 
-                <div class="filter-buttons stagger-2" id="projectFilterButtons"></div>
+                <div class="filter-buttons ios-stagger-2" id="projectFilterButtons"></div>
 
                 <!-- Grid Kartu Project / Media -->
-                <div class="projects-grid media-showcase-grid stagger-3" id="projectsGrid"></div>
+                <div class="projects-grid media-showcase-grid ios-stagger-3" id="projectsGrid"></div>
             </div>
         </section>
 
@@ -263,7 +263,7 @@
              ========================================================= -->
         <section id="page-contact" class="page-view">
             <div class="page-container">
-                <div class="page-header-banner softglass-bar stagger-1">
+                <div class="page-header-banner frosted-bar ios-stagger-1">
                     <div>
                         <span class="breadcrumb-text">Portofolio / <strong>Kontak</strong></span>
                         <h2 class="page-heading editable" data-key="contactSectionTitle">Hubungi <span>Saya</span></h2>
@@ -271,9 +271,9 @@
                 </div>
 
                 <!-- 3 Kolom Kontak: WhatsApp, YouTube, TikTok -->
-                <div class="contact-cards-grid stagger-2">
+                <div class="contact-cards-grid ios-stagger-2">
                     <!-- Kolom 1: WhatsApp -->
-                    <div class="contact-channel-card softglass-card interactive-card spring-card wa-card">
+                    <div class="contact-channel-card frosted-card interactive-card ios-spring-card wa-card">
                         <div class="card-glare"></div>
                         <div class="channel-icon-circle wa-icon">
                             <i class="fab fa-whatsapp"></i>
@@ -284,16 +284,16 @@
 
                         <div class="edit-only-box link-editor-box">
                             <label>Link WhatsApp (wa.me):</label>
-                            <input type="url" id="waLinkInput" class="softglass-input link-sync-input" data-link-key="waLink" value="https://wa.me/6281234567890" placeholder="https://wa.me/628...">
+                            <input type="url" id="waLinkInput" class="frosted-input link-sync-input" data-link-key="waLink" value="https://wa.me/6281234567890" placeholder="https://wa.me/628...">
                         </div>
 
-                        <a href="https://wa.me/6281234567890" id="waActionLink" data-link-target="waLink" target="_blank" rel="noopener" class="btn channel-btn wa-btn spring-btn">
+                        <a href="https://wa.me/6281234567890" id="waActionLink" data-link-target="waLink" target="_blank" rel="noopener" class="btn channel-btn wa-btn ios-spring-btn">
                             <i class="fab fa-whatsapp"></i> Chat WhatsApp
                         </a>
                     </div>
 
                     <!-- Kolom 2: YouTube -->
-                    <div class="contact-channel-card softglass-card interactive-card spring-card yt-card">
+                    <div class="contact-channel-card frosted-card interactive-card ios-spring-card yt-card">
                         <div class="card-glare"></div>
                         <div class="channel-icon-circle yt-icon">
                             <i class="fab fa-youtube"></i>
@@ -304,16 +304,16 @@
 
                         <div class="edit-only-box link-editor-box">
                             <label>Link Channel YouTube:</label>
-                            <input type="url" id="ytLinkInput" class="softglass-input link-sync-input" data-link-key="ytLink" value="https://www.youtube.com" placeholder="https://www.youtube.com/@...">
+                            <input type="url" id="ytLinkInput" class="frosted-input link-sync-input" data-link-key="ytLink" value="https://www.youtube.com" placeholder="https://www.youtube.com/@...">
                         </div>
 
-                        <a href="https://www.youtube.com" id="ytActionLink" data-link-target="ytLink" target="_blank" rel="noopener" class="btn channel-btn yt-btn spring-btn">
+                        <a href="https://www.youtube.com" id="ytActionLink" data-link-target="ytLink" target="_blank" rel="noopener" class="btn channel-btn yt-btn ios-spring-btn">
                             <i class="fab fa-youtube"></i> Kunjungi YouTube
                         </a>
                     </div>
 
                     <!-- Kolom 3: TikTok -->
-                    <div class="contact-channel-card softglass-card interactive-card spring-card tt-card">
+                    <div class="contact-channel-card frosted-card interactive-card ios-spring-card tt-card">
                         <div class="card-glare"></div>
                         <div class="channel-icon-circle tt-icon">
                             <i class="fab fa-tiktok"></i>
@@ -324,10 +324,10 @@
 
                         <div class="edit-only-box link-editor-box">
                             <label>Link Profil TikTok:</label>
-                            <input type="url" id="ttLinkInput" class="softglass-input link-sync-input" data-link-key="ttLink" value="https://www.tiktok.com" placeholder="https://www.tiktok.com/@...">
+                            <input type="url" id="ttLinkInput" class="frosted-input link-sync-input" data-link-key="ttLink" value="https://www.tiktok.com" placeholder="https://www.tiktok.com/@...">
                         </div>
 
-                        <a href="https://www.tiktok.com" id="ttActionLink" data-link-target="ttLink" target="_blank" rel="noopener" class="btn channel-btn tt-btn spring-btn">
+                        <a href="https://www.tiktok.com" id="ttActionLink" data-link-target="ttLink" target="_blank" rel="noopener" class="btn channel-btn tt-btn ios-spring-btn">
                             <i class="fab fa-tiktok"></i> Kunjungi TikTok
                         </a>
                     </div>
@@ -336,7 +336,7 @@
         </section>
 
         <!-- Footer -->
-        <footer class="softglass-footer">
+        <footer class="frosted-footer">
             <p class="editable" data-key="footerText">&copy; 2026 Portofolio TJKT - Fio Hakim. Dibuat dengan kode & kopi.</p>
         </footer>
     </main>
@@ -346,28 +346,28 @@
     <input type="file" id="uploadBg" accept="image/*" hidden>
 
     <!-- Indikator Status Melayang -->
-    <div id="uploadToast" class="upload-toast softglass-pill hidden">
+    <div id="uploadToast" class="upload-toast frosted-pill hidden">
         <i class="fas fa-spinner fa-spin"></i> <span id="uploadProgressText">Menyimpan...</span>
     </div>
 
     <!-- Bilah Kontrol Admin Ringkas di Pojok Kanan Bawah -->
     <div class="floating-admin-bar">
-        <button id="adminLoginBtn" class="admin-fab spring-btn" title="Login Admin">
+        <button id="adminLoginBtn" class="admin-fab ios-spring-btn" title="Login Admin">
             <i class="fas fa-user-shield"></i>
         </button>
 
         <div id="adminQuickControls" class="admin-quick-controls hidden">
-            <label for="uploadBg" class="edit-only-box btn-pill-dark softglass-pill spring-btn" title="Ganti Background Web">
+            <label for="uploadBg" class="edit-only-box btn-pill-dark frosted-pill ios-spring-btn" title="Ganti Background Web">
                 <i class="fas fa-fill-drip"></i> BG
             </label>
-            <button id="resetAllBtn" class="edit-only-box btn-pill-dark softglass-pill spring-btn" title="Reset ke Awal">
+            <button id="resetAllBtn" class="edit-only-box btn-pill-dark frosted-pill ios-spring-btn" title="Reset ke Awal">
                 <i class="fas fa-undo"></i>
             </button>
-            <button id="logoutAdminBtn" class="edit-only-box btn-pill-danger spring-btn" title="Keluar Akun Admin">
+            <button id="logoutAdminBtn" class="edit-only-box btn-pill-danger ios-spring-btn" title="Keluar Akun Admin">
                 <i class="fas fa-sign-out-alt"></i>
             </button>
 
-            <button id="toggleEditModeBtn" class="btn-pill-finish spring-btn">
+            <button id="toggleEditModeBtn" class="btn-pill-finish ios-spring-btn">
                 <i class="fas fa-check"></i> Selesai Edit
             </button>
         </div>
@@ -375,19 +375,19 @@
 
     <!-- Modal Tambah Konten / Project Baru -->
     <div id="addProjectModal" class="modal">
-        <div class="modal-content softglass-modal modal-scrollable">
-            <span class="close-modal" data-close="addProjectModal">&times;</span>
+        <div class="modal-content frosted-modal modal-scrollable">
+            <span class="close-modal ios-squish" data-close="addProjectModal">&times;</span>
             <h3><i class="fas fa-folder-plus"></i> Tambah Konten / Tugas Baru</h3>
 
             <div class="form-group">
                 <label>Halaman Tujuan (Semester / Folder)</label>
-                <select id="projSemesterSelect" class="modal-select softglass-input"></select>
+                <select id="projSemesterSelect" class="modal-select frosted-input"></select>
                 <small class="field-hint">Konten akan tampil di halaman semester yang dipilih.</small>
             </div>
 
             <div class="form-group">
                 <label>Kategori / Nama Guru / Mata Pelajaran</label>
-                <input type="text" id="projCategoryInput" list="categorySuggestions" class="softglass-input" placeholder="Contoh: Bu Faridah / MikroTik / Linux...">
+                <input type="text" id="projCategoryInput" list="categorySuggestions" class="frosted-input" placeholder="Contoh: Bu Faridah / MikroTik / Linux...">
                 <datalist id="categorySuggestions">
                     <option value="MikroTik">
                     <option value="Linux Server">
@@ -398,7 +398,7 @@
 
             <div class="form-group">
                 <label>Jenis Konten</label>
-                <select id="projMediaType" class="modal-select softglass-input">
+                <select id="projMediaType" class="modal-select frosted-input">
                     <option value="youtube">Video YouTube (Link YouTube / Shorts)</option>
                     <option value="tiktok">Video TikTok (Link Video TikTok)</option>
                     <option value="image">Unggah Foto Langsung (Dari Galeri / Laptop)</option>
@@ -408,37 +408,37 @@
 
             <div class="form-group" id="projUrlGroup">
                 <label id="projUrlLabel">Tempel Link Video YouTube</label>
-                <input type="url" id="projMediaUrlInput" class="softglass-input" placeholder="https://www.youtube.com/watch?v=...">
+                <input type="url" id="projMediaUrlInput" class="frosted-input" placeholder="https://www.youtube.com/watch?v=...">
                 <small class="field-hint" id="projUrlHint">Video akan langsung bisa diputar di dalam kartu project.</small>
             </div>
 
             <div class="form-group hidden" id="projFileGroup">
                 <label>Pilih File Foto (JPG / PNG / WebP)</label>
-                <input type="file" id="projMediaFileInput" accept="image/*" class="softglass-input file-input-custom">
+                <input type="file" id="projMediaFileInput" accept="image/*" class="frosted-input file-input-custom">
                 <small class="field-hint">Foto dioptimasi agar cepat dimuat di HP maupun laptop.</small>
             </div>
 
             <div class="form-group">
                 <label>Judul Karya / Tugas</label>
-                <input type="text" id="projTitleInput" class="softglass-input" placeholder="Contoh: Konfigurasi VLAN & Hotspot MikroTik">
+                <input type="text" id="projTitleInput" class="frosted-input" placeholder="Contoh: Konfigurasi VLAN & Hotspot MikroTik">
             </div>
 
             <div class="form-group">
                 <label>Tag Label</label>
-                <input type="text" id="projTagInput" class="softglass-input" placeholder="Contoh: VIDEO / PRAKTIKUM / IOT">
+                <input type="text" id="projTagInput" class="frosted-input" placeholder="Contoh: VIDEO / PRAKTIKUM / IOT">
             </div>
 
             <div class="form-group">
                 <label>Tautan Tambahan / Link Lampiran (Opsional)</label>
-                <input type="url" id="projExtraLinkInput" class="softglass-input" placeholder="Contoh: https://drive.google.com/...">
+                <input type="url" id="projExtraLinkInput" class="frosted-input" placeholder="Contoh: https://drive.google.com/...">
             </div>
 
             <div class="form-group">
                 <label>Deskripsi</label>
-                <textarea id="projDescInput" rows="3" class="softglass-input" placeholder="Jelaskan detail konfigurasi, alat yang digunakan, atau isi file..."></textarea>
+                <textarea id="projDescInput" rows="3" class="frosted-input" placeholder="Jelaskan detail konfigurasi, alat yang digunakan, atau isi file..."></textarea>
             </div>
 
-            <button id="submitNewProjectBtn" class="btn primary spring-btn" style="width: 100%; margin-top: 8px;">
+            <button id="submitNewProjectBtn" class="btn primary ios-spring-btn" style="width: 100%; margin-top: 8px;">
                 <i class="fas fa-cloud-upload-alt"></i> Simpan & Tampilkan Project
             </button>
         </div>
@@ -446,19 +446,19 @@
 
     <!-- Modal Tambah Sub-Menu Semester -->
     <div id="addSubmenuModal" class="modal">
-        <div class="modal-content softglass-modal">
-            <span class="close-modal" data-close="addSubmenuModal">&times;</span>
+        <div class="modal-content frosted-modal">
+            <span class="close-modal ios-squish" data-close="addSubmenuModal">&times;</span>
             <h3><i class="fas fa-folder-plus"></i> Tambah Sub-Menu Tugas Projek</h3>
             <p class="modal-hint">Tambahkan folder semester atau kelompok tugas baru di bawah menu Tugas Projek.</p>
-            <input type="text" id="newSubmenuLabel" class="softglass-input" placeholder="Nama Sub-Menu (misal: Semester 4 / PKL)" style="margin-bottom: 12px;">
-            <button id="confirmAddSubmenuBtn" class="btn primary spring-btn" style="width: 100%;">Tambahkan Sub-Menu</button>
+            <input type="text" id="newSubmenuLabel" class="frosted-input" placeholder="Nama Sub-Menu (misal: Semester 4 / PKL)" style="margin-bottom: 12px;">
+            <button id="confirmAddSubmenuBtn" class="btn primary ios-spring-btn" style="width: 100%;">Tambahkan Sub-Menu</button>
         </div>
     </div>
 
     <!-- Modal Pemutar Layar Penuh (Lightbox) -->
     <div id="fullscreenMediaModal" class="modal">
-        <div class="modal-content softglass-modal fullscreen-box">
-            <span class="close-modal" data-close="fullscreenMediaModal">&times;</span>
+        <div class="modal-content frosted-modal fullscreen-box">
+            <span class="close-modal ios-squish" data-close="fullscreenMediaModal">&times;</span>
             <h3 id="fullscreenMediaTitle" style="margin-bottom: 12px;">Pratinjau Media</h3>
             <div id="fullscreenMediaContainer" class="fullscreen-media-body"></div>
         </div>
@@ -466,8 +466,8 @@
 
     <!-- Modal Pemilih Ikon -->
     <div id="iconPickerModal" class="modal">
-        <div class="modal-content softglass-modal">
-            <span class="close-modal" data-close="iconPickerModal">&times;</span>
+        <div class="modal-content frosted-modal">
+            <span class="close-modal ios-squish" data-close="iconPickerModal">&times;</span>
             <h3><i class="fas fa-icons"></i> Pilih Ikon</h3>
             <p class="modal-hint">Pilih ikon jaringan, server, atau perangkat untuk bagian ini:</p>
             <div class="icon-grid-picker" id="iconGridPicker"></div>
@@ -476,30 +476,30 @@
 
     <!-- Modal Login Firebase Admin -->
     <div id="loginModal" class="modal">
-        <div class="modal-content softglass-modal">
-            <span class="close-modal" data-close="loginModal">&times;</span>
+        <div class="modal-content frosted-modal">
+            <span class="close-modal ios-squish" data-close="loginModal">&times;</span>
             <h3><i class="fas fa-fire"></i> Login Admin Firebase</h3>
             <p class="modal-hint">Sesi login tersimpan otomatis di browser ini.</p>
-            <input type="email" id="adminEmailInput" class="softglass-input" placeholder="Email Admin" style="margin-bottom: 10px;">
-            <input type="password" id="adminPasswordInput" class="softglass-input" placeholder="Password Admin">
-            <button id="submitLoginBtn" class="btn primary spring-btn" style="width: 100%; margin-top: 12px;">Masuk</button>
+            <input type="email" id="adminEmailInput" class="frosted-input" placeholder="Email Admin" style="margin-bottom: 10px;">
+            <input type="password" id="adminPasswordInput" class="frosted-input" placeholder="Password Admin">
+            <button id="submitLoginBtn" class="btn primary ios-spring-btn" style="width: 100%; margin-top: 12px;">Masuk</button>
         </div>
     </div>
 
     <!-- Modal Tambah Halaman Menu Utama -->
     <div id="addSidebarModal" class="modal">
-        <div class="modal-content softglass-modal">
-            <span class="close-modal" data-close="addSidebarModal">&times;</span>
+        <div class="modal-content frosted-modal">
+            <span class="close-modal ios-squish" data-close="addSidebarModal">&times;</span>
             <h3><i class="fas fa-bars"></i> Tambah Menu Sidebar</h3>
-            <input type="text" id="newSidebarLabel" class="softglass-input" placeholder="Nama Menu (misal: Sertifikat)" style="margin: 10px 0;">
-            <select id="newSidebarIcon" class="modal-select softglass-input">
+            <input type="text" id="newSidebarLabel" class="frosted-input" placeholder="Nama Menu (misal: Sertifikat)" style="margin: 10px 0;">
+            <select id="newSidebarIcon" class="modal-select frosted-input">
                 <option value="fas fa-folder">Ikon Folder</option>
                 <option value="fas fa-certificate">Ikon Sertifikat</option>
                 <option value="fas fa-server">Ikon Server</option>
                 <option value="fas fa-network-wired">Ikon Jaringan</option>
                 <option value="fas fa-play-circle">Ikon Video</option>
             </select>
-            <button id="confirmAddSidebarBtn" class="btn primary spring-btn" style="width: 100%; margin-top: 12px;">Tambahkan</button>
+            <button id="confirmAddSidebarBtn" class="btn primary ios-spring-btn" style="width: 100%; margin-top: 12px;">Tambahkan</button>
         </div>
     </div>
 
