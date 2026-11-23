@@ -91,7 +91,11 @@ function switchPage(pageName, semesterId = null) {
 
     document.querySelectorAll('.page-view').forEach(sec => sec.classList.remove('active'));
     const targetSection = document.getElementById(`page-${pageName}`);
-    if (targetSection) targetSection.classList.add('active');
+    if (targetSection) {
+        // Trigger ulang animasi stagger saat halaman dibuka
+        void targetSection.offsetWidth;
+        targetSection.classList.add('active');
+    }
 
     document.querySelectorAll('.sidebar-links a.nav-item, .submenu-link').forEach(el => {
         el.classList.remove('active');
@@ -144,14 +148,12 @@ document.getElementById('statTotalProjectsBox').addEventListener('click', () => 
     switchPage('projects', firstSem);
 });
 
-// Semua tombol/kartu dengan data-goto-page (termasuk Hubungi Saya -> Kontak)
 document.querySelectorAll('[data-goto-page]').forEach(el => {
     el.addEventListener('click', () => {
         switchPage(el.getAttribute('data-goto-page'));
     });
 });
 
-// Sinkronisasi input link WA, YouTube, TikTok di halaman Kontak
 function syncContactLinksToUI() {
     Object.keys(contactLinks).forEach(key => {
         const inputEl = document.querySelector(`.link-sync-input[data-link-key="${key}"]`);
@@ -170,6 +172,23 @@ document.querySelectorAll('.link-sync-input').forEach(input => {
         if (anchorEl) anchorEl.href = val || '#';
     });
 });
+
+// Animasi Counter Angka Halus di Beranda
+function animateCounter(el, targetValue) {
+    if (!el) return;
+    const startVal = parseInt(el.textContent) || 0;
+    if (startVal === targetValue) return;
+    const duration = 450;
+    const startTime = performance.now();
+
+    function step(now) {
+        const progress = Math.min((now - startTime) / duration, 1);
+        const eased = 1 - Math.pow(1 - progress, 3);
+        el.textContent = Math.round(startVal + (targetValue - startVal) * eased);
+        if (progress < 1) requestAnimationFrame(step);
+    }
+    requestAnimationFrame(step);
+}
 
 // Render Sub-Menu Semester di Sidebar
 function renderProjectSubmenus() {
@@ -229,8 +248,8 @@ function renderProjectSubmenus() {
         });
     });
 
-    document.getElementById('homeTotalProjects').textContent = showcaseProjects.length;
-    document.getElementById('homeTotalSemesters').textContent = projectSubmenus.length;
+    animateCounter(document.getElementById('homeTotalProjects'), showcaseProjects.length);
+    animateCounter(document.getElementById('homeTotalSemesters'), projectSubmenus.length);
 }
 
 document.getElementById('addSubmenuBtn').addEventListener('click', (e) => {
@@ -449,11 +468,11 @@ async function loadMediaFromFirestore(mediaKey) {
 }
 
 // =========================================
-// 7. MICROINTERACTIONS RINGAN (HANYA DESKTOP)
+// 7. MICROINTERACTIONS ENGINE (SPOTLIGHT & TILT HALUS)
 // =========================================
 function initMicrointeractions() {
     const isTouchDevice = ('ontouchstart' in window) || (navigator.maxTouchPoints > 0);
-    if (isTouchDevice) return;
+    if (isTouchDevice) return; // Tetap ultra-ringan di HP
 
     document.querySelectorAll('.interactive-card').forEach(card => {
         if (card.dataset.tiltBound) return;
@@ -531,7 +550,7 @@ function renderDynamicElements() {
     skillsGrid.querySelectorAll('.dynamic-col').forEach(el => el.remove());
     extraSkills.forEach((col, index) => {
         const card = document.createElement('div');
-        card.className = 'skill-card glass-card interactive-card dynamic-col';
+        card.className = 'skill-card softglass-card interactive-card spring-card dynamic-col';
         card.innerHTML = `
             <div class="card-glare"></div>
             <button class="edit-only-box delete-card-btn" data-type="skill" data-index="${index}" title="Hapus Kartu"><i class="fas fa-trash"></i></button>
@@ -591,7 +610,7 @@ function renderProjectsForActiveSemester() {
     });
 
     const allBtn = document.createElement('button');
-    allBtn.className = `filter-btn glass-pill ${activeCategoryFilter === 'all' ? 'active' : ''}`;
+    allBtn.className = `filter-btn softglass-pill spring-btn ${activeCategoryFilter === 'all' ? 'active' : ''}`;
     allBtn.innerHTML = `<i class="fas fa-layer-group"></i> Semua <span class="filter-count">${semesterProjects.length}</span>`;
     allBtn.addEventListener('click', () => {
         activeCategoryFilter = 'all';
@@ -601,7 +620,7 @@ function renderProjectsForActiveSemester() {
 
     Object.keys(categoryCounts).forEach(cat => {
         const btn = document.createElement('button');
-        btn.className = `filter-btn glass-pill ${activeCategoryFilter === cat ? 'active' : ''}`;
+        btn.className = `filter-btn softglass-pill spring-btn ${activeCategoryFilter === cat ? 'active' : ''}`;
         btn.innerHTML = `<i class="fas fa-tag"></i> ${cat} <span class="filter-count">${categoryCounts[cat]}</span>`;
         btn.addEventListener('click', () => {
             activeCategoryFilter = cat;
@@ -623,7 +642,7 @@ function renderProjectsForActiveSemester() {
 
     if (filteredList.length === 0) {
         projectsGrid.innerHTML = `
-            <div class="empty-projects-placeholder glass-card">
+            <div class="empty-projects-placeholder softglass-card">
                 <i class="fas fa-folder-open"></i>
                 <p>Belum ada tugas atau project di ${semName}.</p>
                 <small>Masuk sebagai admin lalu klik <strong>"Tambah Konten / Project"</strong> di pojok kanan atas untuk menambahkan video YouTube, TikTok, foto, atau tautan.</small>
@@ -634,7 +653,7 @@ function renderProjectsForActiveSemester() {
 
     filteredList.slice().reverse().forEach(proj => {
         const card = document.createElement('div');
-        card.className = 'project-card glass-card interactive-card';
+        card.className = 'project-card softglass-card interactive-card spring-card';
 
         let mediaHtml = '';
         if (proj.mediaType === 'youtube' && proj.youtubeId) {
@@ -656,7 +675,7 @@ function renderProjectsForActiveSemester() {
                     <div class="project-media-wrapper">
                         <div class="tiktok-embed-box">
                             <i class="fab fa-tiktok"></i>
-                            <a href="${proj.mediaUrl}" target="_blank" rel="noopener" class="btn primary" style="padding: 0.45rem 1rem; font-size: 0.82rem;">Tonton di TikTok</a>
+                            <a href="${proj.mediaUrl}" target="_blank" rel="noopener" class="btn primary spring-btn" style="padding: 0.45rem 1rem; font-size: 0.82rem;">Tonton di TikTok</a>
                         </div>
                     </div>
                 `;
@@ -692,7 +711,7 @@ function renderProjectsForActiveSemester() {
             <h3 class="editable dynamic-proj-field" data-real-index="${proj.realIndex}" data-field="title">${proj.title}</h3>
             <p class="editable dynamic-proj-field" data-real-index="${proj.realIndex}" data-field="desc">${proj.desc}</p>
             ${extraLinkHtml}
-            <button type="button" class="btn-card-fullscreen" data-real-index="${proj.realIndex}">
+            <button type="button" class="btn-card-fullscreen spring-btn" data-real-index="${proj.realIndex}">
                 <i class="fas fa-play"></i> Putar / Lihat Layar Penuh
             </button>
         `;
@@ -729,6 +748,7 @@ function renderProjectsForActiveSemester() {
 
     attachTextDeleteControls();
     applyEditModeState();
+    initMicrointeractions();
 }
 
 function openFullscreenProject(proj) {
