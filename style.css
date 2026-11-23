@@ -3,11 +3,10 @@
    ========================================= */
 :root {
     --bg-base: #060a14;
-    /* Full Frosted Glass Crystal Layers */
     --frost-surface: rgba(12, 18, 34, 0.48);
     --frost-surface-hover: rgba(18, 27, 48, 0.64);
-    --frost-panel: rgba(9, 14, 28, 0.62);
-    --frost-pill: rgba(15, 23, 42, 0.54);
+    --frost-panel: rgba(9, 14, 28, 0.64);
+    --frost-pill: rgba(15, 23, 42, 0.56);
     --frost-border: rgba(255, 255, 255, 0.20);
     --frost-specular: rgba(255, 255, 255, 0.42);
     --frost-shadow: 0 18px 42px -8px rgba(0, 0, 0, 0.52),
@@ -20,9 +19,12 @@
     --text-main: #ffffff;
     --sidebar-width: 268px;
 
-    /* Kurva Pegas Kenyal ala iOS (Squish & Overshoot Bounce) */
     --ios-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
     --ios-fluid: cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+html {
+    scroll-behavior: smooth;
 }
 
 * {
@@ -44,7 +46,31 @@ body {
     overflow-x: hidden;
 }
 
-/* Lapisan penjaga kontras agar tulisan putih selalu tajam di atas wallpaper */
+/* =========================================
+   1. DYNAMIC GRADIENT MESH & READABILITY SCRIM
+   ========================================= */
+.dynamic-gradient-mesh {
+    position: fixed;
+    inset: -25%;
+    z-index: -3;
+    pointer-events: none;
+    background: linear-gradient(
+        -45deg,
+        rgba(14, 165, 233, 0.16),
+        rgba(99, 102, 241, 0.16),
+        rgba(16, 185, 129, 0.12),
+        rgba(236, 72, 153, 0.12)
+    );
+    background-size: 300% 300%;
+    animation: gradientFlow 18s ease infinite;
+}
+
+@keyframes gradientFlow {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+}
+
 .bg-readability-tint {
     position: fixed;
     inset: 0;
@@ -53,13 +79,13 @@ body {
     pointer-events: none;
 }
 
-/* Cahaya Ambient Frosted Glass */
 .ambient-orbs {
     position: fixed;
     inset: 0;
     z-index: -1;
     overflow: hidden;
     pointer-events: none;
+    will-change: transform;
 }
 
 .orb {
@@ -103,7 +129,7 @@ body {
 }
 
 /* =========================================
-   MATERIAL FULL FROSTED GLASS & iOS SPRING PHYSICS
+   2. MATERIAL FULL FROSTED GLASS & RIPPLE EFFECT
    ========================================= */
 .frosted-panel {
     background: var(--frost-panel);
@@ -168,6 +194,107 @@ body {
 .frosted-pill:hover {
     background: rgba(28, 42, 76, 0.72);
     border-color: var(--frost-specular);
+}
+
+/* Ripple Wave saat diklik */
+.ripple-trigger {
+    position: relative;
+    overflow: hidden;
+}
+
+.ripple-wave {
+    position: absolute;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.36);
+    transform: scale(0);
+    animation: rippleExpand 0.55s ease-out forwards;
+    pointer-events: none;
+}
+
+@keyframes rippleExpand {
+    to {
+        transform: scale(3.2);
+        opacity: 0;
+    }
+}
+
+/* Ikon Berputar Halus saat Hover */
+.spin-hover-icon {
+    display: inline-block;
+    transition: transform 0.45s var(--ios-spring);
+}
+
+.btn:hover .spin-hover-icon,
+.ios-spring-card:hover .spin-hover-icon,
+.icon-picker-trigger:hover .spin-hover-icon {
+    transform: rotate(18deg) scale(1.14);
+}
+
+/* =========================================
+   3. SCROLL-TRIGGERED FADE-UP (0.38s CEPAT & HALUS)
+   ========================================= */
+.scroll-reveal {
+    opacity: 0;
+    transform: translateY(20px) scale(0.97);
+    transition: opacity 0.38s var(--ios-fluid), transform 0.42s var(--ios-spring);
+}
+
+.scroll-reveal.revealed {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+}
+
+/* =========================================
+   4. SKELETON LOADING SHIMMER
+   ========================================= */
+.skeleton-card {
+    padding: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.85rem;
+}
+
+.skeleton-box {
+    background: linear-gradient(
+        90deg,
+        rgba(255, 255, 255, 0.06) 25%,
+        rgba(255, 255, 255, 0.16) 50%,
+        rgba(255, 255, 255, 0.06) 75%
+    );
+    background-size: 200% 100%;
+    animation: skeletonShimmer 1.3s infinite linear;
+    border-radius: 10px;
+}
+
+.skeleton-media {
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    border-radius: 14px;
+}
+
+.skeleton-tag {
+    width: 90px;
+    height: 22px;
+    border-radius: 8px;
+}
+
+.skeleton-title {
+    width: 75%;
+    height: 24px;
+}
+
+.skeleton-line {
+    width: 100%;
+    height: 14px;
+}
+
+.skeleton-line.short {
+    width: 60%;
+}
+
+@keyframes skeletonShimmer {
+    0% { background-position: 200% 0; }
+    100% { background-position: -200% 0; }
 }
 
 /* =========================================
@@ -370,7 +497,6 @@ body {
     box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.25);
 }
 
-/* Grup Accordion: Tugas Projek > */
 .sidebar-accordion-group {
     display: flex;
     flex-direction: column;
@@ -435,7 +561,6 @@ body {
     font-size: 0.78rem;
 }
 
-/* Sub-Menu Semester */
 .sidebar-submenu {
     list-style: none;
     display: none;
@@ -514,7 +639,6 @@ body {
     border-top: 1px solid var(--frost-border);
 }
 
-/* Header Mobile */
 .mobile-topbar {
     display: none;
     position: fixed;
@@ -558,7 +682,7 @@ body {
 }
 
 /* =========================================
-   KONTEN UTAMA & ANIMASI KENYAL ALA iOS
+   KONTEN UTAMA & TRANSISI HALAMAN
    ========================================= */
 .main-content {
     margin-left: var(--sidebar-width);
@@ -575,23 +699,28 @@ body {
 
 .page-view.active {
     display: block;
+    animation: pageTransitionIn 0.35s var(--ios-fluid) both;
 }
 
-/* Animasi berpantul kenyal (iOS Spring Pop) saat membuka halaman */
+@keyframes pageTransitionIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
 .page-view.active .ios-stagger-1 {
-    animation: iosSpringPop 0.56s var(--ios-spring) 0.02s both;
+    animation: iosSpringPop 0.45s var(--ios-spring) 0.02s both;
 }
 .page-view.active .ios-stagger-2 {
-    animation: iosSpringPop 0.60s var(--ios-spring) 0.09s both;
+    animation: iosSpringPop 0.48s var(--ios-spring) 0.08s both;
 }
 .page-view.active .ios-stagger-3 {
-    animation: iosSpringPop 0.64s var(--ios-spring) 0.16s both;
+    animation: iosSpringPop 0.52s var(--ios-spring) 0.14s both;
 }
 
 @keyframes iosSpringPop {
     0% {
         opacity: 0;
-        transform: translateY(22px) scale(0.94);
+        transform: translateY(18px) scale(0.95);
     }
     100% {
         opacity: 1;
@@ -766,9 +895,9 @@ body {
     text-shadow: 0 1px 5px rgba(0, 0, 0, 0.75);
 }
 
-/* Foto Profil dengan Cincin Frosted Glass Kenyal */
 .hero-profile {
     flex-shrink: 0;
+    will-change: transform;
 }
 
 .frosted-ring {

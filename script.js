@@ -61,9 +61,87 @@ let activeSemesterId = 'sem-1';
 let activeCategoryFilter = 'all';
 let isEditingMode = false;
 let currentUser = null;
+let isInitialCloudLoaded = false;
 
 // =========================================
-// 2. SISTEM MULTI-HALAMAN & SIDEBAR ACCORDION
+// 2. RIPPLE CLICK, SCROLL-REVEAL, PARALLAX & SKELETON
+// =========================================
+// A. Efek Ripple Gelombang saat Klik
+document.addEventListener('click', (e) => {
+    const target = e.target.closest('.ripple-trigger');
+    if (!target) return;
+
+    const rect = target.getBoundingClientRect();
+    const size = Math.max(rect.width, rect.height);
+    const ripple = document.createElement('span');
+    ripple.className = 'ripple-wave';
+    ripple.style.width = ripple.style.height = `${size}px`;
+    ripple.style.left = `${e.clientX - rect.left - size / 2}px`;
+    ripple.style.top = `${e.clientY - rect.top - size / 2}px`;
+
+    target.appendChild(ripple);
+    setTimeout(() => ripple.remove(), 580);
+});
+
+// B. Scroll-Triggered Fade-Up Animations (0.38s)
+const scrollRevealObserver = new IntersectionObserver((entries) => {
+    entries.forEach((entry, idx) => {
+        if (entry.isIntersecting) {
+            setTimeout(() => {
+                entry.target.classList.add('revealed');
+            }, idx * 55);
+            scrollRevealObserver.unobserve(entry.target);
+        }
+    });
+}, { threshold: 0.08 });
+
+function observeScrollRevealElements() {
+    document.querySelectorAll('.scroll-reveal').forEach(el => {
+        if (!el.classList.contains('revealed')) {
+            scrollRevealObserver.observe(el);
+        }
+    });
+}
+
+// C. Parallax Halus saat Di-scroll (Kedalaman 3D Ringan)
+let parallaxTicking = false;
+window.addEventListener('scroll', () => {
+    if (parallaxTicking) return;
+    parallaxTicking = true;
+    requestAnimationFrame(() => {
+        const scrollY = window.scrollY;
+        const orbs = document.getElementById('parallaxOrbs');
+        const profileBox = document.getElementById('heroProfileParallax');
+
+        if (orbs) {
+            orbs.style.transform = `translate3d(0, ${(scrollY * 0.14).toFixed(1)}px, 0)`;
+        }
+        if (profileBox && window.innerWidth > 900) {
+            profileBox.style.transform = `translate3d(0, ${(scrollY * -0.06).toFixed(1)}px, 0)`;
+        }
+        parallaxTicking = false;
+    });
+}, { passive: true });
+
+const isTouchDevice = ('ontouchstart' in window) || (navigator.maxTouchPoints > 0);
+
+// D. Skeleton Loading Helper
+function showProjectsSkeleton(show) {
+    const skel = document.getElementById('projectsSkeletonGrid');
+    const grid = document.getElementById('projectsGrid');
+    if (!skel || !grid) return;
+
+    if (show) {
+        skel.classList.remove('hidden');
+        grid.classList.add('hidden');
+    } else {
+        skel.classList.add('hidden');
+        grid.classList.remove('hidden');
+    }
+}
+
+// =========================================
+// 3. SISTEM MULTI-HALAMAN & SIDEBAR ACCORDION
 // =========================================
 const sidebar = document.getElementById('sidebar');
 const sidebarBackdrop = document.getElementById('sidebarBackdrop');
@@ -116,7 +194,15 @@ function switchPage(pageName, semesterId = null) {
         }
 
         activeCategoryFilter = 'all';
-        renderProjectsForActiveSemester();
+        if (!isInitialCloudLoaded) {
+            showProjectsSkeleton(true);
+        } else {
+            showProjectsSkeleton(true);
+            setTimeout(() => {
+                showProjectsSkeleton(false);
+                renderProjectsForActiveSemester();
+            }, 220);
+        }
     } else {
         const navLink = document.querySelector(`.sidebar-links a.nav-item[data-page="${pageName}"]`);
         if (navLink) {
@@ -125,6 +211,7 @@ function switchPage(pageName, semesterId = null) {
         }
     }
 
+    observeScrollRevealElements();
     window.scrollTo({ top: 0, behavior: 'smooth' });
     closeMobileSidebar();
 }
@@ -269,7 +356,7 @@ document.getElementById('confirmAddSubmenuBtn').addEventListener('click', () => 
 });
 
 // =========================================
-// 3. KONTROL HAPUS SEMUA TEKS SAAT MODE EDIT
+// 4. KONTROL HAPUS SEMUA TEKS SAAT MODE EDIT
 // =========================================
 function attachTextDeleteControls() {
     document.querySelectorAll('.editable').forEach(el => {
@@ -316,7 +403,7 @@ function attachTextDeleteControls() {
 }
 
 // =========================================
-// 4. PARSER VIDEO YOUTUBE & TIKTOK
+// 5. PARSER VIDEO YOUTUBE & TIKTOK
 // =========================================
 function extractYouTubeId(url) {
     if (!url) return null;
@@ -332,7 +419,7 @@ function extractTikTokId(url) {
 }
 
 // =========================================
-// 5. PEMILIH IKON (ICON PICKER)
+// 6. PEMILIH IKON (ICON PICKER)
 // =========================================
 const ICON_OPTIONS = [
     "fas fa-network-wired", "fas fa-server", "fas fa-router", "fas fa-wifi",
@@ -419,7 +506,7 @@ document.addEventListener('click', (e) => {
 });
 
 // =========================================
-// 6. PENYIMPANAN GAMBAR HD RINGAN DI FIRESTORE
+// 7. PENYIMPANAN GAMBAR HD RINGAN DI FIRESTORE
 // =========================================
 function compressImageForFirestore(file, maxWidth = 1280, quality = 0.8) {
     return new Promise((resolve, reject) => {
@@ -465,11 +552,10 @@ async function loadMediaFromFirestore(mediaKey) {
 }
 
 // =========================================
-// 7. iOS 3D GLASS TILT & SPOTLIGHT GLARE ENGINE
+// 8. iOS 3D GLASS TILT & SPOTLIGHT GLARE ENGINE
 // =========================================
 function initMicrointeractions() {
-    const isTouchDevice = ('ontouchstart' in window) || (navigator.maxTouchPoints > 0);
-    if (isTouchDevice) return; // Tetap ultra-ringan di HP
+    if (isTouchDevice) return;
 
     document.querySelectorAll('.interactive-card').forEach(card => {
         if (card.dataset.tiltBound) return;
@@ -502,7 +588,7 @@ function initMicrointeractions() {
 }
 
 // =========================================
-// 8. SIMPAN KE CLOUD FIRESTORE
+// 9. SIMPAN KE CLOUD FIRESTORE
 // =========================================
 async function saveAllToCloud(showAlert = false) {
     if (!currentUser) return;
@@ -546,7 +632,7 @@ function showToast(msg, duration = 2400) {
 }
 
 // =========================================
-// 9. RENDER KEAHLIAN & HALAMAN PROJECT SEMESTER
+// 10. RENDER KEAHLIAN & HALAMAN PROJECT SEMESTER
 // =========================================
 function renderDynamicElements() {
     deletedStaticCards.forEach(staticKey => {
@@ -561,12 +647,12 @@ function renderDynamicElements() {
     skillsGrid.querySelectorAll('.dynamic-col').forEach(el => el.remove());
     extraSkills.forEach((col, index) => {
         const card = document.createElement('div');
-        card.className = 'skill-card frosted-card interactive-card ios-spring-card dynamic-col';
+        card.className = 'skill-card frosted-card interactive-card ios-spring-card scroll-reveal dynamic-col';
         card.innerHTML = `
             <div class="card-glare"></div>
             <button class="edit-only-box delete-card-btn ios-squish" data-type="skill" data-index="${index}" title="Hapus Kartu"><i class="fas fa-trash"></i></button>
             <div class="icon-badge icon-picker-trigger" title="Klik untuk ganti ikon">
-                <i class="${col.icon || 'fas fa-microchip'} dynamic-icon" data-array="extraSkills" data-index="${index}"></i>
+                <i class="${col.icon || 'fas fa-microchip'} dynamic-icon spin-hover-icon" data-array="extraSkills" data-index="${index}"></i>
             </div>
             <h3 class="editable dynamic-field" data-array="extraSkills" data-index="${index}" data-field="title">${col.title}</h3>
             <p class="editable dynamic-field" data-array="extraSkills" data-index="${index}" data-field="desc">${col.desc}</p>
@@ -598,10 +684,12 @@ function renderDynamicElements() {
         });
     });
 
+    showProjectsSkeleton(false);
     renderProjectsForActiveSemester();
     attachTextDeleteControls();
     applyEditModeState();
     initMicrointeractions();
+    observeScrollRevealElements();
 }
 
 function renderProjectsForActiveSemester() {
@@ -621,7 +709,7 @@ function renderProjectsForActiveSemester() {
     });
 
     const allBtn = document.createElement('button');
-    allBtn.className = `filter-btn frosted-pill ios-spring-btn ${activeCategoryFilter === 'all' ? 'active' : ''}`;
+    allBtn.className = `filter-btn frosted-pill ios-spring-btn ripple-trigger ${activeCategoryFilter === 'all' ? 'active' : ''}`;
     allBtn.innerHTML = `<i class="fas fa-layer-group"></i> Semua <span class="filter-count">${semesterProjects.length}</span>`;
     allBtn.addEventListener('click', () => {
         activeCategoryFilter = 'all';
@@ -631,7 +719,7 @@ function renderProjectsForActiveSemester() {
 
     Object.keys(categoryCounts).forEach(cat => {
         const btn = document.createElement('button');
-        btn.className = `filter-btn frosted-pill ios-spring-btn ${activeCategoryFilter === cat ? 'active' : ''}`;
+        btn.className = `filter-btn frosted-pill ios-spring-btn ripple-trigger ${activeCategoryFilter === cat ? 'active' : ''}`;
         btn.innerHTML = `<i class="fas fa-tag"></i> ${cat} <span class="filter-count">${categoryCounts[cat]}</span>`;
         btn.addEventListener('click', () => {
             activeCategoryFilter = cat;
@@ -653,18 +741,19 @@ function renderProjectsForActiveSemester() {
 
     if (filteredList.length === 0) {
         projectsGrid.innerHTML = `
-            <div class="empty-projects-placeholder frosted-card">
+            <div class="empty-projects-placeholder frosted-card scroll-reveal">
                 <i class="fas fa-folder-open"></i>
                 <p>Belum ada tugas atau project di ${semName}.</p>
                 <small>Masuk sebagai admin lalu klik <strong>"Tambah Konten / Project"</strong> di pojok kanan atas untuk menambahkan video YouTube, TikTok, foto, atau tautan.</small>
             </div>
         `;
+        observeScrollRevealElements();
         return;
     }
 
     filteredList.slice().reverse().forEach(proj => {
         const card = document.createElement('div');
-        card.className = 'project-card frosted-card interactive-card ios-spring-card';
+        card.className = 'project-card frosted-card interactive-card ios-spring-card scroll-reveal';
 
         let mediaHtml = '';
         if (proj.mediaType === 'youtube' && proj.youtubeId) {
@@ -686,7 +775,7 @@ function renderProjectsForActiveSemester() {
                     <div class="project-media-wrapper">
                         <div class="tiktok-embed-box">
                             <i class="fab fa-tiktok"></i>
-                            <a href="${proj.mediaUrl}" target="_blank" rel="noopener" class="btn primary ios-spring-btn" style="padding: 0.45rem 1rem; font-size: 0.82rem;">Tonton di TikTok</a>
+                            <a href="${proj.mediaUrl}" target="_blank" rel="noopener" class="btn primary ios-spring-btn ripple-trigger" style="padding: 0.45rem 1rem; font-size: 0.82rem;">Tonton di TikTok</a>
                         </div>
                     </div>
                 `;
@@ -722,8 +811,8 @@ function renderProjectsForActiveSemester() {
             <h3 class="editable dynamic-proj-field" data-real-index="${proj.realIndex}" data-field="title">${proj.title}</h3>
             <p class="editable dynamic-proj-field" data-real-index="${proj.realIndex}" data-field="desc">${proj.desc}</p>
             ${extraLinkHtml}
-            <button type="button" class="btn-card-fullscreen ios-spring-btn" data-real-index="${proj.realIndex}">
-                <i class="fas fa-play"></i> Putar / Lihat Layar Penuh
+            <button type="button" class="btn-card-fullscreen ios-spring-btn ripple-trigger" data-real-index="${proj.realIndex}">
+                <i class="fas fa-play spin-hover-icon"></i> Putar / Lihat Layar Penuh
             </button>
         `;
 
@@ -760,6 +849,7 @@ function renderProjectsForActiveSemester() {
     attachTextDeleteControls();
     applyEditModeState();
     initMicrointeractions();
+    observeScrollRevealElements();
 }
 
 function openFullscreenProject(proj) {
@@ -792,7 +882,7 @@ function openFullscreenProject(proj) {
 }
 
 // =========================================
-// 10. MODAL TAMBAH KONTEN / PROJECT BARU
+// 11. MODAL TAMBAH KONTEN / PROJECT BARU
 // =========================================
 const addProjectModal = document.getElementById('addProjectModal');
 const projMediaType = document.getElementById('projMediaType');
@@ -904,11 +994,13 @@ document.getElementById('submitNewProjectBtn').addEventListener('click', async (
 });
 
 // =========================================
-// 11. MUAT DATA DARI CLOUD FIRESTORE
+// 12. MUAT DATA DARI CLOUD FIRESTORE (DENGAN SKELETON)
 // =========================================
 async function loadCloudContent() {
+    showProjectsSkeleton(true);
     try {
         const docSnap = await getDoc(portfolioDocRef);
+        isInitialCloudLoaded = true;
         if (docSnap.exists()) {
             const data = docSnap.data();
 
@@ -948,6 +1040,7 @@ async function loadCloudContent() {
             showcaseProjects = data.showcaseProjects || [];
             renderDynamicElements();
         } else {
+            showProjectsSkeleton(false);
             renderProjectSubmenus();
             syncContactLinksToUI();
             attachTextDeleteControls();
@@ -962,12 +1055,14 @@ async function loadCloudContent() {
         if (bgData) document.body.style.backgroundImage = `url('${bgData}')`;
 
     } catch (error) {
+        isInitialCloudLoaded = true;
+        showProjectsSkeleton(false);
         console.error("Gagal memuat data dari Firebase:", error);
     }
 }
 
 // =========================================
-// 12. KONTROL ADMIN & EVENT TAMBAHAN
+// 13. KONTROL ADMIN & EVENT TAMBAHAN
 // =========================================
 const adminLoginBtn = document.getElementById('adminLoginBtn');
 const adminQuickControls = document.getElementById('adminQuickControls');
@@ -1116,5 +1211,6 @@ document.addEventListener('DOMContentLoaded', () => {
     attachTextDeleteControls();
     initIconPicker();
     initMicrointeractions();
+    observeScrollRevealElements();
     loadCloudContent();
 });
