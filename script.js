@@ -64,9 +64,167 @@ let currentUser = null;
 let isInitialCloudLoaded = false;
 
 // =========================================
+// 1B. HYPEROS UI SOUND EFFECTS ENGINE (WEB AUDIO API)
+// =========================================
+class HyperOSSoundEngine {
+    constructor() {
+        this.ctx = null;
+        this.enabled = localStorage.getItem('hyperos_sfx') !== 'off';
+        this.lastHoverTime = 0;
+    }
+
+    init() {
+        if (!this.ctx) {
+            const AudioCtx = window.AudioContext || window.webkitAudioContext;
+            if (AudioCtx) this.ctx = new AudioCtx();
+        }
+        if (this.ctx && this.ctx.state === 'suspended') {
+            this.ctx.resume().catch(() => {});
+        }
+    }
+
+    toggle() {
+        this.enabled = !this.enabled;
+        localStorage.setItem('hyperos_sfx', this.enabled ? 'on' : 'off');
+        this.updateButtons();
+        if (this.enabled) {
+            this.init();
+            this.playClick();
+        }
+    }
+
+    updateButtons() {
+        const iconClass = this.enabled ? 'fas fa-volume-up' : 'fas fa-volume-mute';
+        const titleText = this.enabled ? 'Efek Suara UI: Aktif' : 'Efek Suara UI: Nonaktif';
+        ['toggleSoundBtn', 'mobileSoundBtn'].forEach(id => {
+            const btn = document.getElementById(id);
+            if (!btn) return;
+            btn.classList.toggle('muted', !this.enabled);
+            btn.title = titleText;
+            const icon = btn.querySelector('i');
+            if (icon) icon.className = iconClass;
+        });
+    }
+
+    playHover() {
+        if (!this.enabled) return;
+        const now = performance.now();
+        if (now - this.lastHoverTime < 65) return;
+        this.lastHoverTime = now;
+
+        this.init();
+        if (!this.ctx || this.ctx.state !== 'running') return;
+
+        const t = this.ctx.currentTime;
+        const osc = this.ctx.createOscillator();
+        const gain = this.ctx.createGain();
+
+        osc.type = 'sine';
+        osc.frequency.setValueAtTime(1150, t);
+        osc.frequency.exponentialRampToValueAtTime(1650, t + 0.028);
+
+        gain.gain.setValueAtTime(0.0001, t);
+        gain.gain.linearRampToValueAtTime(0.022, t + 0.006);
+        gain.gain.exponentialRampToValueAtTime(0.0001, t + 0.032);
+
+        osc.connect(gain);
+        gain.connect(this.ctx.destination);
+        osc.start(t);
+        osc.stop(t + 0.035);
+    }
+
+    playClick() {
+        if (!this.enabled) return;
+        this.init();
+        if (!this.ctx) return;
+
+        const t = this.ctx.currentTime;
+        const osc = this.ctx.createOscillator();
+        const gain = this.ctx.createGain();
+
+        osc.type = 'triangle';
+        osc.frequency.setValueAtTime(480, t);
+        osc.frequency.exponentialRampToValueAtTime(860, t + 0.045);
+
+        gain.gain.setValueAtTime(0.001, t);
+        gain.gain.linearRampToValueAtTime(0.075, t + 0.008);
+        gain.gain.exponentialRampToValueAtTime(0.0001, t + 0.065);
+
+        osc.connect(gain);
+        gain.connect(this.ctx.destination);
+        osc.start(t);
+        osc.stop(t + 0.07);
+    }
+
+    playTransition() {
+        if (!this.enabled) return;
+        this.init();
+        if (!this.ctx) return;
+
+        const t = this.ctx.currentTime;
+        const osc = this.ctx.createOscillator();
+        const gain = this.ctx.createGain();
+
+        osc.type = 'sine';
+        osc.frequency.setValueAtTime(240, t);
+        osc.frequency.exponentialRampToValueAtTime(520, t + 0.14);
+
+        gain.gain.setValueAtTime(0.0001, t);
+        gain.gain.linearRampToValueAtTime(0.045, t + 0.04);
+        gain.gain.exponentialRampToValueAtTime(0.0001, t + 0.16);
+
+        osc.connect(gain);
+        gain.connect(this.ctx.destination);
+        osc.start(t);
+        osc.stop(t + 0.17);
+    }
+
+    playSuccess() {
+        if (!this.enabled) return;
+        this.init();
+        if (!this.ctx) return;
+
+        const notes = [587.33, 880];
+        notes.forEach((freq, i) => {
+            const t = this.ctx.currentTime + i * 0.085;
+            const osc = this.ctx.createOscillator();
+            const gain = this.ctx.createGain();
+            osc.type = 'sine';
+            osc.frequency.setValueAtTime(freq, t);
+
+            gain.gain.setValueAtTime(0.0001, t);
+            gain.gain.linearRampToValueAtTime(0.065, t + 0.015);
+            gain.gain.exponentialRampToValueAtTime(0.0001, t + 0.24);
+
+            osc.connect(gain);
+            gain.connect(this.ctx.destination);
+            osc.start(t);
+            osc.stop(t + 0.26);
+        });
+    }
+}
+
+const sfx = new HyperOSSoundEngine();
+
+['pointerdown', 'keydown'].forEach(evt => {
+    window.addEventListener(evt, () => sfx.init(), { once: true });
+});
+
+document.addEventListener('pointerenter', (e) => {
+    if (e.target && e.target.closest && e.target.closest('.sfx-hover, .btn, .filter-btn')) {
+        sfx.playHover();
+    }
+}, true);
+
+// =========================================
 // 2. RIPPLE CLICK, SCROLL-REVEAL, PARALLAX & SKELETON
 // =========================================
 document.addEventListener('click', (e) => {
+    const interactiveEl = e.target.closest('.ripple-trigger, .btn, .nav-item, .submenu-link, .filter-btn, .ios-squish');
+    if (interactiveEl && !e.target.closest('#toggleSoundBtn, #mobileSoundBtn')) {
+        sfx.playClick();
+    }
+
     const target = e.target.closest('.ripple-trigger');
     if (!target) return;
 
@@ -137,7 +295,7 @@ function showProjectsSkeleton(show) {
 }
 
 // =========================================
-// 3. SISTEM MULTI-HALAMAN (TRANSISI MULUS BEBAS KEDUT)
+// 3. SISTEM MULTI-HALAMAN + NATIVE VIEW TRANSITIONS API
 // =========================================
 const sidebar = document.getElementById('sidebar');
 const sidebarBackdrop = document.getElementById('sidebarBackdrop');
@@ -160,12 +318,7 @@ document.getElementById('toggleProjectMenuBtn').addEventListener('click', () => 
     projectAccordionGroup.classList.toggle('open');
 });
 
-function switchPage(pageName, semesterId = null) {
-    if (activePage === pageName && (!semesterId || activeSemesterId === semesterId)) {
-        closeMobileSidebar();
-        return;
-    }
-
+function performPageUpdate(pageName, semesterId = null) {
     activePage = pageName;
 
     if (window.scrollY > 0) {
@@ -214,6 +367,23 @@ function switchPage(pageName, semesterId = null) {
 
     observeScrollRevealElements();
     closeMobileSidebar();
+}
+
+function switchPage(pageName, semesterId = null) {
+    if (activePage === pageName && (!semesterId || activeSemesterId === semesterId)) {
+        closeMobileSidebar();
+        return;
+    }
+
+    sfx.playTransition();
+
+    if (document.startViewTransition && !window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+        document.startViewTransition(() => {
+            performPageUpdate(pageName, semesterId);
+        });
+    } else {
+        performPageUpdate(pageName, semesterId);
+    }
 }
 
 document.querySelectorAll('.sidebar-links a.nav-item[data-page]').forEach(link => {
@@ -287,7 +457,7 @@ function renderProjectSubmenus() {
         const li = document.createElement('li');
         li.className = 'submenu-item-row';
         li.innerHTML = `
-            <a href="#projects-${sub.id}" class="submenu-link ios-squish ${activePage === 'projects' && activeSemesterId === sub.id ? 'active' : ''}" data-sem-id="${sub.id}">
+            <a href="#projects-${sub.id}" class="submenu-link ios-squish sfx-hover ${activePage === 'projects' && activeSemesterId === sub.id ? 'active' : ''}" data-sem-id="${sub.id}">
                 <span class="editable submenu-label-text" data-sub-index="${index}">${sub.label}</span>
                 <span class="submenu-count">${count}</span>
             </a>
@@ -552,7 +722,7 @@ async function loadMediaFromFirestore(mediaKey) {
 }
 
 // =========================================
-// 8. SPOTLIGHT BORDER + iOS 3D GLASS TILT ENGINE
+// 8. INTERACTIVE 3D CARD TILT + SPECULAR GLARE + SPOTLIGHT BORDER
 // =========================================
 function initMicrointeractions() {
     if (isTouchDevice) return;
@@ -570,12 +740,20 @@ function initMicrointeractions() {
             card.style.setProperty('--mouse-x', `${x}px`);
             card.style.setProperty('--mouse-y', `${y}px`);
 
+            const glareX = rect.width - x;
+            const glareY = rect.height - y;
+            card.style.setProperty('--glare-x', `${glareX}px`);
+            card.style.setProperty('--glare-y', `${glareY}px`);
+
             if (card.classList.contains('ios-spring-card')) {
                 const centerX = rect.width / 2;
                 const centerY = rect.height / 2;
-                const rotateX = ((y - centerY) / centerY) * -4.2;
-                const rotateY = ((x - centerX) / centerX) * 4.2;
-                card.style.transform = `perspective(950px) rotateX(${rotateX.toFixed(2)}deg) rotateY(${rotateY.toFixed(2)}deg) translateY(-6px) scale(1.015)`;
+                const isLargeCard = rect.width > 520;
+                const maxTilt = isLargeCard ? 3.2 : 6.5;
+
+                const rotateX = ((y - centerY) / centerY) * -maxTilt;
+                const rotateY = ((x - centerX) / centerX) * maxTilt;
+                card.style.transform = `perspective(1000px) rotateX(${rotateX.toFixed(2)}deg) rotateY(${rotateY.toFixed(2)}deg) translateY(-6px) scale(1.015)`;
             }
         });
 
@@ -616,7 +794,10 @@ async function saveAllToCloud(showAlert = false) {
             showcaseProjects
         }, { merge: true });
 
-        if (showAlert) showToast("Tersimpan ke Cloud!");
+        if (showAlert) {
+            sfx.playSuccess();
+            showToast("Tersimpan ke Cloud!");
+        }
     } catch (error) {
         console.error("Gagal menyimpan ke Cloud:", error);
         showToast("Gagal menyimpan: " + error.message, 4000);
@@ -647,7 +828,7 @@ function renderDynamicElements() {
     skillsGrid.querySelectorAll('.dynamic-col').forEach(el => el.remove());
     extraSkills.forEach((col, index) => {
         const card = document.createElement('div');
-        card.className = 'skill-card frosted-card interactive-card spotlight-card ios-spring-card scroll-reveal dynamic-col';
+        card.className = 'skill-card frosted-card interactive-card spotlight-card ios-spring-card scroll-reveal sfx-hover dynamic-col';
         card.innerHTML = `
             <div class="card-glare"></div>
             <button class="edit-only-box delete-card-btn ios-squish" data-type="skill" data-index="${index}" title="Hapus Kartu"><i class="fas fa-trash"></i></button>
@@ -709,7 +890,7 @@ function renderProjectsForActiveSemester() {
     });
 
     const allBtn = document.createElement('button');
-    allBtn.className = `filter-btn frosted-pill ios-spring-btn ripple-trigger ${activeCategoryFilter === 'all' ? 'active' : ''}`;
+    allBtn.className = `filter-btn frosted-pill ios-spring-btn ripple-trigger sfx-hover ${activeCategoryFilter === 'all' ? 'active' : ''}`;
     allBtn.innerHTML = `<i class="fas fa-layer-group"></i> Semua <span class="filter-count">${semesterProjects.length}</span>`;
     allBtn.addEventListener('click', () => {
         activeCategoryFilter = 'all';
@@ -719,7 +900,7 @@ function renderProjectsForActiveSemester() {
 
     Object.keys(categoryCounts).forEach(cat => {
         const btn = document.createElement('button');
-        btn.className = `filter-btn frosted-pill ios-spring-btn ripple-trigger ${activeCategoryFilter === cat ? 'active' : ''}`;
+        btn.className = `filter-btn frosted-pill ios-spring-btn ripple-trigger sfx-hover ${activeCategoryFilter === cat ? 'active' : ''}`;
         btn.innerHTML = `<i class="fas fa-tag"></i> ${cat} <span class="filter-count">${categoryCounts[cat]}</span>`;
         btn.addEventListener('click', () => {
             activeCategoryFilter = cat;
@@ -753,7 +934,7 @@ function renderProjectsForActiveSemester() {
 
     filteredList.slice().reverse().forEach(proj => {
         const card = document.createElement('div');
-        card.className = 'project-card frosted-card interactive-card spotlight-card ios-spring-card scroll-reveal';
+        card.className = 'project-card frosted-card interactive-card spotlight-card ios-spring-card scroll-reveal sfx-hover';
 
         let mediaHtml = '';
         if (proj.mediaType === 'youtube' && proj.youtubeId) {
@@ -811,7 +992,7 @@ function renderProjectsForActiveSemester() {
             <h3 class="editable dynamic-proj-field" data-real-index="${proj.realIndex}" data-field="title">${proj.title}</h3>
             <p class="editable dynamic-proj-field" data-real-index="${proj.realIndex}" data-field="desc">${proj.desc}</p>
             ${extraLinkHtml}
-            <button type="button" class="btn-card-fullscreen ios-spring-btn ripple-trigger" data-real-index="${proj.realIndex}">
+            <button type="button" class="btn-card-fullscreen ios-spring-btn ripple-trigger sfx-hover" data-real-index="${proj.realIndex}">
                 <i class="fas fa-play spin-hover-icon"></i> Putar / Lihat Layar Penuh
             </button>
         `;
@@ -1062,7 +1243,7 @@ async function loadCloudContent() {
 }
 
 // =========================================
-// 13. KONTROL ADMIN & EVENT TAMBAHAN
+// 13. KONTROL ADMIN, TOMBOL SUARA & EVENT TAMBAHAN
 // =========================================
 const adminLoginBtn = document.getElementById('adminLoginBtn');
 const adminQuickControls = document.getElementById('adminQuickControls');
@@ -1136,6 +1317,7 @@ async function handleFirebaseLogin() {
     try {
         submitLoginBtn.textContent = "Memverifikasi...";
         await signInWithEmailAndPassword(auth, email, password);
+        sfx.playSuccess();
         loginModal.style.display = 'none';
         adminEmailInput.value = '';
         adminPasswordInput.value = '';
@@ -1179,6 +1361,7 @@ function setupFirestoreImageUpload(inputId, mediaKey, maxWidth, applyCallback) {
             const optimizedDataUrl = await compressImageForFirestore(file, maxWidth, 0.82);
             await saveMediaToFirestore(mediaKey, optimizedDataUrl);
             applyCallback(optimizedDataUrl);
+            sfx.playSuccess();
             showToast("Foto tersimpan di Cloud!", 3000);
         } catch (error) {
             showToast("Gagal menyimpan foto: " + error.message, 4000);
@@ -1207,7 +1390,13 @@ document.getElementById('resetAllBtn').addEventListener('click', async () => {
     }
 });
 
+['toggleSoundBtn', 'mobileSoundBtn'].forEach(id => {
+    const btn = document.getElementById(id);
+    if (btn) btn.addEventListener('click', () => sfx.toggle());
+});
+
 document.addEventListener('DOMContentLoaded', () => {
+    sfx.updateButtons();
     attachTextDeleteControls();
     initIconPicker();
     initMicrointeractions();

@@ -25,20 +25,25 @@
     <!-- Overlay Gelap saat Sidebar Terbuka di HP -->
     <div class="sidebar-backdrop" id="sidebarBackdrop"></div>
 
-    <!-- 3. Floating Sticky Glass Sidebar (Konsep 3) -->
+    <!-- 3. Floating Sticky Glass Sidebar ala HyperOS Control Center -->
     <aside class="sidebar frosted-panel floating-sidebar" id="sidebar">
         <div class="sidebar-header">
-            <div class="logo-wrap ios-squish">
+            <div class="logo-wrap ios-squish sfx-hover">
                 <span class="logo-dot"></span>
                 <div class="logo editable" data-key="logo">TJKT<span>.net</span></div>
             </div>
-            <button id="closeSidebarBtn" class="close-sidebar-btn ios-squish" aria-label="Tutup Menu"><i class="fas fa-times"></i></button>
+            <div class="sidebar-header-actions">
+                <button type="button" id="toggleSoundBtn" class="sound-toggle-btn ios-squish sfx-hover" title="Efek Suara UI: Aktif" aria-label="Toggle Efek Suara">
+                    <i class="fas fa-volume-up"></i>
+                </button>
+                <button id="closeSidebarBtn" class="close-sidebar-btn ios-squish" aria-label="Tutup Menu"><i class="fas fa-times"></i></button>
+            </div>
         </div>
         
         <ul class="sidebar-links" id="sidebarLinks">
             <!-- Halaman 1: Beranda -->
             <li>
-                <a href="#page-home" class="nav-item ios-squish ripple-trigger active" data-page="home">
+                <a href="#page-home" class="nav-item ios-squish ripple-trigger sfx-hover active" data-page="home">
                     <span class="nav-icon-wrap"><i class="fas fa-home editable-icon spin-hover-icon" data-icon-key="navHomeIcon"></i></span>
                     <span class="editable" data-key="navHome">Beranda</span>
                 </a>
@@ -46,7 +51,7 @@
 
             <!-- Halaman 2: Tentang & Keahlian -->
             <li>
-                <a href="#page-about" class="nav-item ios-squish ripple-trigger" data-page="about">
+                <a href="#page-about" class="nav-item ios-squish ripple-trigger sfx-hover" data-page="about">
                     <span class="nav-icon-wrap"><i class="fas fa-user-astronaut editable-icon spin-hover-icon" data-icon-key="navAboutIcon"></i></span>
                     <span class="editable" data-key="navAbout">Tentang & Keahlian</span>
                 </a>
@@ -55,7 +60,7 @@
             <!-- Menu Accordion: Tugas Projek > Semester 1, 2, dst -->
             <li class="sidebar-accordion-group open" id="projectAccordionGroup">
                 <div class="accordion-header-row">
-                    <button type="button" class="accordion-toggle-btn ios-squish ripple-trigger" id="toggleProjectMenuBtn">
+                    <button type="button" class="accordion-toggle-btn ios-squish ripple-trigger sfx-hover" id="toggleProjectMenuBtn">
                         <span class="accordion-left">
                             <span class="nav-icon-wrap folder-accent"><i class="fas fa-folder-open editable-icon spin-hover-icon" data-icon-key="navProjectsIcon"></i></span>
                             <span class="editable" data-key="navProjects">Tugas Projek</span>
@@ -73,7 +78,7 @@
 
             <!-- Halaman Kontak -->
             <li>
-                <a href="#page-contact" class="nav-item ios-squish ripple-trigger" data-page="contact">
+                <a href="#page-contact" class="nav-item ios-squish ripple-trigger sfx-hover" data-page="contact">
                     <span class="nav-icon-wrap"><i class="fas fa-envelope editable-icon spin-hover-icon" data-icon-key="navContactIcon"></i></span>
                     <span class="editable" data-key="navContact">Kontak</span>
                 </a>
@@ -94,19 +99,21 @@
             <i class="fas fa-bars"></i>
         </button>
         <div class="mobile-topbar-title" id="mobilePageTitle">Beranda</div>
-        <div class="mobile-topbar-badge">TJKT</div>
+        <button type="button" id="mobileSoundBtn" class="sound-toggle-btn ios-squish" aria-label="Toggle Efek Suara">
+            <i class="fas fa-volume-up"></i>
+        </button>
     </header>
 
     <!-- Konten Utama Multi-Halaman -->
     <main class="main-content">
 
         <!-- =========================================================
-             HALAMAN 1: BERANDA (BENTO HERO + SPATIAL CARD)
+             HALAMAN 1: BERANDA (HYPEROS SPATIAL HERO CARD)
              ========================================================= -->
         <section id="page-home" class="page-view active">
             <div class="hero">
                 <div class="hero-wrapper">
-                    <div class="hero-content frosted-hero-card interactive-card spotlight-card ios-stagger-1">
+                    <div class="hero-content frosted-hero-card interactive-card spotlight-card ios-spring-card ios-stagger-1 sfx-hover">
                         <div class="card-glare"></div>
                         <div class="hero-status-pill ios-squish">
                             <span class="pulse-dot"></span>
@@ -121,25 +128,28 @@
                             Membangun infrastruktur jaringan yang handal, mengamankan server, dan mendokumentasikan setiap proyek praktikum dari semester ke semester.
                         </p>
                         <div class="hero-buttons">
-                            <button type="button" class="btn primary ios-spring-btn ripple-trigger" id="heroExploreProjectsBtn">
+                            <button type="button" class="btn primary ios-spring-btn ripple-trigger sfx-hover" id="heroExploreProjectsBtn">
                                 <i class="fas fa-folder-open spin-hover-icon"></i> <span class="editable" data-key="btnPrimary">Jelajahi Tugas Projek</span>
                             </button>
-                            <button type="button" class="btn secondary frosted-pill ios-spring-btn ripple-trigger" data-goto-page="contact">
+                            <button type="button" class="btn secondary frosted-pill ios-spring-btn ripple-trigger sfx-hover" data-goto-page="contact">
                                 <i class="fas fa-address-book spin-hover-icon"></i> <span class="editable" data-key="btnSecondary">Hubungi Saya</span>
                             </button>
                         </div>
 
                         <!-- Kartu Bento Statistik Interaktif -->
                         <div class="quick-stats-row">
-                            <div class="stat-frosted-box interactive-card spotlight-card ios-spring-card ripple-trigger" id="statTotalProjectsBox" title="Klik untuk melihat semua tugas">
+                            <div class="stat-frosted-box interactive-card spotlight-card ios-spring-card ripple-trigger sfx-hover" id="statTotalProjectsBox" title="Klik untuk melihat semua tugas">
+                                <div class="card-glare"></div>
                                 <span class="stat-number" id="homeTotalProjects">0</span>
                                 <span class="stat-label">Total Projek</span>
                             </div>
-                            <div class="stat-frosted-box interactive-card spotlight-card ios-spring-card ripple-trigger" data-goto-page="about">
+                            <div class="stat-frosted-box interactive-card spotlight-card ios-spring-card ripple-trigger sfx-hover" data-goto-page="about">
+                                <div class="card-glare"></div>
                                 <span class="stat-number" id="homeTotalSemesters">3</span>
                                 <span class="stat-label">Folder Semester</span>
                             </div>
-                            <div class="stat-frosted-box interactive-card spotlight-card ios-spring-card ripple-trigger" data-goto-page="contact" title="Klik untuk membuka kontak WA, YouTube & TikTok">
+                            <div class="stat-frosted-box interactive-card spotlight-card ios-spring-card ripple-trigger sfx-hover" data-goto-page="contact" title="Klik untuk membuka kontak WA, YouTube & TikTok">
+                                <div class="card-glare"></div>
                                 <span class="stat-number"><i class="fas fa-paper-plane spin-hover-icon" style="font-size: 1.25rem;"></i></span>
                                 <span class="stat-label">Hubungi Saya</span>
                             </div>
@@ -148,7 +158,8 @@
                     
                     <!-- Foto Profil Spatial Floating Card -->
                     <div class="hero-profile ios-stagger-2" id="heroProfileParallax">
-                        <div class="profile-frame frosted-ring interactive-card spotlight-card ios-spring-card">
+                        <div class="profile-frame frosted-ring interactive-card spotlight-card ios-spring-card sfx-hover">
+                            <div class="card-glare"></div>
                             <img id="profileImage" src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&w=600&q=80" alt="Foto Profil">
                             <label for="uploadProfile" class="edit-only-box profile-change-badge ios-squish" title="Ganti Foto Profil">
                                 <i class="fas fa-camera"></i>
@@ -174,10 +185,10 @@
                     </button>
                 </div>
 
-                <!-- Susunan Bento Grid Asimetris (Konsep 1) -->
+                <!-- Susunan Bento Grid Asimetris -->
                 <div class="bento-about-grid ios-stagger-2" id="skillsGrid">
                     <!-- Kotak Bento Utama (Span 2 Kolom): Profil Singkat -->
-                    <div class="about-card bento-span-2 frosted-card interactive-card spotlight-card scroll-reveal">
+                    <div class="about-card bento-span-2 frosted-card interactive-card spotlight-card ios-spring-card scroll-reveal sfx-hover">
                         <div class="card-glare"></div>
                         <div class="about-flex-inner">
                             <div class="icon-badge center-badge icon-picker-trigger ios-squish" title="Klik untuk ganti ikon">
@@ -194,7 +205,7 @@
                     </div>
 
                     <!-- Kotak Bento Keahlian 1 -->
-                    <div class="skill-card frosted-card interactive-card spotlight-card ios-spring-card scroll-reveal" data-static-card="skill1">
+                    <div class="skill-card frosted-card interactive-card spotlight-card ios-spring-card scroll-reveal sfx-hover" data-static-card="skill1">
                         <div class="card-glare"></div>
                         <button class="edit-only-box delete-card-btn ios-squish" data-static-key="skill1" title="Hapus Kartu"><i class="fas fa-trash"></i></button>
                         <div class="icon-badge icon-picker-trigger" title="Klik untuk ganti ikon">
@@ -205,7 +216,7 @@
                     </div>
 
                     <!-- Kotak Bento Keahlian 2 -->
-                    <div class="skill-card frosted-card interactive-card spotlight-card ios-spring-card scroll-reveal" data-static-card="skill2">
+                    <div class="skill-card frosted-card interactive-card spotlight-card ios-spring-card scroll-reveal sfx-hover" data-static-card="skill2">
                         <div class="card-glare"></div>
                         <button class="edit-only-box delete-card-btn ios-squish" data-static-key="skill2" title="Hapus Kartu"><i class="fas fa-trash"></i></button>
                         <div class="icon-badge icon-picker-trigger" title="Klik untuk ganti ikon">
@@ -216,7 +227,7 @@
                     </div>
 
                     <!-- Kotak Bento Keahlian 3 -->
-                    <div class="skill-card frosted-card interactive-card spotlight-card ios-spring-card scroll-reveal" data-static-card="skill3">
+                    <div class="skill-card frosted-card interactive-card spotlight-card ios-spring-card scroll-reveal sfx-hover" data-static-card="skill3">
                         <div class="card-glare"></div>
                         <button class="edit-only-box delete-card-btn ios-squish" data-static-key="skill3" title="Hapus Kartu"><i class="fas fa-trash"></i></button>
                         <div class="icon-badge icon-picker-trigger" title="Klik untuk ganti ikon">
@@ -227,7 +238,7 @@
                     </div>
 
                     <!-- Kotak Bento Keahlian 4 -->
-                    <div class="skill-card frosted-card interactive-card spotlight-card ios-spring-card scroll-reveal" data-static-card="skill4">
+                    <div class="skill-card frosted-card interactive-card spotlight-card ios-spring-card scroll-reveal sfx-hover" data-static-card="skill4">
                         <div class="card-glare"></div>
                         <button class="edit-only-box delete-card-btn ios-squish" data-static-key="skill4" title="Hapus Kartu"><i class="fas fa-trash"></i></button>
                         <div class="icon-badge icon-picker-trigger" title="Klik untuk ganti ikon">
@@ -308,7 +319,7 @@
                 <!-- 3 Kolom Kontak: WhatsApp, YouTube, TikTok -->
                 <div class="contact-cards-grid ios-stagger-2">
                     <!-- Kolom 1: WhatsApp -->
-                    <div class="contact-channel-card frosted-card interactive-card spotlight-card ios-spring-card scroll-reveal wa-card">
+                    <div class="contact-channel-card frosted-card interactive-card spotlight-card ios-spring-card scroll-reveal sfx-hover wa-card">
                         <div class="card-glare"></div>
                         <div class="channel-icon-circle wa-icon">
                             <i class="fab fa-whatsapp spin-hover-icon"></i>
@@ -322,13 +333,13 @@
                             <input type="url" id="waLinkInput" class="frosted-input link-sync-input" data-link-key="waLink" value="https://wa.me/6281234567890" placeholder="https://wa.me/628...">
                         </div>
 
-                        <a href="https://wa.me/6281234567890" id="waActionLink" data-link-target="waLink" target="_blank" rel="noopener" class="btn channel-btn wa-btn ios-spring-btn ripple-trigger">
+                        <a href="https://wa.me/6281234567890" id="waActionLink" data-link-target="waLink" target="_blank" rel="noopener" class="btn channel-btn wa-btn ios-spring-btn ripple-trigger sfx-hover">
                             <i class="fab fa-whatsapp"></i> Chat WhatsApp
                         </a>
                     </div>
 
                     <!-- Kolom 2: YouTube -->
-                    <div class="contact-channel-card frosted-card interactive-card spotlight-card ios-spring-card scroll-reveal yt-card">
+                    <div class="contact-channel-card frosted-card interactive-card spotlight-card ios-spring-card scroll-reveal sfx-hover yt-card">
                         <div class="card-glare"></div>
                         <div class="channel-icon-circle yt-icon">
                             <i class="fab fa-youtube spin-hover-icon"></i>
@@ -342,13 +353,13 @@
                             <input type="url" id="ytLinkInput" class="frosted-input link-sync-input" data-link-key="ytLink" value="https://www.youtube.com" placeholder="https://www.youtube.com/@...">
                         </div>
 
-                        <a href="https://www.youtube.com" id="ytActionLink" data-link-target="ytLink" target="_blank" rel="noopener" class="btn channel-btn yt-btn ios-spring-btn ripple-trigger">
+                        <a href="https://www.youtube.com" id="ytActionLink" data-link-target="ytLink" target="_blank" rel="noopener" class="btn channel-btn yt-btn ios-spring-btn ripple-trigger sfx-hover">
                             <i class="fab fa-youtube"></i> Kunjungi YouTube
                         </a>
                     </div>
 
                     <!-- Kolom 3: TikTok -->
-                    <div class="contact-channel-card frosted-card interactive-card spotlight-card ios-spring-card scroll-reveal tt-card">
+                    <div class="contact-channel-card frosted-card interactive-card spotlight-card ios-spring-card scroll-reveal sfx-hover tt-card">
                         <div class="card-glare"></div>
                         <div class="channel-icon-circle tt-icon">
                             <i class="fab fa-tiktok spin-hover-icon"></i>
@@ -362,7 +373,7 @@
                             <input type="url" id="ttLinkInput" class="frosted-input link-sync-input" data-link-key="ttLink" value="https://www.tiktok.com" placeholder="https://www.tiktok.com/@...">
                         </div>
 
-                        <a href="https://www.tiktok.com" id="ttActionLink" data-link-target="ttLink" target="_blank" rel="noopener" class="btn channel-btn tt-btn ios-spring-btn ripple-trigger">
+                        <a href="https://www.tiktok.com" id="ttActionLink" data-link-target="ttLink" target="_blank" rel="noopener" class="btn channel-btn tt-btn ios-spring-btn ripple-trigger sfx-hover">
                             <i class="fab fa-tiktok"></i> Kunjungi TikTok
                         </a>
                     </div>
@@ -387,7 +398,7 @@
 
     <!-- Bilah Kontrol Admin Ringkas di Pojok Kanan Bawah -->
     <div class="floating-admin-bar">
-        <button id="adminLoginBtn" class="admin-fab ios-spring-btn ripple-trigger" title="Login Admin">
+        <button id="adminLoginBtn" class="admin-fab ios-spring-btn ripple-trigger sfx-hover" title="Login Admin">
             <i class="fas fa-user-shield spin-hover-icon"></i>
         </button>
 

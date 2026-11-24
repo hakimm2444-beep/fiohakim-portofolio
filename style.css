@@ -1,17 +1,20 @@
 /* =========================================
-   RESET & VARIABEL FROSTED GLASS + BENTO + FLOATING SIDEBAR
+   RESET & VARIABEL HYPEROS FROSTED GLASS + VIEW TRANSITIONS
    ========================================= */
 :root {
-    --bg-base: #050811;
-    --frost-surface: rgba(12, 18, 34, 0.44);
-    --frost-surface-hover: rgba(18, 27, 48, 0.58);
-    --frost-panel: rgba(9, 14, 28, 0.58);
-    --frost-pill: rgba(15, 23, 42, 0.52);
+    --bg-base: #060913;
+    /* HyperOS High-Saturation Translucent Glass */
+    --frost-surface: rgba(18, 25, 44, 0.36);
+    --frost-surface-hover: rgba(25, 35, 60, 0.5);
+    --frost-panel: rgba(13, 19, 36, 0.52);
+    --frost-pill: rgba(20, 29, 52, 0.48);
     --frost-border: rgba(255, 255, 255, 0.18);
-    --frost-specular: rgba(255, 255, 255, 0.44);
-    --frost-shadow: 0 20px 46px -8px rgba(0, 0, 0, 0.55),
-                    inset 0 1px 0 0 rgba(255, 255, 255, 0.34),
-                    inset 0 0 28px rgba(255, 255, 255, 0.06);
+    --frost-specular: rgba(255, 255, 255, 0.52);
+    --hyperos-blur: blur(48px) saturate(230%) brightness(1.06);
+    --frost-shadow: 0 22px 48px -10px rgba(0, 0, 0, 0.56),
+                    inset 0 1px 0 0 rgba(255, 255, 255, 0.45),
+                    inset 0 -1px 0 0 rgba(255, 255, 255, 0.08),
+                    inset 0 0 32px rgba(255, 255, 255, 0.07);
 
     --primary: #38bdf8;
     --secondary: #818cf8;
@@ -21,6 +24,39 @@
 
     --ios-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
     --ios-fluid: cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+/* =========================================
+   NATIVE VIEW TRANSITIONS API (HYPEROS MORPH)
+   ========================================= */
+::view-transition-old(root) {
+    animation: hyperosViewOut 0.24s var(--ios-fluid) both;
+}
+
+::view-transition-new(root) {
+    animation: hyperosViewIn 0.34s var(--ios-fluid) both;
+}
+
+@keyframes hyperosViewOut {
+    from {
+        opacity: 1;
+        transform: scale(1) translateY(0);
+    }
+    to {
+        opacity: 0;
+        transform: scale(0.985) translateY(-6px);
+    }
+}
+
+@keyframes hyperosViewIn {
+    from {
+        opacity: 0;
+        transform: scale(1.015) translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1) translateY(0);
+    }
 }
 
 html {
@@ -58,10 +94,10 @@ body {
     pointer-events: none;
     background: linear-gradient(
         -45deg,
-        rgba(14, 165, 233, 0.24),
-        rgba(99, 102, 241, 0.24),
-        rgba(16, 185, 129, 0.18),
-        rgba(236, 72, 153, 0.18)
+        rgba(14, 165, 233, 0.28),
+        rgba(99, 102, 241, 0.28),
+        rgba(16, 185, 129, 0.2),
+        rgba(236, 72, 153, 0.22)
     );
     background-size: 300% 300%;
     animation: gradientFlow 18s ease infinite;
@@ -76,7 +112,7 @@ body {
 .bg-readability-tint {
     position: fixed;
     inset: 0;
-    background: radial-gradient(circle at 25% 15%, rgba(6, 10, 20, 0.1), rgba(5, 9, 18, 0.42));
+    background: radial-gradient(circle at 25% 15%, rgba(6, 10, 20, 0.08), rgba(5, 9, 18, 0.42));
     z-index: -3;
     pointer-events: none;
 }
@@ -90,7 +126,6 @@ body {
     will-change: transform;
 }
 
-/* Tekstur Bintik Halus (Grain/Noise 3%) agar Kaca Terasa Nyata */
 .glass-noise-overlay {
     position: fixed;
     inset: 0;
@@ -104,7 +139,7 @@ body {
     position: absolute;
     border-radius: 50%;
     filter: blur(95px);
-    opacity: 0.42;
+    opacity: 0.45;
     animation: ambientFloat 14s ease-in-out infinite alternate;
 }
 
@@ -131,7 +166,7 @@ body {
     background: radial-gradient(circle, #2dd4bf, transparent 70%);
     top: 45%;
     left: 45%;
-    opacity: 0.28;
+    opacity: 0.3;
     animation-delay: -9s;
 }
 
@@ -141,26 +176,28 @@ body {
 }
 
 /* =========================================
-   2. MATERIAL FROSTED GLASS + SPOTLIGHT BORDER
+   2. MATERIAL HYPEROS FROSTED GLASS + SPOTLIGHT + 3D GLARE
    ========================================= */
 .frosted-panel {
     background: var(--frost-panel);
-    backdrop-filter: blur(42px) saturate(210%);
-    -webkit-backdrop-filter: blur(42px) saturate(210%);
+    backdrop-filter: var(--hyperos-blur);
+    -webkit-backdrop-filter: var(--hyperos-blur);
     border: 1px solid var(--frost-border);
-    box-shadow: 0 20px 44px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.22);
+    box-shadow: 0 22px 48px rgba(0, 0, 0, 0.52),
+                inset 0 1px 0 rgba(255, 255, 255, 0.35),
+                inset 0 0 24px rgba(255, 255, 255, 0.05);
 }
 
 .frosted-card {
     position: relative;
     background: var(--frost-surface);
-    backdrop-filter: blur(42px) saturate(210%);
-    -webkit-backdrop-filter: blur(42px) saturate(210%);
+    backdrop-filter: var(--hyperos-blur);
+    -webkit-backdrop-filter: var(--hyperos-blur);
     border: 1px solid var(--frost-border);
     border-top: 1px solid var(--frost-specular);
-    border-left: 1px solid var(--frost-specular);
+    border-left: 1px solid rgba(255, 255, 255, 0.34);
     box-shadow: var(--frost-shadow);
-    border-radius: 24px;
+    border-radius: 28px;
     overflow: hidden;
     transform-style: preserve-3d;
     transition: transform 0.45s var(--ios-spring),
@@ -177,9 +214,9 @@ body {
     border-radius: inherit;
     padding: 1.5px;
     background: radial-gradient(
-        240px circle at var(--mouse-x, -300px) var(--mouse-y, -300px),
-        rgba(56, 189, 248, 0.92),
-        rgba(129, 140, 248, 0.45) 45%,
+        260px circle at var(--mouse-x, -300px) var(--mouse-y, -300px),
+        rgba(56, 189, 248, 0.95),
+        rgba(129, 140, 248, 0.48) 45%,
         transparent 75%
     );
     -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
@@ -188,7 +225,7 @@ body {
     pointer-events: none;
     opacity: 0;
     transition: opacity 0.3s ease;
-    z-index: 4;
+    z-index: 6;
 }
 
 .spotlight-card:hover::before {
@@ -197,18 +234,18 @@ body {
 
 .frosted-card:hover {
     background: var(--frost-surface-hover);
-    box-shadow: 0 24px 50px -10px rgba(0, 0, 0, 0.64),
-                0 0 32px rgba(56, 189, 248, 0.22),
-                inset 0 1px 0 0 rgba(255, 255, 255, 0.4);
+    box-shadow: 0 26px 54px -10px rgba(0, 0, 0, 0.66),
+                0 0 34px rgba(56, 189, 248, 0.24),
+                inset 0 1px 0 0 rgba(255, 255, 255, 0.52);
 }
 
 .frosted-bar {
-    background: rgba(12, 18, 34, 0.46);
-    backdrop-filter: blur(42px) saturate(210%);
-    -webkit-backdrop-filter: blur(42px) saturate(210%);
+    background: rgba(16, 23, 42, 0.42);
+    backdrop-filter: var(--hyperos-blur);
+    -webkit-backdrop-filter: var(--hyperos-blur);
     border: 1px solid var(--frost-border);
     border-top: 1px solid var(--frost-specular);
-    border-radius: 22px;
+    border-radius: 26px;
     padding: 1.05rem 1.45rem;
     display: flex;
     justify-content: space-between;
@@ -221,15 +258,15 @@ body {
 
 .frosted-pill {
     background: var(--frost-pill);
-    backdrop-filter: blur(32px) saturate(200%);
-    -webkit-backdrop-filter: blur(32px) saturate(200%);
+    backdrop-filter: blur(36px) saturate(220%);
+    -webkit-backdrop-filter: blur(36px) saturate(220%);
     border: 1px solid var(--frost-border);
-    border-top: 1px solid rgba(255, 255, 255, 0.36);
-    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.26);
+    border-top: 1px solid rgba(255, 255, 255, 0.42);
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.32);
 }
 
 .frosted-pill:hover {
-    background: rgba(28, 42, 76, 0.72);
+    background: rgba(30, 44, 80, 0.68);
     border-color: var(--frost-specular);
 }
 
@@ -242,7 +279,7 @@ body {
 .ripple-wave {
     position: absolute;
     border-radius: 50%;
-    background: rgba(255, 255, 255, 0.36);
+    background: rgba(255, 255, 255, 0.38);
     transform: scale(0);
     animation: rippleExpand 0.55s ease-out forwards;
     pointer-events: none;
@@ -268,7 +305,7 @@ body {
 }
 
 /* =========================================
-   3. SCROLL-TRIGGERED FADE-UP (0.35s TANPA GESER)
+   3. SCROLL-TRIGGERED FADE-UP
    ========================================= */
 .scroll-reveal {
     opacity: 0;
@@ -300,19 +337,19 @@ body {
     );
     background-size: 200% 100%;
     animation: skeletonShimmer 1.3s infinite linear;
-    border-radius: 10px;
+    border-radius: 12px;
 }
 
 .skeleton-media {
     width: 100%;
     aspect-ratio: 16 / 9;
-    border-radius: 14px;
+    border-radius: 16px;
 }
 
 .skeleton-tag {
     width: 90px;
     height: 22px;
-    border-radius: 8px;
+    border-radius: 9px;
 }
 
 .skeleton-title {
@@ -335,7 +372,7 @@ body {
 }
 
 /* =========================================
-   EFEK KENYAL ALA iOS (SQUISH & OVERSHOOT BOUNCE)
+   INTERACTIVE 3D TILT + SPECULAR GLARE
    ========================================= */
 .ios-spring-card {
     will-change: transform;
@@ -350,7 +387,7 @@ body {
 }
 
 .ios-spring-card:active {
-    transform: translateY(0px) scale(0.955);
+    transform: translateY(0px) scale(0.96);
     transition-duration: 0.14s;
 }
 
@@ -381,15 +418,25 @@ body {
     transition-duration: 0.12s;
 }
 
+/* Lapisan Kilau Kaca (Glare) 2 Lapisan: Refleksi Kursor + Pantulan Sudut 3D */
 .card-glare {
     position: absolute;
     inset: 0;
     pointer-events: none;
-    background: radial-gradient(
-        circle 260px at var(--mouse-x, 50%) var(--mouse-y, 50%),
-        rgba(255, 255, 255, 0.18),
-        transparent 75%
-    );
+    z-index: 5;
+    background: 
+        radial-gradient(
+            circle 240px at var(--mouse-x, 50%) var(--mouse-y, 50%),
+            rgba(255, 255, 255, 0.26),
+            rgba(56, 189, 248, 0.08) 45%,
+            transparent 75%
+        ),
+        radial-gradient(
+            circle 340px at var(--glare-x, 50%) var(--glare-y, 50%),
+            rgba(255, 255, 255, 0.14),
+            transparent 70%
+        );
+    mix-blend-mode: screen;
     opacity: 0;
     transition: opacity 0.35s ease;
 }
@@ -399,7 +446,7 @@ body {
 }
 
 /* =========================================
-   FLOATING STICKY GLASS SIDEBAR (KONSEP 3)
+   FLOATING STICKY GLASS SIDEBAR (HYPEROS CONTROL CENTER)
    ========================================= */
 .sidebar.floating-sidebar {
     width: calc(var(--sidebar-width) - 18px);
@@ -407,9 +454,9 @@ body {
     position: fixed;
     top: 14px;
     left: 14px;
-    border-radius: 26px;
+    border-radius: 30px;
     border-top: 1px solid var(--frost-specular);
-    border-left: 1px solid var(--frost-specular);
+    border-left: 1px solid rgba(255, 255, 255, 0.35);
     padding: 1.45rem 0.9rem;
     display: flex;
     flex-direction: column;
@@ -435,9 +482,37 @@ body {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 0 0.5rem 1.2rem;
+    padding: 0 0.45rem 1.2rem;
     border-bottom: 1px solid var(--frost-border);
     margin-bottom: 1.2rem;
+}
+
+.sidebar-header-actions {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.sound-toggle-btn {
+    background: rgba(56, 189, 248, 0.2);
+    border: 1px solid rgba(56, 189, 248, 0.45);
+    border-top: 1px solid rgba(255, 255, 255, 0.4);
+    color: #bae6fd;
+    width: 34px;
+    height: 34px;
+    border-radius: 12px;
+    font-size: 0.92rem;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
+}
+
+.sound-toggle-btn.muted {
+    background: rgba(255, 255, 255, 0.08);
+    border-color: rgba(255, 255, 255, 0.18);
+    color: #94a3b8;
 }
 
 .logo-wrap {
@@ -456,7 +531,7 @@ body {
 }
 
 .logo {
-    font-size: 1.54rem;
+    font-size: 1.48rem;
     font-weight: 800;
     color: #fff;
     letter-spacing: 0.5px;
@@ -494,7 +569,7 @@ body {
     padding: 0.76rem 0.95rem;
     color: #ffffff;
     text-decoration: none;
-    border-radius: 16px;
+    border-radius: 18px;
     font-weight: 600;
     border: 1px solid transparent;
     text-shadow: 0 1px 6px rgba(0, 0, 0, 0.75);
@@ -503,9 +578,9 @@ body {
 .nav-icon-wrap {
     width: 33px;
     height: 33px;
-    border-radius: 11px;
-    background: rgba(255, 255, 255, 0.1);
-    border: 1px solid rgba(255, 255, 255, 0.18);
+    border-radius: 12px;
+    background: rgba(255, 255, 255, 0.12);
+    border: 1px solid rgba(255, 255, 255, 0.22);
     display: inline-flex;
     align-items: center;
     justify-content: center;
@@ -524,23 +599,23 @@ body {
 .sidebar-links a.nav-item:hover .nav-icon-wrap,
 .sidebar-links a.nav-item.active .nav-icon-wrap {
     transform: scale(1.12) rotate(-4deg);
-    background: rgba(56, 189, 248, 0.28);
-    border-color: rgba(56, 189, 248, 0.5);
+    background: rgba(56, 189, 248, 0.3);
+    border-color: rgba(56, 189, 248, 0.55);
 }
 
 .sidebar-links a.nav-item:hover,
 .sidebar-links a.nav-item.active {
-    background: rgba(56, 189, 248, 0.22);
-    border-color: rgba(56, 189, 248, 0.46);
+    background: rgba(56, 189, 248, 0.24);
+    border-color: rgba(56, 189, 248, 0.48);
     color: #fff;
     transform: translateX(4px);
-    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.25);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.28);
 }
 
 .sidebar-accordion-group {
     display: flex;
     flex-direction: column;
-    border-radius: 18px;
+    border-radius: 20px;
     background: rgba(255, 255, 255, 0.05);
     border: 1px solid rgba(255, 255, 255, 0.12);
     padding: 0.25rem;
@@ -563,7 +638,7 @@ body {
     color: #ffffff;
     font-size: 0.95rem;
     font-weight: 600;
-    border-radius: 13px;
+    border-radius: 14px;
     cursor: pointer;
     text-shadow: 0 1px 6px rgba(0, 0, 0, 0.75);
 }
@@ -634,7 +709,7 @@ body {
     align-items: center;
     justify-content: space-between;
     padding: 0.56rem 0.85rem;
-    border-radius: 12px;
+    border-radius: 13px;
     color: #f1f5f9;
     text-decoration: none;
     font-size: 0.9rem;
@@ -645,12 +720,12 @@ body {
 
 .submenu-link:hover,
 .submenu-link.active {
-    background: linear-gradient(135deg, rgba(14, 165, 233, 0.38), rgba(99, 102, 241, 0.38));
-    border-color: rgba(56, 189, 248, 0.58);
+    background: linear-gradient(135deg, rgba(14, 165, 233, 0.42), rgba(99, 102, 241, 0.42));
+    border-color: rgba(56, 189, 248, 0.6);
     color: #ffffff;
     font-weight: 600;
     transform: translateX(3px);
-    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.25);
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.28);
 }
 
 .submenu-count {
@@ -711,16 +786,6 @@ body {
     color: #ffffff;
 }
 
-.mobile-topbar-badge {
-    background: rgba(56, 189, 248, 0.26);
-    border: 1px solid rgba(56, 189, 248, 0.48);
-    color: #bae6fd;
-    padding: 0.2rem 0.65rem;
-    border-radius: 9px;
-    font-size: 0.75rem;
-    font-weight: 700;
-}
-
 /* =========================================
    KONTEN UTAMA & TRANSISI HALAMAN BEBAS KEDUT
    ========================================= */
@@ -740,7 +805,7 @@ body {
 
 .page-view.active {
     display: block;
-    animation: pageCrossfade 0.26s ease-out both;
+    animation: pageCrossfade 0.28s ease-out both;
 }
 
 @keyframes pageCrossfade {
@@ -794,7 +859,7 @@ body {
     color: var(--primary);
 }
 
-/* Hero Beranda Full Frosted Glass */
+/* Hero Beranda Full HyperOS Frosted Glass */
 .hero {
     min-height: calc(100vh - 65px);
     display: flex;
@@ -815,16 +880,17 @@ body {
 .frosted-hero-card {
     position: relative;
     flex: 1;
-    background: rgba(12, 18, 34, 0.44);
-    backdrop-filter: blur(42px) saturate(210%);
-    -webkit-backdrop-filter: blur(42px) saturate(210%);
+    background: var(--frost-surface);
+    backdrop-filter: var(--hyperos-blur);
+    -webkit-backdrop-filter: var(--hyperos-blur);
     border: 1px solid var(--frost-border);
     border-top: 1px solid var(--frost-specular);
-    border-left: 1px solid var(--frost-specular);
-    border-radius: 28px;
+    border-left: 1px solid rgba(255, 255, 255, 0.36);
+    border-radius: 30px;
     padding: 2.65rem;
     box-shadow: var(--frost-shadow);
     overflow: hidden;
+    transform-style: preserve-3d;
 }
 
 .hero-status-pill {
@@ -833,8 +899,8 @@ body {
     gap: 8px;
     background: rgba(15, 23, 42, 0.56);
     backdrop-filter: blur(28px);
-    border: 1px solid rgba(56, 189, 248, 0.45);
-    border-top: 1px solid rgba(255, 255, 255, 0.35);
+    border: 1px solid rgba(56, 189, 248, 0.48);
+    border-top: 1px solid rgba(255, 255, 255, 0.4);
     padding: 0.36rem 1rem;
     border-radius: 999px;
     font-size: 0.82rem;
@@ -907,15 +973,16 @@ body {
 .stat-frosted-box {
     position: relative;
     background: rgba(255, 255, 255, 0.08);
-    backdrop-filter: blur(30px) saturate(190%);
-    -webkit-backdrop-filter: blur(30px) saturate(190%);
+    backdrop-filter: blur(34px) saturate(210%);
+    -webkit-backdrop-filter: blur(34px) saturate(210%);
     border: 1px solid rgba(255, 255, 255, 0.22);
-    border-top: 1px solid rgba(255, 255, 255, 0.4);
-    border-radius: 18px;
+    border-top: 1px solid rgba(255, 255, 255, 0.45);
+    border-radius: 20px;
     padding: 0.92rem 0.7rem;
     text-align: center;
     cursor: pointer;
-    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.24);
+    overflow: hidden;
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.28);
 }
 
 .stat-frosted-box:hover {
@@ -945,22 +1012,19 @@ body {
 
 .frosted-ring {
     position: relative;
-    width: 252px;
-    height: 252px;
+    width: 254px;
+    height: 254px;
     border-radius: 50%;
     padding: 12px;
-    background: rgba(12, 18, 34, 0.44);
-    backdrop-filter: blur(42px) saturate(210%);
-    -webkit-backdrop-filter: blur(42px) saturate(210%);
+    background: var(--frost-surface);
+    backdrop-filter: var(--hyperos-blur);
+    -webkit-backdrop-filter: var(--hyperos-blur);
     border: 1px solid var(--frost-specular);
-    box-shadow: 0 20px 44px rgba(0, 0, 0, 0.52),
-                0 0 36px rgba(56, 189, 248, 0.28),
-                inset 0 1px 0 rgba(255, 255, 255, 0.44);
+    box-shadow: 0 22px 48px rgba(0, 0, 0, 0.56),
+                0 0 38px rgba(56, 189, 248, 0.3),
+                inset 0 1px 0 rgba(255, 255, 255, 0.5);
     cursor: pointer;
-}
-
-.frosted-ring:hover {
-    transform: scale(1.06) rotate(2deg);
+    overflow: hidden;
 }
 
 .profile-frame img {
@@ -969,7 +1033,7 @@ body {
     object-fit: cover;
     border-radius: 50%;
     background-color: var(--bg-base);
-    border: 2px solid rgba(255, 255, 255, 0.34);
+    border: 2px solid rgba(255, 255, 255, 0.38);
 }
 
 .profile-change-badge {
@@ -984,12 +1048,13 @@ body {
     justify-content: center;
     cursor: pointer;
     box-shadow: 0 4px 12px rgba(0,0,0,0.6);
+    z-index: 8;
 }
 
 /* Buttons */
 .btn {
     padding: 0.84rem 1.72rem;
-    border-radius: 16px;
+    border-radius: 18px;
     text-decoration: none;
     font-weight: 600;
     cursor: pointer;
@@ -1004,8 +1069,8 @@ body {
 .btn.primary {
     background: linear-gradient(135deg, #0284c7, #4f46e5);
     color: #ffffff;
-    border-top: 1px solid rgba(255, 255, 255, 0.42);
-    box-shadow: 0 10px 24px rgba(2, 132, 199, 0.45), inset 0 1px 0 rgba(255, 255, 255, 0.28);
+    border-top: 1px solid rgba(255, 255, 255, 0.45);
+    box-shadow: 0 10px 24px rgba(2, 132, 199, 0.45), inset 0 1px 0 rgba(255, 255, 255, 0.3);
 }
 
 .btn.primary:hover {
@@ -1022,7 +1087,7 @@ body {
     border: 1px dashed #34d399;
     color: #ffffff;
     padding: 0.62rem 1.18rem;
-    border-radius: 14px;
+    border-radius: 15px;
     cursor: pointer;
     font-size: 0.86rem;
     font-weight: 600;
@@ -1034,7 +1099,7 @@ body {
 }
 
 /* =========================================
-   HALAMAN TENTANG & BENTO GRID ASIMETRIS (KONSEP 1)
+   HALAMAN TENTANG & BENTO GRID ASIMETRIS
    ========================================= */
 .bento-about-grid {
     display: grid;
@@ -1053,9 +1118,9 @@ body {
     letter-spacing: 1px;
     color: #7dd3fc;
     background: rgba(56, 189, 248, 0.18);
-    border: 1px solid rgba(56, 189, 248, 0.4);
+    border: 1px solid rgba(56, 189, 248, 0.42);
     padding: 0.15rem 0.6rem;
-    border-radius: 6px;
+    border-radius: 7px;
     margin-bottom: 0.45rem;
 }
 
@@ -1090,10 +1155,10 @@ body {
 .icon-badge {
     width: 52px;
     height: 52px;
-    border-radius: 16px;
+    border-radius: 17px;
     background: rgba(56, 189, 248, 0.24);
-    border: 1px solid rgba(56, 189, 248, 0.48);
-    border-top: 1px solid rgba(255, 255, 255, 0.38);
+    border: 1px solid rgba(56, 189, 248, 0.5);
+    border-top: 1px solid rgba(255, 255, 255, 0.42);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -1166,8 +1231,8 @@ body.editing-active .icon-picker-trigger {
     justify-content: center;
     font-size: 2.15rem;
     margin-bottom: 1.15rem;
-    border: 1px solid rgba(255, 255, 255, 0.42);
-    box-shadow: 0 12px 28px rgba(0, 0, 0, 0.38), inset 0 1px 0 rgba(255, 255, 255, 0.35);
+    border: 1px solid rgba(255, 255, 255, 0.45);
+    box-shadow: 0 12px 28px rgba(0, 0, 0, 0.38), inset 0 1px 0 rgba(255, 255, 255, 0.38);
     transition: transform 0.45s var(--ios-spring);
 }
 
@@ -1230,7 +1295,7 @@ body.editing-active .icon-picker-trigger {
     margin-top: auto;
     width: 100%;
     color: #ffffff;
-    border-top: 1px solid rgba(255, 255, 255, 0.4);
+    border-top: 1px solid rgba(255, 255, 255, 0.42);
 }
 
 .wa-btn {
@@ -1258,7 +1323,7 @@ body.editing-active .icon-picker-trigger {
 
 .item-count-badge {
     background: rgba(255, 255, 255, 0.18);
-    border: 1px solid rgba(255, 255, 255, 0.3);
+    border: 1px solid rgba(255, 255, 255, 0.32);
     padding: 0.22rem 0.78rem;
     border-radius: 999px;
     font-size: 0.8rem;
@@ -1366,9 +1431,9 @@ body.editing-active .icon-picker-trigger {
     margin-top: auto;
     padding: 0.68rem 1rem;
     width: 100%;
-    border-radius: 13px;
+    border-radius: 14px;
     background: rgba(255, 255, 255, 0.14);
-    border: 1px solid rgba(255, 255, 255, 0.28);
+    border: 1px solid rgba(255, 255, 255, 0.3);
     color: #ffffff;
     font-weight: 600;
     font-size: 0.86rem;
@@ -1471,7 +1536,7 @@ body.editing-active .editable-wrapper:focus-within > .delete-text-btn {
     background: rgba(9, 14, 28, 0.56);
     backdrop-filter: blur(28px);
     border: 1px solid var(--frost-border);
-    border-radius: 14px;
+    border-radius: 15px;
     color: #ffffff;
     outline: none;
     font-size: 0.88rem;
@@ -1502,9 +1567,9 @@ body.editing-active .editable-wrapper:focus-within > .delete-text-btn {
 .frosted-footer {
     text-align: center;
     padding: 1.35rem;
-    background: rgba(9, 14, 28, 0.56);
-    backdrop-filter: blur(36px) saturate(200%);
-    -webkit-backdrop-filter: blur(36px) saturate(200%);
+    background: rgba(11, 16, 30, 0.54);
+    backdrop-filter: var(--hyperos-blur);
+    -webkit-backdrop-filter: var(--hyperos-blur);
     border-top: 1px solid var(--frost-border);
     color: #f1f5f9;
     font-size: 0.88rem;
@@ -1557,10 +1622,10 @@ body.editing-active .editable {
     border-radius: 50%;
     background: linear-gradient(135deg, #0284c7, #4f46e5);
     color: #fff;
-    border: 1px solid rgba(255,255,255,0.42);
+    border: 1px solid rgba(255,255,255,0.45);
     font-size: 1.18rem;
     cursor: pointer;
-    box-shadow: 0 10px 26px rgba(56, 189, 248, 0.48), inset 0 1px 0 rgba(255,255,255,0.35);
+    box-shadow: 0 10px 26px rgba(56, 189, 248, 0.48), inset 0 1px 0 rgba(255,255,255,0.38);
 }
 
 .admin-quick-controls {
@@ -1624,14 +1689,14 @@ body.editing-active .editable {
 }
 
 /* =========================================
-   MODALS DENGAN FROSTED BLUR 44PX
+   MODALS DENGAN HYPEROS FROSTED BLUR
    ========================================= */
 .modal {
     display: none;
     position: fixed;
     inset: 0;
     background: rgba(3, 7, 18, 0.58);
-    backdrop-filter: blur(18px);
+    backdrop-filter: blur(22px);
     z-index: 2000;
     justify-content: center;
     align-items: center;
@@ -1639,13 +1704,13 @@ body.editing-active .editable {
 }
 
 .frosted-modal {
-    background: rgba(12, 19, 36, 0.72);
-    backdrop-filter: blur(44px) saturate(210%);
-    -webkit-backdrop-filter: blur(44px) saturate(210%);
+    background: rgba(14, 21, 40, 0.74);
+    backdrop-filter: var(--hyperos-blur);
+    -webkit-backdrop-filter: var(--hyperos-blur);
     padding: 1.9rem;
-    border-radius: 26px;
+    border-radius: 28px;
     border: 1px solid var(--frost-specular);
-    box-shadow: 0 30px 64px rgba(0, 0, 0, 0.82), inset 0 1px 0 rgba(255, 255, 255, 0.34);
+    box-shadow: 0 30px 64px rgba(0, 0, 0, 0.82), inset 0 1px 0 rgba(255, 255, 255, 0.38);
     width: 100%;
     max-width: 480px;
     position: relative;
@@ -1670,7 +1735,7 @@ body.editing-active .editable {
     width: 100%;
     aspect-ratio: 16 / 9;
     background: #000;
-    border-radius: 16px;
+    border-radius: 18px;
     overflow: hidden;
 }
 
@@ -1756,7 +1821,7 @@ body.editing-active .editable {
         top: 0;
         left: 0;
         height: 100vh;
-        border-radius: 0 24px 24px 0;
+        border-radius: 0 26px 26px 0;
         transform: translateX(-100%);
         width: 274px;
     }
