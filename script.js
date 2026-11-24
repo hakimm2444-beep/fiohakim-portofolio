@@ -552,7 +552,7 @@ async function loadMediaFromFirestore(mediaKey) {
 }
 
 // =========================================
-// 8. iOS 3D GLASS TILT & SPOTLIGHT GLARE ENGINE
+// 8. SPOTLIGHT BORDER + iOS 3D GLASS TILT ENGINE
 // =========================================
 function initMicrointeractions() {
     if (isTouchDevice) return;
@@ -647,7 +647,7 @@ function renderDynamicElements() {
     skillsGrid.querySelectorAll('.dynamic-col').forEach(el => el.remove());
     extraSkills.forEach((col, index) => {
         const card = document.createElement('div');
-        card.className = 'skill-card frosted-card interactive-card ios-spring-card scroll-reveal dynamic-col';
+        card.className = 'skill-card frosted-card interactive-card spotlight-card ios-spring-card scroll-reveal dynamic-col';
         card.innerHTML = `
             <div class="card-glare"></div>
             <button class="edit-only-box delete-card-btn ios-squish" data-type="skill" data-index="${index}" title="Hapus Kartu"><i class="fas fa-trash"></i></button>
@@ -753,7 +753,7 @@ function renderProjectsForActiveSemester() {
 
     filteredList.slice().reverse().forEach(proj => {
         const card = document.createElement('div');
-        card.className = 'project-card frosted-card interactive-card ios-spring-card scroll-reveal';
+        card.className = 'project-card frosted-card interactive-card spotlight-card ios-spring-card scroll-reveal';
 
         let mediaHtml = '';
         if (proj.mediaType === 'youtube' && proj.youtubeId) {

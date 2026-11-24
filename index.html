@@ -9,24 +9,24 @@
 </head>
 <body id="mainBody">
 
-    <!-- 1. Dynamic Moving Gradient Mesh (Latar Gradasi Bergerak Lembut) -->
+    <!-- 1. Ambient Moving Gradient Mesh & Orbs -->
     <div class="dynamic-gradient-mesh" aria-hidden="true"></div>
-
-    <!-- Lapisan Kontras Adaptif agar Teks Selalu Terbaca Tajam -->
     <div class="bg-readability-tint" aria-hidden="true"></div>
 
-    <!-- 2. Parallax Ambient Orbs Frosted Glass -->
     <div class="ambient-orbs" id="parallaxOrbs" aria-hidden="true">
         <div class="orb orb-1"></div>
         <div class="orb orb-2"></div>
         <div class="orb orb-3"></div>
     </div>
 
+    <!-- 2. Noise Texture Halus (3%) untuk Tekstur Kaca Es Asli -->
+    <div class="glass-noise-overlay" aria-hidden="true"></div>
+
     <!-- Overlay Gelap saat Sidebar Terbuka di HP -->
     <div class="sidebar-backdrop" id="sidebarBackdrop"></div>
 
-    <!-- Sidebar Navigasi Full Frosted Glass -->
-    <aside class="sidebar frosted-panel" id="sidebar">
+    <!-- 3. Floating Sticky Glass Sidebar (Konsep 3) -->
+    <aside class="sidebar frosted-panel floating-sidebar" id="sidebar">
         <div class="sidebar-header">
             <div class="logo-wrap ios-squish">
                 <span class="logo-dot"></span>
@@ -101,12 +101,12 @@
     <main class="main-content">
 
         <!-- =========================================================
-             HALAMAN 1: BERANDA (HERO & SOROTAN)
+             HALAMAN 1: BERANDA (BENTO HERO + SPATIAL CARD)
              ========================================================= -->
         <section id="page-home" class="page-view active">
             <div class="hero">
                 <div class="hero-wrapper">
-                    <div class="hero-content frosted-hero-card interactive-card ios-stagger-1">
+                    <div class="hero-content frosted-hero-card interactive-card spotlight-card ios-stagger-1">
                         <div class="card-glare"></div>
                         <div class="hero-status-pill ios-squish">
                             <span class="pulse-dot"></span>
@@ -129,26 +129,26 @@
                             </button>
                         </div>
 
-                        <!-- Kartu Ringkasan Cepat Interaktif -->
+                        <!-- Kartu Bento Statistik Interaktif -->
                         <div class="quick-stats-row">
-                            <div class="stat-frosted-box ios-spring-card ripple-trigger" id="statTotalProjectsBox" title="Klik untuk melihat semua tugas">
+                            <div class="stat-frosted-box interactive-card spotlight-card ios-spring-card ripple-trigger" id="statTotalProjectsBox" title="Klik untuk melihat semua tugas">
                                 <span class="stat-number" id="homeTotalProjects">0</span>
                                 <span class="stat-label">Total Projek</span>
                             </div>
-                            <div class="stat-frosted-box ios-spring-card ripple-trigger" data-goto-page="about">
+                            <div class="stat-frosted-box interactive-card spotlight-card ios-spring-card ripple-trigger" data-goto-page="about">
                                 <span class="stat-number" id="homeTotalSemesters">3</span>
                                 <span class="stat-label">Folder Semester</span>
                             </div>
-                            <div class="stat-frosted-box ios-spring-card ripple-trigger" data-goto-page="contact" title="Klik untuk membuka kontak WA, YouTube & TikTok">
+                            <div class="stat-frosted-box interactive-card spotlight-card ios-spring-card ripple-trigger" data-goto-page="contact" title="Klik untuk membuka kontak WA, YouTube & TikTok">
                                 <span class="stat-number"><i class="fas fa-paper-plane spin-hover-icon" style="font-size: 1.25rem;"></i></span>
                                 <span class="stat-label">Hubungi Saya</span>
                             </div>
                         </div>
                     </div>
                     
-                    <!-- Foto Profil dengan Cincin Frosted Glass & Parallax -->
+                    <!-- Foto Profil Spatial Floating Card -->
                     <div class="hero-profile ios-stagger-2" id="heroProfileParallax">
-                        <div class="profile-frame frosted-ring ios-spring-card">
+                        <div class="profile-frame frosted-ring interactive-card spotlight-card ios-spring-card">
                             <img id="profileImage" src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&w=600&q=80" alt="Foto Profil">
                             <label for="uploadProfile" class="edit-only-box profile-change-badge ios-squish" title="Ganti Foto Profil">
                                 <i class="fas fa-camera"></i>
@@ -160,7 +160,7 @@
         </section>
 
         <!-- =========================================================
-             HALAMAN 2: TENTANG SAYA & KEAHLIAN TEKNIS
+             HALAMAN 2: TENTANG SAYA & BENTO GRID KEAHLIAN
              ========================================================= -->
         <section id="page-about" class="page-view">
             <div class="page-container">
@@ -174,25 +174,27 @@
                     </button>
                 </div>
 
-                <!-- Kartu Profil Singkat -->
-                <div class="about-card frosted-card interactive-card scroll-reveal ios-stagger-2" style="margin-bottom: 1.8rem;">
-                    <div class="card-glare"></div>
-                    <div class="about-flex-inner">
-                        <div class="icon-badge center-badge icon-picker-trigger ios-squish" title="Klik untuk ganti ikon">
-                            <i class="fas fa-network-wired editable-icon spin-hover-icon" data-icon-key="aboutIcon"></i>
-                        </div>
-                        <div class="about-text-body">
-                            <h3 class="editable" data-key="aboutTitle">Profil Singkat</h3>
-                            <p class="editable" data-key="aboutDesc">
-                                Saya adalah pelajar SMK jurusan <strong>Teknik Jaringan Komputer dan Telekomunikasi (TJKT)</strong> yang memiliki antusiasme tinggi di bidang administrasi jaringan, Linux Server, Fiber Optik, dan keamanan siber dasar. Terbiasa melakukan konfigurasi perangkat keras jaringan serta troubleshooting konektivitas.
-                            </p>
+                <!-- Susunan Bento Grid Asimetris (Konsep 1) -->
+                <div class="bento-about-grid ios-stagger-2" id="skillsGrid">
+                    <!-- Kotak Bento Utama (Span 2 Kolom): Profil Singkat -->
+                    <div class="about-card bento-span-2 frosted-card interactive-card spotlight-card scroll-reveal">
+                        <div class="card-glare"></div>
+                        <div class="about-flex-inner">
+                            <div class="icon-badge center-badge icon-picker-trigger ios-squish" title="Klik untuk ganti ikon">
+                                <i class="fas fa-network-wired editable-icon spin-hover-icon" data-icon-key="aboutIcon"></i>
+                            </div>
+                            <div class="about-text-body">
+                                <span class="bento-kicker">PROFIL TEKNISI</span>
+                                <h3 class="editable" data-key="aboutTitle">Profil Singkat</h3>
+                                <p class="editable" data-key="aboutDesc">
+                                    Saya adalah pelajar SMK jurusan <strong>Teknik Jaringan Komputer dan Telekomunikasi (TJKT)</strong> yang memiliki antusiasme tinggi di bidang administrasi jaringan, Linux Server, Fiber Optik, dan keamanan siber dasar. Terbiasa melakukan konfigurasi perangkat keras jaringan serta troubleshooting konektivitas.
+                                </p>
+                            </div>
                         </div>
                     </div>
-                </div>
 
-                <!-- Grid Keahlian Teknis -->
-                <div class="skills-grid ios-stagger-3" id="skillsGrid">
-                    <div class="skill-card frosted-card interactive-card ios-spring-card scroll-reveal" data-static-card="skill1">
+                    <!-- Kotak Bento Keahlian 1 -->
+                    <div class="skill-card frosted-card interactive-card spotlight-card ios-spring-card scroll-reveal" data-static-card="skill1">
                         <div class="card-glare"></div>
                         <button class="edit-only-box delete-card-btn ios-squish" data-static-key="skill1" title="Hapus Kartu"><i class="fas fa-trash"></i></button>
                         <div class="icon-badge icon-picker-trigger" title="Klik untuk ganti ikon">
@@ -201,7 +203,9 @@
                         <h3 class="editable" data-key="skill1Title">Routing & Switching</h3>
                         <p class="editable" data-key="skill1Desc">Konfigurasi MikroTik (MTCNA), Cisco Packet Tracer, VLAN, OSPF, dan Manajemen Bandwidth.</p>
                     </div>
-                    <div class="skill-card frosted-card interactive-card ios-spring-card scroll-reveal" data-static-card="skill2">
+
+                    <!-- Kotak Bento Keahlian 2 -->
+                    <div class="skill-card frosted-card interactive-card spotlight-card ios-spring-card scroll-reveal" data-static-card="skill2">
                         <div class="card-glare"></div>
                         <button class="edit-only-box delete-card-btn ios-squish" data-static-key="skill2" title="Hapus Kartu"><i class="fas fa-trash"></i></button>
                         <div class="icon-badge icon-picker-trigger" title="Klik untuk ganti ikon">
@@ -210,7 +214,9 @@
                         <h3 class="editable" data-key="skill2Title">System Administration</h3>
                         <p class="editable" data-key="skill2Desc">Instalasi & konfigurasi Linux Debian/Ubuntu Server (DNS, DHCP, Web Server, Mail Server).</p>
                     </div>
-                    <div class="skill-card frosted-card interactive-card ios-spring-card scroll-reveal" data-static-card="skill3">
+
+                    <!-- Kotak Bento Keahlian 3 -->
+                    <div class="skill-card frosted-card interactive-card spotlight-card ios-spring-card scroll-reveal" data-static-card="skill3">
                         <div class="card-glare"></div>
                         <button class="edit-only-box delete-card-btn ios-squish" data-static-key="skill3" title="Hapus Kartu"><i class="fas fa-trash"></i></button>
                         <div class="icon-badge icon-picker-trigger" title="Klik untuk ganti ikon">
@@ -219,7 +225,9 @@
                         <h3 class="editable" data-key="skill3Title">Fiber Optik (FTTH)</h3>
                         <p class="editable" data-key="skill3Desc">Penyambungan kabel FO (Splicing), pengukuran redaman dengan OTDR & OPM, instalasi ODP/ONT.</p>
                     </div>
-                    <div class="skill-card frosted-card interactive-card ios-spring-card scroll-reveal" data-static-card="skill4">
+
+                    <!-- Kotak Bento Keahlian 4 -->
+                    <div class="skill-card frosted-card interactive-card spotlight-card ios-spring-card scroll-reveal" data-static-card="skill4">
                         <div class="card-glare"></div>
                         <button class="edit-only-box delete-card-btn ios-squish" data-static-key="skill4" title="Hapus Kartu"><i class="fas fa-trash"></i></button>
                         <div class="icon-badge icon-picker-trigger" title="Klik untuk ganti ikon">
@@ -255,7 +263,7 @@
                 
                 <div class="filter-buttons ios-stagger-2" id="projectFilterButtons"></div>
 
-                <!-- 5. Skeleton Loading Screen saat Memuat Data -->
+                <!-- Skeleton Loading Screen saat Memuat Data -->
                 <div class="projects-grid media-showcase-grid hidden" id="projectsSkeletonGrid" aria-hidden="true">
                     <div class="frosted-card skeleton-card">
                         <div class="skeleton-box skeleton-media"></div>
@@ -300,7 +308,7 @@
                 <!-- 3 Kolom Kontak: WhatsApp, YouTube, TikTok -->
                 <div class="contact-cards-grid ios-stagger-2">
                     <!-- Kolom 1: WhatsApp -->
-                    <div class="contact-channel-card frosted-card interactive-card ios-spring-card scroll-reveal wa-card">
+                    <div class="contact-channel-card frosted-card interactive-card spotlight-card ios-spring-card scroll-reveal wa-card">
                         <div class="card-glare"></div>
                         <div class="channel-icon-circle wa-icon">
                             <i class="fab fa-whatsapp spin-hover-icon"></i>
@@ -320,7 +328,7 @@
                     </div>
 
                     <!-- Kolom 2: YouTube -->
-                    <div class="contact-channel-card frosted-card interactive-card ios-spring-card scroll-reveal yt-card">
+                    <div class="contact-channel-card frosted-card interactive-card spotlight-card ios-spring-card scroll-reveal yt-card">
                         <div class="card-glare"></div>
                         <div class="channel-icon-circle yt-icon">
                             <i class="fab fa-youtube spin-hover-icon"></i>
@@ -340,7 +348,7 @@
                     </div>
 
                     <!-- Kolom 3: TikTok -->
-                    <div class="contact-channel-card frosted-card interactive-card ios-spring-card scroll-reveal tt-card">
+                    <div class="contact-channel-card frosted-card interactive-card spotlight-card ios-spring-card scroll-reveal tt-card">
                         <div class="card-glare"></div>
                         <div class="channel-icon-circle tt-icon">
                             <i class="fab fa-tiktok spin-hover-icon"></i>

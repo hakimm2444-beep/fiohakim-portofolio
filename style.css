@@ -1,14 +1,14 @@
 /* =========================================
-   RESET & VARIABEL FULL FROSTED GLASS + iOS SPRING
+   RESET & VARIABEL FROSTED GLASS + BENTO + FLOATING SIDEBAR
    ========================================= */
 :root {
-    --bg-base: #060a14;
+    --bg-base: #050811;
     --frost-surface: rgba(12, 18, 34, 0.44);
     --frost-surface-hover: rgba(18, 27, 48, 0.58);
     --frost-panel: rgba(9, 14, 28, 0.58);
     --frost-pill: rgba(15, 23, 42, 0.52);
-    --frost-border: rgba(255, 255, 255, 0.24);
-    --frost-specular: rgba(255, 255, 255, 0.46);
+    --frost-border: rgba(255, 255, 255, 0.18);
+    --frost-specular: rgba(255, 255, 255, 0.44);
     --frost-shadow: 0 20px 46px -8px rgba(0, 0, 0, 0.55),
                     inset 0 1px 0 0 rgba(255, 255, 255, 0.34),
                     inset 0 0 28px rgba(255, 255, 255, 0.06);
@@ -49,19 +49,19 @@ body {
 }
 
 /* =========================================
-   1. DYNAMIC GRADIENT MESH & READABILITY SCRIM
+   1. AMBIENT MOVING MESH + NOISE GRAIN TEXTURE (3%)
    ========================================= */
 .dynamic-gradient-mesh {
     position: fixed;
     inset: -25%;
-    z-index: -3;
+    z-index: -4;
     pointer-events: none;
     background: linear-gradient(
         -45deg,
-        rgba(14, 165, 233, 0.22),
-        rgba(99, 102, 241, 0.22),
-        rgba(16, 185, 129, 0.16),
-        rgba(236, 72, 153, 0.16)
+        rgba(14, 165, 233, 0.24),
+        rgba(99, 102, 241, 0.24),
+        rgba(16, 185, 129, 0.18),
+        rgba(236, 72, 153, 0.18)
     );
     background-size: 300% 300%;
     animation: gradientFlow 18s ease infinite;
@@ -76,39 +76,49 @@ body {
 .bg-readability-tint {
     position: fixed;
     inset: 0;
-    background: radial-gradient(circle at 25% 15%, rgba(6, 10, 20, 0.12), rgba(5, 9, 18, 0.42));
-    z-index: -2;
+    background: radial-gradient(circle at 25% 15%, rgba(6, 10, 20, 0.1), rgba(5, 9, 18, 0.42));
+    z-index: -3;
     pointer-events: none;
 }
 
 .ambient-orbs {
     position: fixed;
     inset: 0;
-    z-index: -1;
+    z-index: -2;
     overflow: hidden;
     pointer-events: none;
     will-change: transform;
+}
+
+/* Tekstur Bintik Halus (Grain/Noise 3%) agar Kaca Terasa Nyata */
+.glass-noise-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: -1;
+    pointer-events: none;
+    opacity: 0.032;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.82' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
 }
 
 .orb {
     position: absolute;
     border-radius: 50%;
     filter: blur(95px);
-    opacity: 0.38;
+    opacity: 0.42;
     animation: ambientFloat 14s ease-in-out infinite alternate;
 }
 
 .orb-1 {
-    width: 420px;
-    height: 420px;
+    width: 440px;
+    height: 440px;
     background: radial-gradient(circle, #38bdf8, transparent 70%);
     top: -100px;
     left: 15%;
 }
 
 .orb-2 {
-    width: 470px;
-    height: 470px;
+    width: 480px;
+    height: 480px;
     background: radial-gradient(circle, #818cf8, transparent 70%);
     bottom: 2%;
     right: 5%;
@@ -116,29 +126,29 @@ body {
 }
 
 .orb-3 {
-    width: 320px;
-    height: 320px;
+    width: 340px;
+    height: 340px;
     background: radial-gradient(circle, #2dd4bf, transparent 70%);
     top: 45%;
     left: 45%;
-    opacity: 0.24;
+    opacity: 0.28;
     animation-delay: -9s;
 }
 
 @keyframes ambientFloat {
     0% { transform: translate3d(0, 0, 0) scale(1); }
-    100% { transform: translate3d(28px, -24px, 0) scale(1.1); }
+    100% { transform: translate3d(30px, -26px, 0) scale(1.1); }
 }
 
 /* =========================================
-   2. MATERIAL FULL FROSTED GLASS (EXTRA BLUR 42PX)
+   2. MATERIAL FROSTED GLASS + SPOTLIGHT BORDER
    ========================================= */
 .frosted-panel {
     background: var(--frost-panel);
     backdrop-filter: blur(42px) saturate(210%);
     -webkit-backdrop-filter: blur(42px) saturate(210%);
-    border-right: 1px solid var(--frost-border);
-    box-shadow: 10px 0 38px rgba(0, 0, 0, 0.48), inset -1px 0 0 rgba(255, 255, 255, 0.16);
+    border: 1px solid var(--frost-border);
+    box-shadow: 0 20px 44px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.22);
 }
 
 .frosted-card {
@@ -159,11 +169,36 @@ body {
                 box-shadow 0.4s var(--ios-fluid);
 }
 
+/* Spotlight Border: Garis Tepi Bercahaya Mengikuti Kursor */
+.spotlight-card::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    padding: 1.5px;
+    background: radial-gradient(
+        240px circle at var(--mouse-x, -300px) var(--mouse-y, -300px),
+        rgba(56, 189, 248, 0.92),
+        rgba(129, 140, 248, 0.45) 45%,
+        transparent 75%
+    );
+    -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    z-index: 4;
+}
+
+.spotlight-card:hover::before {
+    opacity: 1;
+}
+
 .frosted-card:hover {
     background: var(--frost-surface-hover);
-    border-color: rgba(56, 189, 248, 0.62);
     box-shadow: 0 24px 50px -10px rgba(0, 0, 0, 0.64),
-                0 0 32px rgba(56, 189, 248, 0.24),
+                0 0 32px rgba(56, 189, 248, 0.22),
                 inset 0 1px 0 0 rgba(255, 255, 255, 0.4);
 }
 
@@ -173,7 +208,7 @@ body {
     -webkit-backdrop-filter: blur(42px) saturate(210%);
     border: 1px solid var(--frost-border);
     border-top: 1px solid var(--frost-specular);
-    border-radius: 20px;
+    border-radius: 22px;
     padding: 1.05rem 1.45rem;
     display: flex;
     justify-content: space-between;
@@ -352,7 +387,7 @@ body {
     pointer-events: none;
     background: radial-gradient(
         circle 260px at var(--mouse-x, 50%) var(--mouse-y, 50%),
-        rgba(255, 255, 255, 0.2),
+        rgba(255, 255, 255, 0.18),
         transparent 75%
     );
     opacity: 0;
@@ -364,15 +399,18 @@ body {
 }
 
 /* =========================================
-   SIDEBAR & STRUKTUR ACCORDION BERTINGKAT
+   FLOATING STICKY GLASS SIDEBAR (KONSEP 3)
    ========================================= */
-.sidebar {
-    width: var(--sidebar-width);
-    height: 100vh;
+.sidebar.floating-sidebar {
+    width: calc(var(--sidebar-width) - 18px);
+    height: calc(100vh - 28px);
     position: fixed;
-    top: 0;
-    left: 0;
-    padding: 1.5rem 0.95rem;
+    top: 14px;
+    left: 14px;
+    border-radius: 26px;
+    border-top: 1px solid var(--frost-specular);
+    border-left: 1px solid var(--frost-specular);
+    padding: 1.45rem 0.9rem;
     display: flex;
     flex-direction: column;
     z-index: 1200;
@@ -456,7 +494,7 @@ body {
     padding: 0.76rem 0.95rem;
     color: #ffffff;
     text-decoration: none;
-    border-radius: 15px;
+    border-radius: 16px;
     font-weight: 600;
     border: 1px solid transparent;
     text-shadow: 0 1px 6px rgba(0, 0, 0, 0.75);
@@ -732,7 +770,7 @@ body {
 }
 
 .page-container {
-    padding: 2.5rem 5%;
+    padding: 2rem 4%;
     max-width: 1240px;
     width: 100%;
     margin: 0 auto;
@@ -756,12 +794,12 @@ body {
     color: var(--primary);
 }
 
-/* Hero Beranda Full Frosted Glass (Blur 42px) */
+/* Hero Beranda Full Frosted Glass */
 .hero {
     min-height: calc(100vh - 65px);
     display: flex;
     align-items: center;
-    padding: 3rem 5%;
+    padding: 2.5rem 4%;
 }
 
 .hero-wrapper {
@@ -867,6 +905,7 @@ body {
 }
 
 .stat-frosted-box {
+    position: relative;
     background: rgba(255, 255, 255, 0.08);
     backdrop-filter: blur(30px) saturate(190%);
     -webkit-backdrop-filter: blur(30px) saturate(190%);
@@ -881,7 +920,6 @@ body {
 
 .stat-frosted-box:hover {
     background: rgba(56, 189, 248, 0.24);
-    border-color: rgba(56, 189, 248, 0.58);
 }
 
 .stat-number {
@@ -996,26 +1034,45 @@ body {
 }
 
 /* =========================================
-   HALAMAN TENTANG & KEAHLIAN
+   HALAMAN TENTANG & BENTO GRID ASIMETRIS (KONSEP 1)
    ========================================= */
+.bento-about-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.4rem;
+}
+
+.bento-span-2 {
+    grid-column: span 2;
+}
+
+.bento-kicker {
+    display: inline-block;
+    font-size: 0.72rem;
+    font-weight: 800;
+    letter-spacing: 1px;
+    color: #7dd3fc;
+    background: rgba(56, 189, 248, 0.18);
+    border: 1px solid rgba(56, 189, 248, 0.4);
+    padding: 0.15rem 0.6rem;
+    border-radius: 6px;
+    margin-bottom: 0.45rem;
+}
+
 .about-card {
-    padding: 2.2rem;
+    padding: 2rem;
+    display: flex;
+    align-items: center;
 }
 
 .about-flex-inner {
     display: flex;
     align-items: center;
-    gap: 1.8rem;
+    gap: 1.6rem;
 }
 
 .about-text-body {
     flex: 1;
-}
-
-.skills-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(255px, 1fr));
-    gap: 1.4rem;
 }
 
 .media-showcase-grid {
@@ -1051,13 +1108,13 @@ body {
 }
 
 .center-badge {
-    width: 66px;
-    height: 66px;
+    width: 68px;
+    height: 68px;
     margin-bottom: 0;
 }
 
 .center-badge i {
-    font-size: 1.85rem !important;
+    font-size: 1.9rem !important;
 }
 
 .icon-badge i {
@@ -1695,11 +1752,15 @@ body.editing-active .editable {
     body {
         background-attachment: scroll;
     }
-    .sidebar {
+    .sidebar.floating-sidebar {
+        top: 0;
+        left: 0;
+        height: 100vh;
+        border-radius: 0 24px 24px 0;
         transform: translateX(-100%);
         width: 274px;
     }
-    .sidebar.open {
+    .sidebar.floating-sidebar.open {
         transform: translateX(0);
     }
     .close-sidebar-btn {
@@ -1739,6 +1800,12 @@ body.editing-active .editable {
     .frosted-ring {
         width: 175px;
         height: 175px;
+    }
+    .bento-about-grid {
+        grid-template-columns: 1fr;
+    }
+    .bento-span-2 {
+        grid-column: span 1;
     }
     .about-flex-inner {
         flex-direction: column;
